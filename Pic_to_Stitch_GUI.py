@@ -369,27 +369,27 @@ def colour_select_pop():
 
     pop_frame1 = Frame(pop)
     pop_frame1.pack()
-    pop_label_1 = Label(pop_frame1, text='Select a Colour Level:')
+    pop_label_1 = Label(pop_frame1, text='Select the number of Colours:')
     pop_label_1.grid(row=0, column=0, columnspan=4)
-    pop_label_2 = Label(pop_frame1, text='100%')
+    pop_label_2 = Label(pop_frame1, text='1000')
     pop_label_2.grid(row=1, column=0)
-    pop_label_3 = Label(pop_frame1, text='50%')
+    pop_label_3 = Label(pop_frame1, text='729')
     pop_label_3.grid(row=2, column=0)
-    pop_label_4 = Label(pop_frame1, text='25%')
+    pop_label_4 = Label(pop_frame1, text='512')
     pop_label_4.grid(row=3, column=0)
-    pop_label_5 = Label(pop_frame1, text='18%')
+    pop_label_5 = Label(pop_frame1, text='343')
     pop_label_5.grid(row=4, column=0)
-    pop_label_6 = Label(pop_frame1, text='12%')
+    pop_label_6 = Label(pop_frame1, text='216')
     pop_label_6.grid(row=5, column=0)
-    pop_label_7 = Label(pop_frame1, text='8%')
+    pop_label_7 = Label(pop_frame1, text='125')
     pop_label_7.grid(row=1, column=2)
-    pop_label_8 = Label(pop_frame1, text='5%')
+    pop_label_8 = Label(pop_frame1, text='64')
     pop_label_8.grid(row=2, column=2)
-    pop_label_9 = Label(pop_frame1, text='4%')
+    pop_label_9 = Label(pop_frame1, text='27')
     pop_label_9.grid(row=3, column=2)
-    pop_label_10 = Label(pop_frame1, text='3%')
+    pop_label_10 = Label(pop_frame1, text='8')
     pop_label_10.grid(row=4, column=2)
-    pop_label_11 = Label(pop_frame1, text='2%')
+    pop_label_11 = Label(pop_frame1, text='1')
     pop_label_11.grid(row=5, column=2)
 
     # ** Pre-run alg before pop-up **
@@ -438,51 +438,205 @@ def colour_select_pop():
     # r_button_10 = Radiobutton(pop_frame1, variable=floor_choice, value=10, command=lambda: [colour_display(floor_choice)])
     # r_button_10.grid(row=5, column=3)
 
-    pop_button = Button(pop_frame1, text="OK", command=lambda: [colour_step(floor_choice)])  # pop.destory
+    pop_button = Button(pop_frame1, text="OK", command=lambda: [set_colour_change(floor_choice.get()), pop.destroy()])  # pop.destory
     pop_button.grid(row=8, column=3, pady=10)
     pop_button = Button(pop_frame1, text="Back", command=lambda: [pop.destroy()])
     pop_button.grid(row=8, column=0, pady=10)
 
 
-def floor_step(pix, floors):
+def pix_restrict():
+    global pix
+    print("image merge")
+    if len(images) == 2:
 
-    MAX = 2**8 - 1
-    coarseness = MAX / floors
-    return [coarseness * np.floor(val / coarseness) for val in pix]
-
-
-def colour_step(floor_choice):
-    levels = [2, 3, 4, 5, 8, 12, 18, 25, 50, 100]
-    floor_choice = floor_choice.get()
-    print(type(floor_choice),"\n Value: ", floor_choice)
-
-    if 0 < floor_choice < 11:
-        floors = levels[floor_choice-1]
-
-        image = images[0]
-        pixel_matrix = np.array(image) # .open()
+        image = images[1]
+        pixel_matrix = np.array(image)
         image_copy = pixel_matrix.copy()
-        for i, row in enumerate(pixel_matrix):
-            for j, pix in enumerate(row):
-                print("Pixel value: {}", format(pix))
-                image_copy[i, j] = floor_step(pix, floors)
-                print("New Pixel Value: {}", format(pix))
+        row_num = len(pixel_matrix)
+        col_num = len(pixel_matrix[0])
+        pixel_list = []
+        colour_count = []
+        for y, row in enumerate(pixel_matrix):
+            # print("Row: ", y)
+            # print("Y: ", y, "Pixel Matrix Length: ", len(pixel_matrix))
+            for x, pix in enumerate(row):
 
-            # if not i % 100:
-            #     print("Row Number {}", format(i))
+                # compare pix to list
+                # if yes then +1
+                # if no add to list and +1
+                for i in pixel_list:
+                    # while i < 3:
+                    if i[0] == pix[0]:
+                        if i[1] == pix[1]:
+                            if i[2] == pix[2]:
+                                index = pixel_list.index(pix)
+                                colour_count[index] += 1
+                            else:
+                                pixel_list.append(pix)
+                                colour_count.append(1)
+                        else:
+                            pixel_list.append(pix)
+                            colour_count.append(1)
+                    else:
+                        pixel_list.append(pix)
+                        colour_count.append(1)
+                # if pix in pixel_list:
+                #
+                #     index = pixel_list.index(pix)
+                #     colour_count[index] += 1
+                #
+                # else:
+                #     pixel_list.append(pix)
+                #     colour_count.append(1)
+        e = 1
+        for x in pixel_list:
+            num = colour_count[e-1]
+            print("Colour ", e, " Value: ", x, " Amount:", num)
+
+
+
+
+
+        # images[1] = Image.fromarray(image_copy, "RGB")
+        # display_cy_image()
+    else:
+        print("Error: Pix_change failed")
+
+
+def pix_change():
+    global pix
+
+    if len(images) == 2:
+
+        image = images[1]
+        pixel_matrix = np.array(image)
+        image_copy = pixel_matrix.copy()
+        row_num = len(pixel_matrix)
+        col_num = len(pixel_matrix[0])
+        for y, row in enumerate(pixel_matrix):
+            # print("Row: ", y)
+            # print("Y: ", y, "Pixel Matrix Length: ", len(pixel_matrix))
+            for x, pix in enumerate(row):
+                # print("X: ", x, "Pixel Matrix Height: ", len(pixel_matrix[0]))
+
+                pixels = []
+                dif_list = []
+                dif_val = []
+                # pix = (0, 0, 0)
+                a = y - 1
+                b = y + 1
+                c = x - 1
+                d = x + 1
+
+                if y > 0:
+
+                    pixels.append(pixel_matrix[a, x])
+
+                    if x > 0:
+                        pixels.append(pixel_matrix[a, c])
+                    if x < col_num - 1:  # could need a -1
+                        pixels.append(pixel_matrix[a, d])
+
+                if y < row_num - 1:
+
+                    pixels.append(pixel_matrix[b, x])
+
+                    if x > 0:
+                        pixels.append(pixel_matrix[b, c])
+                    if x < col_num - 1:
+                        pixels.append(pixel_matrix[b, d])
+
+                if x > 0:
+                    pixels.append(pixel_matrix[y, c])
+                if x < col_num - 1:
+                    pixels.append(pixel_matrix[y, d])
+
+                for i in pixels:
+                    a = 0
+                    dif = [0, 0, 0]
+                    if i[0] == pix[0] and i[1] == pix[1] and i[2] == pix[2]:
+                             #dif = (1000, 1000, 1000)
+                             dif = (0, 0, 0)
+                    else:
+                        while a < 3:
+                            if i[a] == pix[a]:
+                                dif[a] = 0
+                            elif i[a] > pix[a]:
+                                p = pix[a]
+                                o_p = i[a]
+                                dif[a] = o_p - p
+                            elif i[a] < pix[a]:
+                                p = pix[a]
+                                o_p = i[a]
+                                dif[a] = p - o_p
+
+                            a += 1
+                    dif_list.append(dif)
+
+                for i in dif_list:
+                    dif_val.append(i[0] + i[1] + i[2])
+                try:
+                    min_index = dif_val.index(min(dif_val))
+                    # print(min_index)
+                    # print("pixels[]: ", pixels)
+                    # print("Cur Pix: (", x, ",", y, ") Values: ", pix)
+                    pix = pixels[min_index]
+                    image_copy[y, x] = pix
+                    # print("New Pix: (", x, ",", y, ") Values: ", pix)
+                except ValueError:
+                    print("no need")
+                else:
+                    pix = pixels[min_index]
+                    image_copy[y, x] = pix
 
         images[1] = Image.fromarray(image_copy, "RGB")
         display_cy_image()
     else:
-        print(" no value was selected")
+        print("Error: Pix_change failed")
+
+def floor_step(pix, floors):
+
+    MAX = 2**8 - 1
+    coarseness = MAX / floors
+
+    return [coarseness * np.floor(val / coarseness) for val in pix]
 
 
+# not used
+# def colour_step(floor_choice):
+#     levels = [70, 63, 50, 42, 32, 21, 10, 5, 3, 2]
+#     floor_choice = floor_choice.get()
+#     print(type(floor_choice),"\n Value: ", floor_choice)
+#
+#     if 0 < floor_choice < 11:
+#         floors = levels[floor_choice-1]
+#
+#         image = images[0]
+#         pixel_matrix = np.array(image) # .open()
+#         image_copy = pixel_matrix.copy()
+#         for i, row in enumerate(pixel_matrix):
+#             for j, pix in enumerate(row):
+#                 print("Pixel value: {}", format(pix))
+#                 image_copy[i, j] = floor_step(pix, floors)
+#                 print("New Pixel Value: {}", format(pix))
+#
+#             if not i % 100:
+#                 print("Row Number {}", format(i))
+#
+#         images[1] = Image.fromarray(image_copy, "RGB")
+#         display_cy_image()
+#     else:
+#         print(" no value was selected")
+
+# ** Working **
 def auto_colour_step():
-
-    levels = [2, 3, 4, 5, 8, 12, 18, 25, 50, 100]
+    temp_images.clear()
+    levels = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     if len(images) == 2:
+        global pix
+        pix = (0,0,0)
         for x in levels:
-            print("X: ", x)
+            # print("X: ", x)
             floors = x
 
             image = images[1]
@@ -490,11 +644,15 @@ def auto_colour_step():
             pixel_matrix = np.array(image) # .open()
             image_copy = pixel_matrix.copy()
             for i, row in enumerate(pixel_matrix):
+                pixel = pix
                 for j, pix in enumerate(row):
+
                     image_copy[i, j] = floor_step(pix, floors)
 
-                if not i % 100:
-                    print("Row Number {}", format(i))
+                # if not i % 100:
+                #     print("Row Number {}", format(i))
+                #     print("Pixel value: ", format(pixel))
+                #     print("Pixel Value: ", format(pix))
 
             temp = Image.fromarray(image_copy, "RGB")
             temp_images.append(temp)
@@ -512,6 +670,11 @@ def colour_display(option):
         display_image(img)
     else:
         print("Error: Colour Display function")
+
+
+def set_colour_change(option):
+    images[1] = temp_images[option - 1]
+    display_cy_image()
 
 
 def process_1_colour_selection():
@@ -757,10 +920,14 @@ insertButton = Button(toolbar, text="Insert Image", command=you_sure)
 insertButton.pack(side=LEFT, padx=2, pady=2)
 printButton = Button(toolbar, text="Size", command=hoop_size_select)
 printButton.pack(side=LEFT, padx=2, pady=2)
-imageButton = Button(toolbar, text="Image", command=auto_load)
+imageButton = Button(toolbar, text="Denoise", command=pix_change)
 imageButton.pack(side=LEFT, padx=2, pady=2)
 process1Button = Button(toolbar, text="Colour", command=auto_colour_step)
 process1Button.pack(side=LEFT, padx=2, pady=2)
+process2Button = Button(toolbar, text="Edges", command=process_1_colour_selection)
+process2Button.pack(side=LEFT, padx=2, pady=2)
+process3Button = Button(toolbar, text="Colour Merge", command=pix_restrict)
+process3Button.pack(side=LEFT, padx=2, pady=2)
 toolbar.pack(side=TOP, fill=X)
 
 # Main Frame
