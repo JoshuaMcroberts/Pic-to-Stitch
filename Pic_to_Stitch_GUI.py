@@ -444,63 +444,543 @@ def colour_select_pop():
     pop_button.grid(row=8, column=0, pady=10)
 
 
-def pix_restrict():
-    global pix
-    print("image merge")
-    if len(images) == 2:
+def get_liner_pixel(pixel_matrix, y, x, deleted_list):
+    row_num = len(pixel_matrix)
+    col_num = len(pixel_matrix[0])
+    pixels = []
+    m = 0
+    pixel_list = []
 
-        image = images[1]
-        pixel_matrix = np.array(image)
-        image_copy = pixel_matrix.copy()
-        row_num = len(pixel_matrix)
-        col_num = len(pixel_matrix[0])
-        pixel_list = []
+    option = 0
+
+    while option != 5:
+
+        if option == 1:
+
+            nx = x - 1
+            while x >= 0:
+                found = 0
+                new_pix = pixel_matrix[y, nx]
+
+                if new_pix == (255, 255, 255):
+                    option = 2
+                    break
+
+                for i in deleted_list:
+                    if i[0] == new_pix[0]:
+                        if i[1] == new_pix[1]:
+                            if i[2] == new_pix[2]:
+                                nx -= 1
+                                found += 1
+
+                if found == 0:
+                    pixel_list.append(new_pix)
+                    option = 2
+                    break
+
+        if option == 2:
+
+            ny = y - 1
+            while y >= 0:
+                found = 0
+                new_pix = pixel_matrix[ny, x]
+
+                if new_pix == (255, 255, 255):
+                    option = 3
+                    break
+
+                for i in deleted_list:
+                    if i[0] == new_pix[0]:
+                        if i[1] == new_pix[1]:
+                            if i[2] == new_pix[2]:
+                                ny -= 1
+                                found += 1
+
+                if found == 0:
+                    pixel_list.append(new_pix)
+                    option = 3
+                    break
+
+        if option == 3:
+
+            nx = x + 1
+            while x < len(pixel_matrix[0]):
+                found = 0
+                new_pix = pixel_matrix[y, nx]
+
+                if new_pix == (255, 255, 255):
+                    option = 4
+                    break
+
+                for i in deleted_list:
+                    if i[0] == new_pix[0]:
+                        if i[1] == new_pix[1]:
+                            if i[2] == new_pix[2]:
+                                nx += 1
+                                found += 1
+
+                if found == 0:
+                    pixel_list.append(new_pix)
+                    option = 4
+                    break
+
+        if option == 4:
+
+            ny = y + 1
+            while y < len(pixel_matrix):
+                found = 0
+                new_pix = pixel_matrix[ny, x]
+
+                if new_pix == (255, 255, 255):
+                    option = 5
+                    break
+
+                for i in deleted_list:
+                    if i[0] == new_pix[0]:
+                        if i[1] == new_pix[1]:
+                            if i[2] == new_pix[2]:
+                                ny += 1
+                                found += 1
+
+                if found == 0:
+                    pixel_list.append(new_pix)
+                    option = 5
+                    break
+
+    if len(pixel_list) == 0:
+        pixel_matrix[y, x] = (255, 255, 255)
+
+    else:
         colour_count = []
-        for y, row in enumerate(pixel_matrix):
-            # print("Row: ", y)
-            # print("Y: ", y, "Pixel Matrix Length: ", len(pixel_matrix))
-            for x, pix in enumerate(row):
+        count_list = []
+        for e in pixel_list:
 
-                # compare pix to list
-                # if yes then +1
-                # if no add to list and +1
+            if len(count_list) == 0:
+
+                count_list.append(list(e))
+                colour_count.append(1)
+            count = 0
+            for i in count_list:
+
+                if i[0] == e[0]:
+                    if i[1] == e[1]:
+                        if i[2] == pix[2]:
+                            index = count_list.index(i)
+
+                            ind = index
+
+                            colour_count[ind] += 1
+                        else:
+                            count += 1
+                    else:
+                        count += 1
+                else:
+                    count += 1
+
+                if count >= len(count_list):
+                    count_list.append(list(e))
+                    colour_count.append(1)
+                    break
+        pick = max(colour_count)
+        ind = colour_count.index(pick)
+        pixel_matrix[y, x] = count_list[ind]
+
+def get_surrounding_pixels(pixel_matrix, y, x):
+    row_num = len(pixel_matrix)
+    col_num = len(pixel_matrix[0])
+    pixels = []
+    a = y - 1
+    b = y + 1
+    c = x - 1
+    d = x + 1
+
+    if y > 0:
+        pixels.append(pixel_matrix[a, x])
+        if x > 0:
+            pixels.append(pixel_matrix[a, c])
+        if x < col_num - 1:
+            pixels.append(pixel_matrix[a, d])
+    if y < row_num - 1:
+        pixels.append(pixel_matrix[b, x])
+        if x > 0:
+            pixels.append(pixel_matrix[b, c])
+        if x < col_num - 1:
+            pixels.append(pixel_matrix[b, d])
+    if x > 0:
+        pixels.append(pixel_matrix[y, c])
+    if x < col_num - 1:
+        pixels.append(pixel_matrix[y, d])
+    return pixels
+
+
+def get_colour_diff(pixels, pix):
+    dif_val = []
+    dif_list = []
+
+    for i in pixels:
+        a = 0
+        dif = [0, 0, 0]
+        if i[0] == pix[0] and i[1] == pix[1] and i[2] == pix[2]:
+            # dif = (1000, 1000, 1000)
+            dif = (0, 0, 0)
+        else:
+            while a < 3:
+                if i[a] == pix[a]:
+                    dif[a] = 0
+                elif i[a] > pix[a]:
+                    p = pix[a]
+                    o_p = i[a]
+                    dif[a] = o_p - p
+                elif i[a] < pix[a]:
+                    p = pix[a]
+                    o_p = i[a]
+                    dif[a] = p - o_p
+
+                a += 1
+        dif_list.append(dif)
+
+    for i in dif_list:
+        dif_val.append(i[0] + i[1] + i[2])
+
+
+    return dif_val
+
+
+def count_colour(pixel_matrix, pixel_list, colour_count, combine_count):
+
+
+    for y, row in enumerate(pixel_matrix):
+        for x, pix in enumerate(row):
+            # print("(Y,X): ", y, ",", x)
+
+            # count the number of times a pixel appears
+            if len(pixel_list) == 0:
+                pixel_list.append(list(pix))
+                colour_count.append(1)
+                combine_count.append(int(pix[0]) + int(pix[1]) + int(pix[2]))
+            else:
+                count = 0
                 for i in pixel_list:
-                    # while i < 3:
+
                     if i[0] == pix[0]:
                         if i[1] == pix[1]:
                             if i[2] == pix[2]:
-                                index = pixel_list.index(pix)
-                                colour_count[index] += 1
+                                index = pixel_list.index(i)
+
+                                ind = index
+
+                                colour_count[ind] += 1
                             else:
-                                pixel_list.append(pix)
-                                colour_count.append(1)
+                                count += 1
                         else:
-                            pixel_list.append(pix)
-                            colour_count.append(1)
+                            count += 1
                     else:
-                        pixel_list.append(pix)
+                        count += 1
+
+                    if count >= len(pixel_list):
+                        pixel_list.append(list(pix))
                         colour_count.append(1)
-                # if pix in pixel_list:
-                #
-                #     index = pixel_list.index(pix)
-                #     colour_count[index] += 1
-                #
-                # else:
-                #     pixel_list.append(pix)
-                #     colour_count.append(1)
+                        combine_count.append(int(pix[0]) + int(pix[1]) + int(pix[2]))
+                        break
+
+    # print list of all individual colours
+
+    e = 1
+    for x in pixel_list:
+        comb = combine_count[e - 1]
+        num = colour_count[e - 1]
+        print("Colour ", e, " Value: ", x," Comb Val:", comb, " Amount: ", num,)
+        e += 1
+    # return pixel_list
+
+# def selection_sort(L):
+#     # i indicates how many items were sorted
+#     for i in range(len(L)-1):
+#         # To find the minimum value of the unsorted segment
+#         # We first assume that the first element is the lowest
+#         min_index = i
+#         # We then use j to loop through the remaining elements
+#         for j in range(i+1, len(L)-1):
+#             # Update the min_index if the element at j is lower than it
+#             if L[j] < L[min_index]:
+#                 min_index = j
+#         # After finding the lowest item of the unsorted regions, swap with the first unsorted item
+#         L[i], L[min_index] = L[min_index], L[i]
+
+
+def sort_algorithm(pixel_list, combine_value, colour_count):
+
+    for i in range(len(combine_value)-1):
+        min_index = i
+
+        for j in range(i+1, len(combine_value)):
+
+            if combine_value[j] < combine_value[min_index]:
+                min_index = j
+
+        combine_value[i], combine_value[min_index] = combine_value[min_index], combine_value[i]
+        pixel_list[i], pixel_list[min_index] = pixel_list[min_index], pixel_list[i]
+        colour_count[i], colour_count[min_index] = colour_count[min_index], colour_count[i]
+
+
+# def darkest_pixel(pixel_matrix, pixel_list):
+#
+#     count_colour(pixel_matrix, pixel_list)
+
+    # sort
+
+def stats():
+
+    image = images[1]
+    pixel_matrix = np.array(image)
+    image_copy = pixel_matrix
+    pixel_list = []
+    colour_count = []
+
+    combine_count = []
+
+    count_colour(pixel_matrix, pixel_list, colour_count, combine_count)
+
+    sort_algorithm(pixel_list, combine_count, colour_count)
+
+    e = 1
+    for x in pixel_list:
+        comb = combine_count[e - 1]
+        num = colour_count[e - 1]
+        print("Colour ", e, " Value: ", x, " Comb Val:", comb, " Amount: ", num, )
+        e += 1
+
+    total_pix = len(pixel_matrix) * len(pixel_matrix[0])
+    print("Total Pixel Count: ", total_pix)
+
+
+def pix_restrict(): # og first different colour
+
+    global pix
+    print("image merge")
+
+    if len(images) == 2:
+        print("yup")
+
+        image = images[1]
+        pixel_matrix = np.array(image)
+        image_copy = pixel_matrix
+        delete_colour = []
+        pixel_list = []
+        colour_count = []
+
+        for y, row in enumerate(pixel_matrix):
+            for x, pix in enumerate(row):
+                print("(Y,X): ", y, ",", x)
+
+# count the number of times a pixel appears
+                if len(pixel_list) == 0:
+                    pixel_list.append(list(pix))
+                    colour_count.append(1)
+                else:
+                    count = 0
+                    for i in pixel_list:
+
+                        if i[0] == pix[0]:
+                            if i[1] == pix[1]:
+                                if i[2] == pix[2]:
+                                    index = pixel_list.index(i)
+
+                                    ind = index
+
+                                    colour_count[ind] += 1
+                                else:
+                                    count += 1
+                            else:
+                                count += 1
+                        else:
+                            count += 1
+
+                        if count >= len(pixel_list):
+                            pixel_list.append(list(pix))
+                            colour_count.append(1)
+                            break
+
+
+# print list of all individual colours
+
         e = 1
         for x in pixel_list:
             num = colour_count[e-1]
-            print("Colour ", e, " Value: ", x, " Amount:", num)
+            print("Colour ", e, " Value: ", x, " Amount: ", num,)
+            e += 1
 
+# make a list of the colours that appear the least
+        # make into a percentage formula
+        # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
+        value = 2000
+        index_list = []
+        for i in colour_count:
+            if i <= value:
+                index = colour_count.index(i)
+                delete_colour.append(pixel_list[index])
+                index_list.append(index)
 
+# for each pixel in image
+        for y, row in enumerate(pixel_matrix):
+            for x, pix in enumerate(row):
 
+# check pixel against the delete list
+                # if it needs to be deleted get surrounding pixels
+                for i in delete_colour:
+                    if i[0] == pix[0]:
+                        if i[1] == pix[1]:
+                            if i[2] == pix[2]:
+                                pixels = get_surrounding_pixels(pixel_matrix, y, x)
 
+# for each surrounding pixel, check it against the delete list
+                                # if it is on the list it is removed from surrounding pixel list
+                                count = 0
+                                for l in pixels:
 
-        # images[1] = Image.fromarray(image_copy, "RGB")
-        # display_cy_image()
+                                    for m in delete_colour:
+                                        if l[0] == m[0]:
+                                            if l[1] == m[1]:
+                                                if l[2] == m[2]:
+                                                    # index = pixels.index(np.logical_and(l))
+                                                    del pixels[count]
+                                                    break
+                                    count += 1
+
+# get the differences of the remaining surrounding pixel values
+                                dif_val = get_colour_diff(pixels, pix)
+
+                                n = 0
+# find the colour with the least differences and change pix to that
+#                                 try:
+#                                     min_index = dif_val.index(min(dif_val))
+#                                     # print("Min_dif: ", min(dif_val), "Index: ", min_index)
+#                                     # print(dif_val)
+#                                     pix = pixels[min_index]
+#                                 except Exception(ValueError):
+#                                     n += 1
+#                                     print(str(n) + " got away!")
+                                for s in dif_val:
+                                    if s > 0:
+                                        pix = pixels[dif_val.index(s)]
+
+    # for w in delete_colour:
+    #     if pix[0] == w[0]:
+    #
+    #         if pix[1] == w[1]:
+    #
+    #             if pix[2] == w[2]:
+    #
+    #                del pixels[min_index]
+
+# set pixel in image
+                    image_copy[y, x] = pix
+
+# print pixel list
+        j = 1
+        for x in pixel_list:
+            num = colour_count[j - 1]
+            print("Colour ", j, " Value: ", x, " Amount: ", num)
+            j += 1
+
+        images[1] = Image.fromarray(image_copy, "RGB")
+        display_cy_image()
     else:
         print("Error: Pix_change failed")
+
+
+# def pix_restrict(): # OG FUZZY EDGES
+#
+#     global pix
+#     print("image merge")
+#
+#     if len(images) == 2:
+#         print("yup")
+#
+#         image = images[1]
+#         pixel_matrix = np.array(image)
+#         image_copy = pixel_matrix
+#         delete_colour = []
+#         pixel_list = []
+#         colour_count = []
+#         combine_count = []
+#
+#         count_colour(pixel_matrix, pixel_list, colour_count, combine_count)
+#
+#
+# # make a list of the colours that appear the least
+#         # make into a percentage formula
+#         value = 3000
+#         index_list = []
+#         for i in colour_count:
+#             if i <= value:
+#                 index = colour_count.index(i)
+#                 delete_colour.append(pixel_list[index])
+#                 index_list.append(index)
+#
+# # for each pixel in image
+#         for y, row in enumerate(pixel_matrix):
+#             for x, pix in enumerate(row):
+#
+# # check pixel against the delete list
+#                 # if it needs to be deleted get surrounding pixels
+#                 for i in delete_colour:
+#                     if i[0] == pix[0]:
+#                         if i[1] == pix[1]:
+#                             if i[2] == pix[2]:
+#                                 pixels = get_surrounding_pixels(pixel_matrix, y, x)
+#
+# # for each surrounding pixel, check it against the delete list
+#                                 # if it is on the list it is removed from surrounding pixel list
+#                                 count = 0
+#                                 for l in pixels:
+#
+#                                     for m in delete_colour:
+#                                         if l[0] == m[0]:
+#                                             if l[1] == m[1]:
+#                                                 if l[2] == m[2]:
+#                                                     # index = pixels.index(np.logical_and(l))
+#                                                     del pixels[count]
+#                                                     break
+#                                     count += 1
+#
+# # get the differences of the remaining surrounding pixel values
+#                                 dif_val = get_colour_diff(pixels, pix)
+#                                 n = 0
+#
+# # find the colour with the least differences and change pix to that
+#                                 try:
+#                                     min_index = dif_val.index(min(dif_val))
+#                                     # print("Min_dif: ", min(dif_val), "Index: ", min_index)
+#                                     # print(dif_val)
+#                                     pix = pixels[min_index]
+#                                 except Exception(ValueError):
+#                                     n += 1
+#                                     print(str(n) + " got away!")
+#
+#     # for w in delete_colour:
+#     #     if pix[0] == w[0]:
+#     #
+#     #         if pix[1] == w[1]:
+#     #
+#     #             if pix[2] == w[2]:
+#     #
+#     #                del pixels[min_index]
+#
+# # set pixel in image
+#                     image_copy[y, x] = pix
+#
+# # print pixel list
+# #         j = 1
+# #         for x in pixel_list:
+# #             num = colour_count[j - 1]
+# #             print("Colour ", j, " Value: ", x, " Amount: ", num)
+# #             j += 1
+#
+#         images[1] = Image.fromarray(image_copy, "RGB")
+#         display_cy_image()
+#     else:
+#         print("Error: Pix_change failed")
 
 
 def pix_change():
@@ -511,88 +991,29 @@ def pix_change():
         image = images[1]
         pixel_matrix = np.array(image)
         image_copy = pixel_matrix.copy()
-        row_num = len(pixel_matrix)
-        col_num = len(pixel_matrix[0])
+
         for y, row in enumerate(pixel_matrix):
-            # print("Row: ", y)
-            # print("Y: ", y, "Pixel Matrix Length: ", len(pixel_matrix))
             for x, pix in enumerate(row):
                 # print("X: ", x, "Pixel Matrix Height: ", len(pixel_matrix[0]))
 
-                pixels = []
-                dif_list = []
-                dif_val = []
-                # pix = (0, 0, 0)
-                a = y - 1
-                b = y + 1
-                c = x - 1
-                d = x + 1
+                pixels = get_surrounding_pixels(pixel_matrix, y, x)
 
-                if y > 0:
+                dif_val = get_colour_diff(pixels, pix)
 
-                    pixels.append(pixel_matrix[a, x])
-
-                    if x > 0:
-                        pixels.append(pixel_matrix[a, c])
-                    if x < col_num - 1:  # could need a -1
-                        pixels.append(pixel_matrix[a, d])
-
-                if y < row_num - 1:
-
-                    pixels.append(pixel_matrix[b, x])
-
-                    if x > 0:
-                        pixels.append(pixel_matrix[b, c])
-                    if x < col_num - 1:
-                        pixels.append(pixel_matrix[b, d])
-
-                if x > 0:
-                    pixels.append(pixel_matrix[y, c])
-                if x < col_num - 1:
-                    pixels.append(pixel_matrix[y, d])
-
-                for i in pixels:
-                    a = 0
-                    dif = [0, 0, 0]
-                    if i[0] == pix[0] and i[1] == pix[1] and i[2] == pix[2]:
-                             #dif = (1000, 1000, 1000)
-                             dif = (0, 0, 0)
-                    else:
-                        while a < 3:
-                            if i[a] == pix[a]:
-                                dif[a] = 0
-                            elif i[a] > pix[a]:
-                                p = pix[a]
-                                o_p = i[a]
-                                dif[a] = o_p - p
-                            elif i[a] < pix[a]:
-                                p = pix[a]
-                                o_p = i[a]
-                                dif[a] = p - o_p
-
-                            a += 1
-                    dif_list.append(dif)
-
-                for i in dif_list:
-                    dif_val.append(i[0] + i[1] + i[2])
                 try:
                     min_index = dif_val.index(min(dif_val))
-                    # print(min_index)
-                    # print("pixels[]: ", pixels)
-                    # print("Cur Pix: (", x, ",", y, ") Values: ", pix)
+
                     pix = pixels[min_index]
                     image_copy[y, x] = pix
-                    # print("New Pix: (", x, ",", y, ") Values: ", pix)
+
                 except ValueError:
                     print("no need")
-                else:
-                    pix = pixels[min_index]
-                    image_copy[y, x] = pix
 
         images[1] = Image.fromarray(image_copy, "RGB")
         display_cy_image()
     else:
         print("Error: Pix_change failed")
+
 
 def floor_step(pix, floors):
 
@@ -638,16 +1059,46 @@ def auto_colour_step():
         for x in levels:
             # print("X: ", x)
             floors = x
-
+            pixel_brightness = []
             image = images[1]
 
-            pixel_matrix = np.array(image) # .open()
+            pixel_matrix = np.array(image)
             image_copy = pixel_matrix.copy()
+            # for i, row in enumerate(pixel_matrix):
+            #     pixel = pix
+            #     for j, pix in enumerate(row):
+            #
+            #        value = pix[0] + pix[1] + pix[2]
+            #         print(value)
+            #         pixel_brightness.append(value)
+            #
+            # darkest = min(pixel_brightness)
+
             for i, row in enumerate(pixel_matrix):
                 pixel = pix
                 for j, pix in enumerate(row):
 
+                    if pix[0] > 230 and pix[1] > 230 and pix[2] > 230:  # Near white equals white
+                        pix = (255, 255, 255)
+                    pix = list(pix)
+                    comb_val = int(pix[0]) + int(pix[1]) + int(pix[2])
+
+                    if pix[0] < 80:
+                        pix_val = 1
+                    elif pix[1] < 80:
+                        pix_val = 1
+                    elif pix[2] < 80:
+                        pix_val = 1
+                    else:
+                        pix_val = 0
+                    val = 160
+                    if comb_val < val and pix_val == 1:  # Near white equals white
+                        pix = (0, 0, 0)
+
                     image_copy[i, j] = floor_step(pix, floors)
+
+
+
 
                 # if not i % 100:
                 #     print("Row Number {}", format(i))
@@ -776,8 +1227,6 @@ def image_resize(hoop_size, option, new_w, new_h):
 
     display_og_image()
     display_cy_image()
-
-
 
 
 def auto_size(size_option):
@@ -928,6 +1377,8 @@ process2Button = Button(toolbar, text="Edges", command=process_1_colour_selectio
 process2Button.pack(side=LEFT, padx=2, pady=2)
 process3Button = Button(toolbar, text="Colour Merge", command=pix_restrict)
 process3Button.pack(side=LEFT, padx=2, pady=2)
+process4Button = Button(toolbar, text="IMage Stats", command=stats)
+process4Button.pack(side=LEFT, padx=2, pady=2)
 toolbar.pack(side=TOP, fill=X)
 
 # Main Frame
