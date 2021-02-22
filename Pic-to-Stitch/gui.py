@@ -501,7 +501,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
     ind_list.append((y, x))
     plot[y, x] = count
     s_object.plot[y, x] = count
-    x += 1
+    # x += 1
     print("Colour: ", c_colour)
 
     for j in range(len(image_copy)*len(image_copy[0])):
@@ -553,7 +553,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                                 #     last_pix = 5
                                 #
                                 # el
-                                if (y, x) == ind_list[0]:
+                                if (y - 1, x - 1) == ind_list[0]:
                                     break
 
                                 else:
@@ -588,7 +588,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                             #     last_pix = 6
                             #
                             # el
-                            if (y, x) == ind_list[0]:
+                            if (y - 1, x) == ind_list[0]:
                                 break
 
                             else:
@@ -650,7 +650,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                                 #     last_pix = 7
                                 #
                                 # el
-                                if (y, x) == ind_list[0]:
+                                if (y - 1, x + 1) == ind_list[0]:
                                     break
 
                                 else:
@@ -685,7 +685,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                             #     last_pix = 8
                             #
                             # el
-                            if (y, x) == ind_list[0]:
+                            if (y, x + 1) == ind_list[0]:
                                 break
 
                             else:
@@ -747,7 +747,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                                 #     last_pix = 1
                                 #
                                 # el
-                                if (y, x) == ind_list[0]:
+                                if (y + 1, x + 1) == ind_list[0]:
                                     break
 
                                 else:
@@ -782,7 +782,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                             #     last_pix = 2
                             #
                             # el
-                            if (y, x) == ind_list[0]:
+                            if (y + 1, x) == ind_list[0]:
                                 break
 
                             else:
@@ -844,7 +844,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                                 #     last_pix = 3
                                 #
                                 # el
-                                if (y, x) == ind_list[0]:
+                                if (y + 1, x - 1) == ind_list[0]:
                                     break
 
                                 else:
@@ -879,7 +879,7 @@ def find_outline(image_copy, plot, s_object, start_pix, start_point):
                             #     last_pix = 4
                             #
                             # el
-                            if (y, x) == ind_list[0]:
+                            if (y, x - 1) == ind_list[0]:
                                 break
 
                             else:
@@ -1035,6 +1035,54 @@ def object_create():
             else:
                 print("done")
     print_plot(plot)
+
+
+# new
+def create_image_plot():
+    image = images[1]
+    pixel_matrix = np.array(image)
+    image_copy = pixel_matrix.copy()
+
+    img_height = len(pixel_matrix)
+    img_width = len(pixel_matrix[0])
+    # Create plot of image
+    row = [0] * img_width
+    plot = np.array([row] * img_height)
+    count = 0
+    i = 1
+    pixel_list = []
+    count_list = []
+    combine_list = []
+    # find the first 0 in plot
+    count_colour(image_copy, pixel_list, count_list, combine_list)
+
+    for y, row in enumerate(image_copy):
+        for x, pixel in enumerate(row):
+
+            for i in pixel_list:
+
+                if i[0] == pixel[0]:
+                    if i[1] == pixel[1]:
+                        if i[2] == pixel[2]:
+                            ind = pixel_list.index(i)
+                            ind += 1
+                            plot[y, x] = ind
+    print_plot(plot)
+
+    main_plot = so.Plot(plot)
+    main_plot.set_num_list(pixel_list)
+    main_plot.create_sub_plot()
+    # main_plot.print_col_matrix_list()
+    col_obj = main_plot.col_matrix_list[1]
+    col_obj.create_ref_plot()
+    col_obj.process_colour_plot(main_plot.matrix)
+    # max_yx, min_yx = col_obj.get_object_outline(col_obj.ref_plot, (0, 0), 8, 1)
+    # col_obj.mine_sweeper_fill(col_obj.ref_plot, max_yx, min_yx, 1)
+
+    so.print_plot(col_obj.ref_plot)
+    # max_yx, min_yx = col_obj.get_object_outline(col_obj.matrix, (0, 0), 8, 3)
+    # col_obj.mine_sweeper_fill(col_obj.matrix, max_yx, min_yx, 3)
+    # so.print_plot(col_obj.matrix)
 
 # new
 def image_object():
@@ -2832,6 +2880,12 @@ process5_button = Button(toolbar, text="Manuel Merge", command=manuel_merge_pop)
 process5_button.pack(side=LEFT, padx=2, pady=2)
 process6_button = Button(toolbar, text="Jan Colour", command=janome_colours)
 process6_button.pack(side=LEFT, padx=2, pady=2)
+process7_button = Button(toolbar, text="Create Plot", command=create_image_plot)
+process7_button.pack(side=LEFT, padx=2, pady=2)
+process8_button = Button(toolbar, text="Manuel Merge", command=manuel_merge_pop)
+process8_button.pack(side=LEFT, padx=2, pady=2)
+process9_button = Button(toolbar, text="Jan Colour", command=janome_colours)
+process9_button.pack(side=LEFT, padx=2, pady=2)
 toolbar.pack(side=TOP, fill=X)
 
 # Main Frame
