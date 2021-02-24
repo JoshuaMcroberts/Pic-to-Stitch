@@ -426,7 +426,6 @@ def check_fill(image_copy, plot, s_object, colour_list):
         return "fail"
 
 
-
 # new
 def find_fill(image_copy, plot, s_object):  # working on this 13/02/2021
     col = s_object.object_id
@@ -1037,7 +1036,7 @@ def object_create():
     print_plot(plot)
 
 
-# new
+# new - used
 def create_image_plot():
     image = images[1]
     pixel_matrix = np.array(image)
@@ -1072,17 +1071,29 @@ def create_image_plot():
     main_plot = so.Plot(plot)
     main_plot.set_num_list(pixel_list)
     main_plot.create_sub_plot()
-    # main_plot.print_col_matrix_list()
-    col_obj = main_plot.col_matrix_list[1]
-    col_obj.create_ref_plot()
-    col_obj.process_colour_plot(main_plot.matrix)
-    # max_yx, min_yx = col_obj.get_object_outline(col_obj.ref_plot, (0, 0), 8, 1)
-    # col_obj.mine_sweeper_fill(col_obj.ref_plot, max_yx, min_yx, 1)
+    main_plot.print_col_matrix_list()
+    # col_obj_list = main_plot.col_matrix_list
+    # count = 1
 
-    so.print_plot(col_obj.ref_plot)
-    # max_yx, min_yx = col_obj.get_object_outline(col_obj.matrix, (0, 0), 8, 3)
-    # col_obj.mine_sweeper_fill(col_obj.matrix, max_yx, min_yx, 3)
-    # so.print_plot(col_obj.matrix)
+    # for i in col_obj_list:
+    #     print("count: {}".format(count))
+    #     col_obj = i
+    #
+    #     col_obj.process_colour_plot(main_plot.matrix)
+    #
+    #     col_obj.create_object_sub_plot()
+    #
+    #     count += 1
+
+    col_obj = main_plot.col_matrix_list[0]
+
+    col_obj.process_colour_plot(main_plot.matrix)
+
+    col_obj.create_object_sub_plot()
+
+    # for i in col_obj_list:
+    #     i.print_ob_matrix_list()
+
 
 # new
 def image_object():

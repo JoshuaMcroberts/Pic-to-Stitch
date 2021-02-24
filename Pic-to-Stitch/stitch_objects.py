@@ -65,8 +65,8 @@ class ColourPlot(Plot):
     def __init__(self, matrix, colour_number, colour):
         super().__init__(matrix)
         # self.plot_matrix = plot_matrix
-        self.ref_plot = []
         self.col_num = colour_number
+        self.ref_plot = self.create_ref_plot()
         self.object_count = 0
         self.colour = colour
         self.ob_matrix_list = []
@@ -76,7 +76,7 @@ class ColourPlot(Plot):
         self.set_matrix_w_h()
 
         p_row = ["0"] * self.matrix_width
-        self.ref_plot = np.array([p_row] * self.matrix_height)
+        ref_plot = np.array([p_row] * self.matrix_height)
 
         for y, row in enumerate(self.matrix):
             for x, point in enumerate(row):
@@ -86,7 +86,8 @@ class ColourPlot(Plot):
                     val = "a"
                 else:
                     val = str(val)
-                self.ref_plot[y, x] = val
+                ref_plot[y, x] = val
+        return ref_plot
 
     def process_colour_plot(self, main_plot):
         ref_plot = self.ref_plot
@@ -96,8 +97,6 @@ class ColourPlot(Plot):
         col_letter = "a"
         count = 0
         i = 0
-
-        self.create_ref_plot()
 
         for y, row in enumerate(ref_plot):
             # if i > 4:
@@ -113,6 +112,7 @@ class ColourPlot(Plot):
                     self.reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, count)
                     print_plot(ref_plot)
                 i += 1
+        self.ref_plot = ref_plot
 
     def get_object_outline(self, main_plot, ref_plot, start_yx, start_point, count):
         plot = main_plot
@@ -158,7 +158,8 @@ class ColourPlot(Plot):
                             if anw == 1:
                                 y -= 1
                                 x -= 1
-                                print("Set ({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 5
@@ -176,7 +177,8 @@ class ColourPlot(Plot):
                                 # check outline_list
                                 y -= 1
                                 x -= 1
-                                print("({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 5
@@ -201,7 +203,8 @@ class ColourPlot(Plot):
                             # print("y-1")
                             # check outline_list
                             y -= 1
-                            print("({},{})".format(y, x))
+                            if test >= 1:
+                                print("Set ({},{})".format(y, x))
                             ref_plot[y, x] = count
                             ind_list.append((y, x))
                             l_point = 6
@@ -231,7 +234,8 @@ class ColourPlot(Plot):
                             if anw == 1:
                                 y -= 1
                                 x += 1
-                                print("Set ({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 7
@@ -249,7 +253,8 @@ class ColourPlot(Plot):
                                 # check outline_list
                                 y -= 1
                                 x += 1
-                                print("({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 7
@@ -274,7 +279,8 @@ class ColourPlot(Plot):
                             # print("x+1")
                             # check outline_list
                             x += 1
-                            print("({},{})".format(y, x))
+                            if test >= 1:
+                                print("Set ({},{})".format(y, x))
                             ref_plot[y, x] = count
                             ind_list.append((y, x))
                             l_point = 8
@@ -304,7 +310,8 @@ class ColourPlot(Plot):
                             if anw == 1:
                                 y += 1
                                 x += 1
-                                print("Set ({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 1
@@ -322,7 +329,8 @@ class ColourPlot(Plot):
                                 # check outline_list
                                 y += 1
                                 x += 1
-                                print("({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 1
@@ -348,7 +356,8 @@ class ColourPlot(Plot):
                             # check outline_list
                             y += 1
 
-                            print("({},{})".format(y, x))
+                            if test >= 1:
+                                print("Set ({},{})".format(y, x))
                             ref_plot[y, x] = count
                             ind_list.append((y, x))
                             l_point = 2
@@ -378,7 +387,8 @@ class ColourPlot(Plot):
                             if anw == 1:
                                 y += 1
                                 x -= 1
-                                print("Set ({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 3
@@ -387,7 +397,7 @@ class ColourPlot(Plot):
                             if anw == 3:
                                 pass
                         else:
-                            if (y, x - 1) == ind_list[0]:
+                            if (y + 1, x - 1) == ind_list[0]:
                                 break
                             else:
                                 comp = True
@@ -395,7 +405,8 @@ class ColourPlot(Plot):
                                 # check outline_list
                                 y += 1
                                 x -= 1
-                                print("({},{})".format(y, x))
+                                if test >= 1:
+                                    print("Set ({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 ind_list.append((y, x))
                                 l_point = 3
@@ -420,7 +431,8 @@ class ColourPlot(Plot):
                             # print("x-1")
                             # check outline_list
                             x -= 1
-                            print("({},{})".format(y, x))
+                            if test >= 1:
+                                print("Set ({},{})".format(y, x))
                             ref_plot[y, x] = count
                             ind_list.append((y, x))
                             l_point = 4
@@ -449,6 +461,7 @@ class ColourPlot(Plot):
 
         return max_yx, min_yx
 
+#  not used
     def mine_sweeper_fill(self, main_plot, ref_plot, max_yx, min_yx, count):
         plot = main_plot
         col_num = self.col_num
@@ -478,49 +491,134 @@ class ColourPlot(Plot):
         col_num = self.col_num
         min_y, min_x = min_yx
         max_y, max_x = max_yx
-        flip = 0
+        l_len = len(ref_plot)
+        r_len = len(ref_plot[0])
         change = 1
+        j = 0
         bol = isinstance(ref_plot[0, 0], str)
-
+        test = 0
         if bol:
             col_num = "a"
             count = str(count)
 
         while change == 1:
             change = 0
-
+            flip = 0
+            # while flip < 2:
             for y, row in enumerate(ref_plot):
                 for x, point in enumerate(ref_plot[0]):
                     if min_x <= x <= max_x and min_y <= y <= max_y:
                         if ref_plot[y, x] == col_num:
-                            points = get_surrounding_points(plot, ref_plot, y, x)
+                            points = get_surrounding_points(plot, ref_plot, y, x, self.col_num)
 
                             if count not in points:
                                 pass
                             else:
-                                print("({},{})".format(y, x))
+                                # print("points List: {}".format(points))
+                                if test >= 1:
+                                    print("Fill Set({},{})".format(y, x))
                                 ref_plot[y, x] = count
                                 change = 1
-            if change == 0 and flip == 1:
-                reverse_plot(ref_plot, flip)
-            if change == 0 and flip == 0:
-                pass
 
-    def create_object_plot(self):
-        pass
+            while l_len >= 0:
+
+                x = r_len
+                while x >= 0:
+                    y = l_len
+
+                    # print("l_len: {} r_len: {}".format(l_len, x))
+                    if min_x <= x <= max_x and min_y <= y <= max_y:
+                        if ref_plot[y, x] == col_num:
+                            points = get_surrounding_points(plot, ref_plot, y, x, self.col_num)
+
+                            if count not in points:
+                                pass
+                            else:
+                                # print("points List: {}".format(points))
+                                if test >= 1:
+                                    print("Re Fill ({},{})".format(y, x))
+                                ref_plot[y, x] = count
+                                change = 1
+                    x -= 1
+                l_len -= 1
+
+                    # # print("Reversed")
+                    # ref_plot = reverse_plot(ref_plot, flip)
+                    # flip += 1
+
+    def set_object_count(self):
+        plot = self.ref_plot
+        num = []
+        row_list = []
+        for i, row in enumerate(plot):
+            for x, point in enumerate(row):
+                bol = isinstance(point, str)
+                if bol:
+                    point = int(point)
+                    row_list.append(point)
+
+            val = max(row_list)
+            num.append(val)
+        val = max(num)
+        print("count is : {}".format(val))
+        self.object_count = val
+
+    def create_object_sub_plot(self):
+
+        self.set_object_count()
+
+        for i in range(self.object_count):
+            print(i+1)
+            colour = self.colour
+
+            self.set_matrix_w_h()
+
+            p_row = [0] * self.matrix_width
+            plot = np.array([p_row] * self.matrix_height)
+
+            for y, row in enumerate(self.ref_plot):
+                for x, point in enumerate(row):
+
+                    if self.ref_plot[y, x] == str(i + 1):
+                        plot[y, x] = str(i + 1)
+            # print_plot(plot)
+            ob_plot = ObjectPlot(plot, i + 1, colour)
+            self.ob_matrix_list.append(ob_plot)
+
+    def print_ob_matrix_list(self):
+
+        if not self.ob_matrix_list:
+            print("Not Matrix' in list")
+        else:
+            for i in self.ob_matrix_list:
+                p_object = i
+                plot = p_object.matrix
+                ind = self.ob_matrix_list.index(i)
+                print("Object: {}".format(ind + 1))
+                for y, row in enumerate(plot):
+                    p_row = ""
+                    for x, point in enumerate(row):
+
+                        if point == 0:
+                            p_row = p_row + ". "
+                        else:
+                            p_row = p_row + str(point) + " "
+
+                    print(p_row)
 
 
 class ObjectPlot(Plot):
 
-    def __init__(self,matrix, object_number, colour):
+    def __init__(self, matrix, object_number, colour):
         super().__init__(matrix)
-        self.ob_num = object_number
+        self.ob_id = object_number
         self.out_ob = 0
         self.in_ob = 2
         self.ob_fill_all = []
         self.ob_outline = []
         self.ob_fill = []
         self.colour = colour
+        self.ob_detail_plot = []
 
 
 class StitchObjects:
@@ -565,9 +663,9 @@ def print_plot(plot):
         print(p_row)
 
 
-def get_surrounding_points(plot, out_plot, y, x):
+def get_surrounding_points(plot, out_plot, y, x, col_num):
     row_num = len(out_plot)
-    col_num = len(out_plot[0])
+    cul_num = len(out_plot[0])
     points = []
     a = y - 1
     b = y + 1
@@ -582,17 +680,17 @@ def get_surrounding_points(plot, out_plot, y, x):
             p_c = plot[y, x - 1]
             if p_a != p_c:
                 points.append(out_plot[a, c])
-            elif p_a == p_c:
-                anw = get_surrounding_points_5x5(plot, y - 1, x - 1)
+            elif p_a == p_c and p_a != col_num:  # and out_plot[a, c] == out_plot[y, x]:
+                anw = valid_position(plot, y - 1, x - 1, col_num, p_a)
                 if anw == 1:
                     points.append(out_plot[a, c])
 
-        if x < col_num - 1:
+        if x < cul_num - 1:
             p_d = plot[y, x + 1]
             if p_a != p_d:
                 points.append(out_plot[a, d])
-            elif p_a == p_d:
-                anw = get_surrounding_points_5x5(plot, y - 1, x + 1)
+            elif p_a == p_d and p_a != col_num:  # and out_plot[a, d] == out_plot[y, x]:
+                anw = valid_position(plot, y - 1, x + 1, col_num, p_a)
                 if anw == 1:
                     points.append(out_plot[a, d])
 
@@ -603,25 +701,44 @@ def get_surrounding_points(plot, out_plot, y, x):
             p_c = plot[y, x - 1]
             if p_b != p_c:
                 points.append(out_plot[b, c])
-            elif p_b == p_c:
-                anw = get_surrounding_points_5x5(plot, y + 1, x - 1)
+            elif p_b == p_c and p_b != col_num:  # and out_plot[b, c] == out_plot[y, x]:
+                anw = valid_position(plot, y + 1, x - 1, col_num, p_b)
                 if anw == 1:
                     points.append(out_plot[b, c])
 
-        if x < col_num - 1:
+        if x < cul_num - 1:
             p_c = plot[y, x + 1]
             if p_b != p_c:
                 points.append(out_plot[b, d])
-            elif p_b == p_c:
-                anw = get_surrounding_points_5x5(plot, y + 1, x + 1)
+            elif p_b == p_c and p_b != col_num:  # and out_plot[b, d] == out_plot[y, x]:
+                anw = valid_position(plot, y + 1, x + 1, col_num, p_b)
                 if anw == 1:
                     points.append(out_plot[b, d])
 
     if x > 0:
         points.append(out_plot[y, c])
-    if x < col_num - 1:
+    if x < cul_num - 1:
         points.append(out_plot[y, d])
     return points
+
+
+def valid_position(main_plot, y, x, col_num, con_col):
+    test = 0
+    if test >= 1:
+        print("Valid position check: ({},{})".format(y, x))
+        print("col_num Value: {}".format(col_num))
+    try:
+        points = get_surrounding_points_5x5(main_plot, y, x)
+        val_list, amount_list = count_list(points)
+        anw = t_w_p_logic(col_num, con_col, val_list, amount_list)
+    except:
+        print("***********************************************************************************************************")
+        print("Error Point: ({},{}) cul_num: {}".format(y, x, col_num))
+        print(val_list)
+        pass
+    else:
+
+        return anw
 
 
 def get_surrounding_points_5x5(main_plot, y, x):
@@ -637,6 +754,7 @@ def get_surrounding_points_5x5(main_plot, y, x):
     g = x - 1
     h = x + 1
 
+    points.append(main_plot[y, x])
     if y > 1:
         points.append(main_plot[a, x])
         if x > 1:
@@ -698,6 +816,11 @@ def count_list(points):
 
 
 def t_w_p_logic(col_num, con_col, val_list, amount_list):
+    test = 0
+
+    if test >= 1:
+        print("** t_w_p_logic() console debug **")
+        print("col_num: {} ".format(col_num))
 
     ind = val_list.index(con_col)
     con_amount = amount_list[ind]
@@ -705,22 +828,28 @@ def t_w_p_logic(col_num, con_col, val_list, amount_list):
     col_amount = amount_list[ind]
 
     if con_amount > col_amount:
-        print("col_num is a line")
+        if test >= 1:
+            print("T_W_P Return: 1")
+            print("** end **")
         return 1
     elif con_amount < col_amount:
-        print("col_con is the line")
+        # print("col_con is the line")
         return 2
     else:
-        print("Both are equal")
+        # print("Both are equal")
         return 3
 
 
+# not used
 def reverse_plot(plot, flip):
 
-    for y, row in enumerate(plot):
-        row = reversed(list(row))
-        plot[y] = row
-    plot = reversed(plot)
+    plot = np.flip(plot)
+    # for y, row in enumerate(plot):
+    #     print(row)
+    #     row = row.reverse()
+    #     print(row)
+    #     plot[y] = row
+    # plot = plot.reverse()
 
     if flip == 0:
         flip = 1
@@ -728,3 +857,5 @@ def reverse_plot(plot, flip):
     elif flip == 1:
         flip = 0
         print("Normal")
+
+    return plot
