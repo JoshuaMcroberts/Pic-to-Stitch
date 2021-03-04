@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import filedialog
 from tkinter import *
 # from tkinter.ttk import *
-from PIL import Image, ImageTk, ImageFilter
+from PIL import Image, ImageTk, ImageFilter, ImageOps
 import tkinter.messagebox
 import numpy as np
 import stitch_objects as so
@@ -66,32 +66,40 @@ def hoop_size_select():
 
     pop = Toplevel(second_frame)
     pop.title("Hoop Size")
-    pop_geometry(300, 200)
+    pop_geometry(300, 250)
 
     pop_frame1 = Frame(pop)
     pop_frame1.pack()
     pop_label_1 = Label(pop_frame1, text='Select a Hoop Size:')
     pop_label_1.grid(row=0, column=0, padx=20, pady=10)
-    pop_label_2 = Label(pop_frame1, text='4"x4" Hoop (101x101mm)')
+    pop_label_2 = Label(pop_frame1, text='4"x4" Hoop (110x110mm)')
     pop_label_2.grid(row=1, column=0)
-    pop_label_3 = Label(pop_frame1, text='5"x7" Hoop (127x177mm)')
+    pop_label_3 = Label(pop_frame1, text='2"x2" Hoop (50x50mm)')
     pop_label_3.grid(row=2, column=0)
-    pop_label_4 = Label(pop_frame1, text='6"x10" Hoop (152x254mm)')
+    pop_label_4 = Label(pop_frame1, text='5.5"x8" Hoop (140x200mm)')
     pop_label_4.grid(row=3, column=0)
+    pop_label_3 = Label(pop_frame1, text='5"x4" Hoop (127x110mm)')
+    pop_label_3.grid(row=4, column=0)
+    pop_label_4 = Label(pop_frame1, text='8"x8" Hoop (200x200mm)')
+    pop_label_4.grid(row=5, column=0)
     r_button_1 = Radiobutton(pop_frame1, variable=hoop_choice, value=1)
     r_button_1.grid(row=1, column=1)
     r_button_2 = Radiobutton(pop_frame1, variable=hoop_choice, value=2)
     r_button_2.grid(row=2, column=1)
     r_button_3 = Radiobutton(pop_frame1, variable=hoop_choice, value=3)
     r_button_3.grid(row=3, column=1)
+    r_button_1 = Radiobutton(pop_frame1, variable=hoop_choice, value=4)
+    r_button_1.grid(row=4, column=1)
+    r_button_2 = Radiobutton(pop_frame1, variable=hoop_choice, value=5)
+    r_button_2.grid(row=5, column=1)
 
     # separator = ttk.Separator(pop_frame1, orient='horizontal')
     # separator.place(relx=0, rely=0.4, relwidth=1, relheight=1)
     custom = IntVar()
     custom_check = Checkbutton(pop_frame1, variable=custom, command=custom_option)
-    custom_check.grid(row=4, column=1)
+    custom_check.grid(row=6, column=1)
     pop_label_7 = Label(pop_frame1, text="Custom size:")
-    pop_label_7.grid(row=4, column=0)
+    pop_label_7.grid(row=6, column=0)
 
     global pop_frame2
     pop_frame2 = Frame(pop)
@@ -176,14 +184,22 @@ def sizing_check(hoopchoice, customcheck):
     go = int()
     try:
         if hoopchoice == 1:
-            hoop_width = 101
-            hoop_height = 101
+            hoop_width = 110
+            hoop_height = 110
 
         elif hoopchoice == 2:
             hoop_width = 127
             hoop_height = 177
 
         elif hoopchoice == 3:
+            hoop_width = 152
+            hoop_height = 254
+
+        elif hoopchoice == 4:
+            hoop_width = 127
+            hoop_height = 177
+
+        elif hoopchoice == 5:
             hoop_width = 152
             hoop_height = 254
 
@@ -213,6 +229,7 @@ def sizing_check(hoopchoice, customcheck):
                 img_w = int(enter_width.get())
                 go = 1
                 print("option 3")
+
             else:
                 go = 0
                 raise ValueError3
@@ -316,7 +333,7 @@ def custom_option():
         pop_label_8 = Label(pop_frame2, text="Lock Aspect Ratio:")
         pop_label_8.grid(row=7, column=0)
         pop_frame2.config()
-        pop_geometry(300, 270)
+        pop_geometry(300, 320)
 
     elif checked == 0:
         print("No Custom")
@@ -1067,32 +1084,73 @@ def create_image_plot():
                             ind += 1
                             plot[y, x] = ind
     print_plot(plot)
+    test = 1
 
     main_plot = so.Plot(plot)
     main_plot.set_num_list(pixel_list)
     main_plot.create_sub_plot()
     main_plot.print_col_matrix_list()
-    # col_obj_list = main_plot.col_matrix_list
-    # count = 1
+
+    if test == 0:
+        col_obj_list = main_plot.col_matrix_list
+        count = 1
+
+        for i in col_obj_list:
+            print("count: {}".format(count))
+            col_obj = i
+
+            col_obj.process_colour_plot(main_plot.matrix)
+
+            col_obj.create_object_sub_plot()
+
+            count += 1
+
+        for i in col_obj_list:
+
+            i.print_ob_matrix_list()
+
+    if test == 1:
+
+        col_obj = main_plot.col_matrix_list[1]
+
+        col_obj.process_colour_plot(main_plot.matrix)
+
+        col_obj.create_object_sub_plot()
+
+        col_obj.print_ob_matrix_list()
+
+        col_sub_obj = col_obj.ob_matrix_list[0]
+
+        so.print_plot(col_sub_obj.ref_plot)
+
+        col_sub_obj.process_colour_plot(main_plot.matrix)
+
+        so.print_plot_advanced(col_sub_obj.ref_plot)
+
+        col_sub_obj.create_detail_sub_plot(main_plot.matrix)
+
+        col_sub_obj.print_ob_part_list()
+
+        out_image = create_section_image(col_sub_obj.matrix, images[1])
+
+        col_sub_obj.section_image = out_image
+
+        images[1] = out_image
+
+        display_cy_image()
+        # add image to object
+
+
+
+
 
     # for i in col_obj_list:
-    #     print("count: {}".format(count))
-    #     col_obj = i
+    #     ob_list = i.ob_matrix_list
     #
-    #     col_obj.process_colour_plot(main_plot.matrix)
+    #     for j in ob_list:
+    #         num_obj = j
     #
-    #     col_obj.create_object_sub_plot()
-    #
-    #     count += 1
-
-    col_obj = main_plot.col_matrix_list[0]
-
-    col_obj.process_colour_plot(main_plot.matrix)
-
-    col_obj.create_object_sub_plot()
-
-    # for i in col_obj_list:
-    #     i.print_ob_matrix_list()
+    #         num_obj.process_colour_plot()
 
 
 # new
@@ -2683,19 +2741,27 @@ def image_resize(hoop_size, option, new_w, new_h):
 
         if hoop_size == 1:
             print('4x4" hoop')
-            w = 400
-            h = 400
+            set_w = 415
+            set_h = 415
         elif hoop_size == 2:
-            print('5x7" hoop')
-            w = 480
-            h = 672
+            print('2x2" hoop')
+            set_w = 188
+            set_h = 188
         elif hoop_size == 3:
-            print('6x10" hoop')
-            w = 576
-            h = 960
-        else:  # never used
-            w = 1
-            h = 1
+            print('5.5x8" hoop')
+            set_w = 529
+            set_h = 756
+        elif hoop_size == 4:
+            print('5x4" hoop')
+            set_w = 476
+            set_h = 415
+        elif hoop_size == 5:
+            print('8x8" hoop')
+            set_w = 756
+            set_h = 756
+        else:
+            set_w = 1
+            set_h = 1
 
         if img_w > w:
             x = img_w / w
@@ -2740,7 +2806,7 @@ def image_resize(hoop_size, option, new_w, new_h):
     display_og_image()
     display_cy_image()
 
-
+# not used
 def auto_size(size_option):
     # Message box
     print("resize ", size_option)
@@ -2749,16 +2815,24 @@ def auto_size(size_option):
 
     if size_option == 1:
         print('4x4" hoop')
-        set_w = 400
-        set_h = 400
+        set_w = 415
+        set_h = 415
     elif size_option == 2:
-        print('5x7" hoop')
-        set_w = 480
-        set_h = 672
+        print('2x2" hoop')
+        set_w = 188
+        set_h = 188
     elif size_option == 3:
-        print('6x10" hoop')
-        set_w = 576
-        set_h = 960
+        print('5.5x8" hoop')
+        set_w = 529
+        set_h = 756
+    elif size_option == 4:
+        print('5x4" hoop')
+        set_w = 476
+        set_h = 415
+    elif size_option == 5:
+        print('8x8" hoop')
+        set_w = 756
+        set_h = 756
     else:
         set_w = 1
         set_h = 1
@@ -2781,6 +2855,58 @@ def auto_size(size_option):
 
     display_og_image()
     display_cy_image()
+
+
+def create_section_image(ref_plot, image):
+    image_array = np.array(image)
+    grey_image = ImageOps.grayscale(image)
+    n_g_image = np.array(grey_image)
+
+    p_row = [(0, 0, 0)] * len(ref_plot[0])
+    g_image = np.array([p_row] * len(ref_plot))
+
+    for y, row in enumerate(n_g_image):
+        for x, pixel in enumerate(row):
+            val = pixel
+            g_image[y, x] = tuple((val, val, val))
+
+    for y, row in enumerate(ref_plot):
+        for x, point in enumerate(row):
+            if point == "1":
+
+                points, yx_points = so.get_surrounding_points_5x5_vary(ref_plot, y, x)
+
+                for i, val in enumerate(points):
+
+                    if val == "1":
+                        pass
+                    else:
+                        y, x = yx_points[i]
+                        g_image[y, x] = image_array[y, x]
+
+    out_image = Image.fromarray(g_image, "RGB")
+    print(g_image)
+    return out_image
+
+    #     if x + 1 < len(ref_plot):
+    #         if ref_plot[y, x + 1] == "1":
+    #             # highlight colour
+    #             pass
+    #
+    #     if x + 2 < len(ref_plot):
+    #         if ref_plot[y, x + 2] == "1":
+    #             pass
+    #
+    #     if x + 3 < len(ref_plot):
+    #         if ref_plot[y, x + 3] == "1":
+    #             pass
+    #
+    #
+    #     # greyscale
+    #     pass
+    #
+    # elif point == "1":
+    #     pass
 
 
 def display_image(image):

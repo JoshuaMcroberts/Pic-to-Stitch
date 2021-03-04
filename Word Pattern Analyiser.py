@@ -43,7 +43,7 @@ for x in content_list:
     new_string = x + " " + pattern_word
     new_content_list.append(new_string)
 
-new_file = open("C:/Users/Joshu/Desktop/"+ filename + " Patterns.txt","w+")
+new_file = open("C:/Users/Joshu/Desktop/" + filename + " Patterns.txt", "w+")
 
 for x in new_content_list:
     new_file.write(x + "\n")
