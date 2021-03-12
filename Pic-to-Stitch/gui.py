@@ -5,6 +5,7 @@ from tkinter import *
 from PIL import Image, ImageTk, ImageFilter, ImageOps
 import tkinter.messagebox
 import numpy as np
+import plot_objects as po
 import stitch_objects as so
 
 # list
@@ -361,6 +362,16 @@ def print_plot(plot):
         #     print(x,)
 
 
+def print_pixel_plot(plot):
+
+    for y, row in enumerate(plot):
+        p_row = ""
+        for x, point in enumerate(row):
+
+            p_row = p_row + str(point) + " "
+
+        print(p_row)
+
 # new
 def plot_check(plot):
     for y in plot:
@@ -400,6 +411,7 @@ def check_fill(image_copy, plot, s_object, colour_list):
         for x, point in enumerate(row):
             if x + 1 <= max_x:
                 n_point = row[x + 1]
+
             if x + 1 > max_x or x < min_x or y > max_y or y < min_y:
                 pass
 
@@ -1055,6 +1067,7 @@ def object_create():
 
 # new - used
 def create_image_plot():
+
     image = images[1]
     pixel_matrix = np.array(image)
     image_copy = pixel_matrix.copy()
@@ -1084,9 +1097,9 @@ def create_image_plot():
                             ind += 1
                             plot[y, x] = ind
     print_plot(plot)
-    test = 1
+    test = 0
 
-    main_plot = so.Plot(plot)
+    main_plot = po.Plot(plot)
     main_plot.set_num_list(pixel_list)
     main_plot.create_sub_plot()
     main_plot.print_col_matrix_list()
@@ -1103,54 +1116,49 @@ def create_image_plot():
 
             col_obj.create_object_sub_plot()
 
+            for j in col_obj.ob_matrix_list:
+                col_sub_obj = j
+
+                col_sub_obj.process_matrix()
+
+                col_sub_obj.create_pathing_lists()
+
+                objects.append(col_sub_obj)
+
             count += 1
-
-        for i in col_obj_list:
-
-            i.print_ob_matrix_list()
 
     if test == 1:
 
-        col_obj = main_plot.col_matrix_list[1]
+        col_obj = main_plot.col_matrix_list[0]
 
         col_obj.process_colour_plot(main_plot.matrix)
-
         col_obj.create_object_sub_plot()
-
-        col_obj.print_ob_matrix_list()
+        # col_obj.print_ob_matrix_list()
 
         col_sub_obj = col_obj.ob_matrix_list[0]
+        po.print_plot(col_sub_obj.ref_plot)
 
-        so.print_plot(col_sub_obj.ref_plot)
+        # not needed?
+        # col_sub_obj.process_colour_plot(main_plot.matrix)
+        po.print_plot_advanced(col_sub_obj.ref_plot)
 
-        col_sub_obj.process_colour_plot(main_plot.matrix)
+        # not needed?
+        # col_sub_obj.create_pathing_lists()
+        # col_sub_obj.print_ob_part_list()
+        col_sub_obj.running_stitch_fill()
+        # col_sub_obj.fill_stitch_fill()
 
-        so.print_plot_advanced(col_sub_obj.ref_plot)
-
-        col_sub_obj.create_detail_sub_plot(main_plot.matrix)
-
-        col_sub_obj.print_ob_part_list()
-
+        po.stitch_test(col_sub_obj.matrix, col_sub_obj.ob_run_fill)
         out_image = create_section_image(col_sub_obj.matrix, images[1])
-
         col_sub_obj.section_image = out_image
-
         images[1] = out_image
-
         display_cy_image()
         # add image to object
 
+    for i in objects:
+        matrix = i.matrix
 
-
-
-
-    # for i in col_obj_list:
-    #     ob_list = i.ob_matrix_list
-    #
-    #     for j in ob_list:
-    #         num_obj = j
-    #
-    #         num_obj.process_colour_plot()
+        po.print_plot(matrix)
 
 
 # new
@@ -1495,26 +1503,7 @@ def image_object1():
             if last_pix != 4:
                 last_pix = 8
 
-        # a = check_index_list(ind_list, y, x)
         i += 1
-
-    # start_val = 0
-    # for y in plot:
-    #     for x in y:
-    #
-    #         co = x
-    #
-    #         if co == start_val:
-    #             for i in col_val_list:
-    #
-    #         if co == 0 and start_val != 0:
-    #             col_val_list.append((y, x))
-    #
-    #         elif co != 0:
-    #             start_val = co
-    #
-    #         else:
-    #             print("x-1")
 
     print_plot(plot)
 
@@ -2219,7 +2208,7 @@ def get_colour_diff(pixels, pixel):
 
     return dif_val
 
-
+#not used
 def background_detect():  # not finished
     pixel_list = []
     colour_count = []
@@ -2626,28 +2615,21 @@ def auto_colour_step():
     levels = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
     if len(images) == 2:
         global pix
-        pix = (0,0,0)
+        pix = (0, 0, 0)
         for x in levels:
-            # print("X: ", x)
             floors = x
-            pixel_brightness = []
             image = images[1]
 
             pixel_matrix = np.array(image)
             image_copy = pixel_matrix.copy()
-            # for i, row in enumerate(pixel_matrix):
-            #     pixel = pix
-            #     for j, pix in enumerate(row):
-            #
-            #        value = pix[0] + pix[1] + pix[2]
-            #         print(value)
-            #         pixel_brightness.append(value)
-            #
-            # darkest = min(pixel_brightness)
 
             for i, row in enumerate(pixel_matrix):
-                pixel = pix
+
                 for j, pix in enumerate(row):
+
+                    if len(pix) == 4:
+                        r, g, b, t = pix
+                        pix = (r, g, b)
 
                     if pix[0] > 230 and pix[1] > 230 and pix[2] > 230:  # Near white equals white
                         pix = (255, 255, 255)
@@ -2666,14 +2648,6 @@ def auto_colour_step():
                         pix = (0, 0, 0)
 
                     image_copy[i, j] = floor_step(pix, floors)
-
-
-
-
-                # if not i % 100:
-                #     print("Row Number {}", format(i))
-                #     print("Pixel value: ", format(pixel))
-                #     print("Pixel Value: ", format(pix))
 
             temp = Image.fromarray(image_copy, "RGB")
             temp_images.append(temp)
@@ -2806,6 +2780,7 @@ def image_resize(hoop_size, option, new_w, new_h):
     display_og_image()
     display_cy_image()
 
+
 # not used
 def auto_size(size_option):
     # Message box
@@ -2858,34 +2833,62 @@ def auto_size(size_option):
 
 
 def create_section_image(ref_plot, image):
+    test = 0
+    ref_plot = ref_plot.copy()
     image_array = np.array(image)
-    grey_image = ImageOps.grayscale(image)
+    grey_image = image.convert('LA')
     n_g_image = np.array(grey_image)
-
-    p_row = [(0, 0, 0)] * len(ref_plot[0])
-    g_image = np.array([p_row] * len(ref_plot))
+    # print_plot(n_g_image)
+    # p_row = [0] * len(ref_plot[0])
+    # g_image = np.array([p_row] * len(ref_plot))
+    g_image = image_array.copy()
+    print("REFPLOT")
+    po.print_plot(ref_plot)
 
     for y, row in enumerate(n_g_image):
         for x, pixel in enumerate(row):
-            val = pixel
-            g_image[y, x] = tuple((val, val, val))
+
+            val, null = pixel
+
+            if test == 1:
+                print("Value: {} Null: {}".format(val, null))
+
+            if val == 255:
+                val = val - 50
+            elif val == 0:
+                val = val + 70
+
+            tup = (val, val, val)
+            g_image[y, x] = tup
+            if test == 1:
+                print("pixel value: {} RBG Pixel:{}".format(pixel, g_image[y, x]))
 
     for y, row in enumerate(ref_plot):
-        for x, point in enumerate(row):
-            if point == "1":
 
-                points, yx_points = so.get_surrounding_points_5x5_vary(ref_plot, y, x)
+        for x, point in enumerate(row):
+            # print(point.dtype)
+            if point == 1:
+                # print(" point == 1")
+
+                points, yx_points = po.get_surrounding_points_5x5(ref_plot, y, x)
 
                 for i, val in enumerate(points):
+                    # ind = points.index(i)
 
-                    if val == "1":
-                        pass
-                    else:
-                        y, x = yx_points[i]
+                    if val == 1:
                         g_image[y, x] = image_array[y, x]
 
+                    # edge highlight not working yet
+                    # elif val == 2:
+                    #     pass
+                    # else:
+                    #     y, x = yx_points[i]
+                    #     # ref_plot[y, x] = 2
+                    #     g_image[y, x] = (216, 0, 255)
+
     out_image = Image.fromarray(g_image, "RGB")
-    print(g_image)
+    # print_plot(g_image)
+    # print_plot(image_array)
     return out_image
 
     #     if x + 1 < len(ref_plot):
@@ -2992,7 +2995,7 @@ menu.add_cascade(label="File", menu=sub_menu)
 sub_menu.add_command(label="New Project...", command=image_object)
 sub_menu.add_command(label="Open Project...", command=delete_list)
 sub_menu.add_separator()
-sub_menu.add_command(label="Exit", command=object_create)
+sub_menu.add_command(label="Exit")
 edit_menu = Menu(menu)
 menu.add_cascade(label="Edit", menu=edit_menu)
 edit_menu.add_command(label="Redo", command=redo)
