@@ -198,7 +198,7 @@ class ObjectPlot(ColourPlot):
         self.section_image = int()
 
     def process_colour_plot(self, main_plot):
-        test = 1
+        test = 0
         ref_plot = self.ref_plot
         col_num = self.col_num
         col_letter_list = ["b", "a"]
@@ -250,17 +250,16 @@ class ObjectPlot(ColourPlot):
                     print_plot_advanced(ref_plot)
 
     def create_pathing_lists(self):
-        test = 1
-        ref_plot = self.ref_plot.copy()
-        p_row = ["0"] * len(ref_plot[0])
-        blank_plot = np.array([p_row] * len(ref_plot))
-        plot = blank_plot.copy()
+        test = 0
+        plot = self.matrix.copy()
+
+        new_plot = plot.copy()
         b_val = 0
 
-        for y, row in enumerate(self.ref_plot):
+        for y, row in enumerate(plot):
             for x, point in enumerate(row):
-                if point == "1":
-                    out = get_object_outline(ref_plot, plot, (y, x), 8, "1", "1")
+                if point == 1:
+                    out = get_object_outline(plot, new_plot, (y, x), 8, 1, 1)
                     ind_list = out[2]
                     self.ob_outline = ind_list  # Outline co-or list
                     b_val = 1
@@ -322,7 +321,7 @@ class ObjectPlot(ColourPlot):
                 break
 
     def fill_stitch_fill(self):
-        test = 1
+        test = 0
         plot = self.matrix.copy()
         print("fill stitch fill")
         print_plot_advanced(plot)
@@ -394,8 +393,11 @@ class ObjectPlot(ColourPlot):
 
         print("Start Val: {}".format(start_val))
         print("end Point: {}".format(end_p))
-        
-        goto, ind_list = move_to(plot, start_val, end_p, 2, 1, ind_list)
+
+        if start_val == end_p:
+            pass
+        else:
+            goto, ind_list = move_to(plot, start_val, end_p, 2, 1, ind_list)
 
         ind_list = get_object_fill_stitch(template, plot, start_val, max_yx, min_yx, ind_list)
 
@@ -425,7 +427,7 @@ def stitch_test(plot, ind_list):
 
 
 def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_num):
-    test = 2
+    test = 0
 
     plot = main_plot
     y, x = start_yx
@@ -796,10 +798,11 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
     if bol:
         set_to = str(set_to)
 
-    ref_plot[y, x] = set_to  # setting start point
-    ind_list.append((y, x))  # setting start point in list
+    if ref_plot[y, x] == 1:
+        ref_plot[y, x] = set_to  # setting start point
+        ind_list.append((y, x))  # setting start point in list
 
-    print("First Set ({},{})".format(y, x))
+        print("First Set ({},{})".format(y, x))
 
     print("plot")
     print_plot(plot)
@@ -817,37 +820,6 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                 n_point = ref_plot[y - 1, x - 1]    # set this point
 
                 if n_point == col_num:       # check against colour_number
-                    # pon_a = plot[y, x - 1]  # set point_a for diagonal test
-                    # pon_b = plot[y - 1, x]  # set point_b for diagonal test
-                    #
-                    # if pon_a == pon_b:  # check if diagonal move is contested
-                    #
-                    #     print("1 can't go equal points pon_a: {} pon_b: {}".format(pon_a, pon_b))
-                    #     # get surrounding points for comparison
-                    #     points, yx_points = get_surrounding_points_5x5(plot, y - 1, x - 1)
-                    #     # count the amount of each colour in the surrounding points
-                    #     val_list, amount_list = count_list(points)
-                    #     # check to see if gathered data means that current colour is a line or shape
-                    #     anw = t_w_p_logic(col_num, pon_a, val_list, amount_list)
-                    #
-                    #     if anw == 1:  # if colour is a line
-                    #         y -= 1  # set y to y - 1
-                    #         x -= 1  # set x to x - 1
-                    #
-                    #         if test == 1 or test == 2:   # testing console comments
-                    #             print("Che 1 Set ({},{})".format(y, x))
-                    #
-                    #         ref_plot[y, x] = set_to     # set point
-                    #         ind_list.append((y, x))     # add point to list
-                    #         loop = 0        # reset loop check value
-                    #         l_point = 5     # set loop start for next point
-                    #
-                    #     if anw == 2:  # if colour is a shape
-                    #         pass
-                    #     if anw == 3:  # if all colours where shapes
-                    #         pass
-                    #
-                    # else:   # if diagonal not contested
 
                     y -= 1  # set y to y - 1
                     x -= 1  # set x to x - 1
@@ -895,37 +867,6 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                 n_point = ref_plot[y - 1, x + 1]    # set this point
 
                 if n_point == col_num:      # check against colour_number
-                    # pon_a = plot[y, x + 1]  # set point_a for diagonal test
-                    # pon_b = plot[y - 1, x]  # set point_b for diagonal test
-                    #
-                    # if pon_a == pon_b:  # check if diagonal move is contested
-                    #
-                    #     print("3 can't go")
-                    #     # get surrounding points for comparison
-                    #     points, yx_points = get_surrounding_points_5x5(plot, y - 1, x + 1)
-                    #     # count the amount of each colour in the surrounding points
-                    #     val_list, amount_list = count_list(points)
-                    #     # check to see if gathered data means that current colour is a line or shape
-                    #     anw = t_w_p_logic(col_num, pon_a, val_list, amount_list)
-                    #
-                    #     if anw == 1:    # if colour is a line
-                    #         y -= 1      # set y to y - 1
-                    #         x += 1      # set x to x - 1
-                    #
-                    #         if test == 1 or test == 2:   # testing console comments
-                    #             print("Che 3 Set ({},{})".format(y, x))
-                    #
-                    #         ref_plot[y, x] = set_to     # set point
-                    #         ind_list.append((y, x))     # add point to list
-                    #         loop = 0        # reset loop check value
-                    #         l_point = 7     # set loop start for next point
-                    #
-                    #     if anw == 2:    # if colour is a shape
-                    #         pass
-                    #     if anw == 3:    # if all colours where shapes
-                    #         pass
-                    #
-                    # else:   # if diagonal not contested
 
                     y -= 1  # set y to y - 1
                     x += 1  # set x to x + 1
@@ -973,37 +914,6 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                 n_point = ref_plot[y + 1, x + 1]    # set this point
 
                 if n_point == col_num:      # check against colour_number
-                    # pon_a = plot[y, x + 1]  # set point_a for diagonal test
-                    # pon_b = plot[y + 1, x]  # set point_b for diagonal test
-                    #
-                    # if pon_a == pon_b:  # check if diagonal move is contested
-                    #
-                    #     print("5 can't go equal points pon_a: {} pon_b: {}".format(pon_a, pon_b))
-                    #     # get surrounding points for comparison
-                    #     points, yx_points = get_surrounding_points_5x5(plot, y + 1, x + 1)
-                    #     # count the amount of each colour in the surrounding points
-                    #     val_list, amount_list = count_list(points)
-                    #     # check to see if gathered data means that current colour is a line or shape
-                    #     anw = t_w_p_logic(col_num, pon_a, val_list, amount_list)
-                    #
-                    #     if anw == 1:    # if colour is a line
-                    #         y += 1  # set y to y + 1
-                    #         x += 1  # set x to x + 1
-                    #
-                    #         if test == 1 or test == 2:   # testing console comments
-                    #             print("Che 5 Set ({},{})".format(y, x))
-                    #
-                    #         ref_plot[y, x] = set_to     # set point
-                    #         ind_list.append((y, x))     # add point to list
-                    #         loop = 0        # reset loop check value
-                    #         l_point = 1     # set loop start for next point
-                    #
-                    #     if anw == 2:    # if colour is a shape
-                    #         pass
-                    #     if anw == 3:    # if all colours where shapes
-                    #         pass
-                    #
-                    # else:   # if diagonal not contested
 
                     y += 1  # set y to y + 1
                     x += 1  # set x to x + 1
@@ -1051,36 +961,6 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                 n_point = ref_plot[y + 1, x - 1]     # set this point
 
                 if n_point == col_num:      # check against colour_number
-                    # pon_a = plot[y, x - 1]  # set point_a for diagonal test
-                    # pon_b = plot[y + 1, x]  # set point_b for diagonal test
-                    #
-                    # if pon_a == pon_b:   # check if diagonal move is contested
-                    #
-                    #     print("7 can't go")
-                    #     # get surrounding points for comparison
-                    #     points, yx_points = get_surrounding_points_5x5(plot, y + 1, x - 1)
-                    #     # count the amount of each colour in the surrounding points
-                    #     val_list, amount_list = count_list(points)
-                    #     # check to see if gathered data means that current colour is a line or shape
-                    #     anw = t_w_p_logic(col_num, pon_a, val_list, amount_list)
-                    #
-                    #     if anw == 1:    # if colour is a line
-                    #         y += 1  # set y to y + 1
-                    #         x -= 1  # set x to x - 1
-                    #
-                    #         if test == 1 or test == 2:   # testing console comments
-                    #             print("Che 7 Set ({},{})".format(y, x))
-                    #
-                    #         ref_plot[y, x] = set_to     # set point
-                    #         ind_list.append((y, x))     # add point to list
-                    #         loop = 0        # reset loop check value
-                    #         l_point = 3     # set loop start for next point
-                    #
-                    #     if anw == 2:    # if colour is a shape
-                    #         pass
-                    #     if anw == 3:    # if all colours where shapes
-                    #         pass
-                    # else:   # if diagonal not contested
 
                     y += 1  # set y to y + 1
                     x -= 1  # set x to x - 1
@@ -1144,7 +1024,7 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
 
 
 def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
-    test = 2
+    test = 0
 
     s_y, s_x = start_yx
     y = s_y
@@ -1189,13 +1069,17 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
             c = y - 1
 
             # x + 1 is larger than shape
+            print(max_x," ", b)
             if b > max_x:
-                anw, yx = check_for_number(template, "2")
+                new_plot = compare_plots(plot_c, 1, template, "2")
+                print_plot(new_plot)
+                anw, yx = check_for_number(new_plot, "1")
 
                 if anw:
                     yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)
                     y, x = yx
                     direct = 1
+
                 else:
                     ext = 1  # if false, all areas have been visited, exit while loop
 
@@ -1228,7 +1112,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     j = 0
                     while j != 1:   # to the end of the line
 
-                        if template[y, x + 1] == "1":
+                        if x + 1 < len(template[0]) and template[y, x + 1] == "1":
                             break
                         elif y + 1 < len(plot_c) and plot_c[y + 1, x] != 0:
                             y = y + 1
@@ -1319,10 +1203,25 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
             else:
                 if test == 1:
                     print("Else")
-                y = y - 1
-                ind_list.append((y, x))
-                if test == 2:
-                    print("Else  Set: ({},{})". format(y, x))
+
+                if y - 1 >= 0 and plot_c[y-1, x] == 1:
+
+                    y = y - 1
+                    ind_list.append((y, x))
+                    if test == 2:
+                        print("Else  Set: ({},{})". format(y, x))
+                else:
+                    print("Else  Right 1 move_to")
+                    new_plot = compare_plots(plot_c, 1, template, "2")
+                    print_plot(new_plot)
+                    anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
+
+                    if anw:  # if true
+                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        y, x = yx
+                        direct = 1
+                    else:
+                        ext = 1  # if false, all areas have been visited, exit while loop
 
         # Up
         elif direct == 3:
@@ -1381,8 +1280,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     j = 0
                     while j != 1:   # to the end of the line
 
-                        if template[y, x + 1] == "1":
-                           break
+                        if x + 1 < len(template[0]) and template[y, x + 1] == "1":
+                            break
                         elif y - 1 >= 0 and plot_c[y - 1, x] != 0:
                             y = y - 1
                             ind_list.append((y, x))
@@ -1466,10 +1365,24 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     # look at the nest 2's column
 
             else:
-                y = y + 1
-                ind_list.append((y, x))
-                if test == 2:
-                    print("else Set: ({},{})". format(y, x))
+                if y + 1 < len(plot_c) and plot_c[y + 1, x] == 1:
+
+                    y = y + 1
+                    ind_list.append((y, x))
+                    if test == 2:
+                        print("Else  Set: ({},{})".format(y, x))
+                else:
+                    print("Else  Right 2 move_to")
+                    new_plot = compare_plots(plot_c, 1, template, "2")
+                    print_plot(new_plot)
+                    anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
+
+                    if anw:  # if true
+                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        y, x = yx
+                        direct = 1
+                    else:
+                        ext = 1  # if false, all areas have been visited, exit while loop
 
     plot_no_change = plot.copy()
 
@@ -1619,7 +1532,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
             d = x - 1
 
             # y + 1 is larger than shape
-            if a > max_y or x - 1 >= 0 and plot_c[a, d] == 2 or plot_c[a, x] == 2 or x + 1 >= len(plot_c[0]) and  plot_c[a, b] == 2:
+            if a > max_y or x - 1 >= 0 and plot_c[a, d] == 2 or plot_c[a, x] == 2 or x + 1 < len(plot_c[0]) and plot_c[a, b] == 2:
                 anw, yx = check_for_number(plot_c, 1)
 
                 if anw:
@@ -1718,7 +1631,7 @@ def compare_plots(plot1, val1, plot2, val2):
 
 
 def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
-    test = 2
+    test = 0
     col_num = look_for  # value 1
     ref_plot = main_plot.copy()
     plot = main_plot.copy()    # untouched plot with just 0's and 1's
@@ -1755,8 +1668,10 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     if bol:
         set_to = str(set_to)
 
-    # ** many already have been set in previous function/method
+    if start_yx == goto_yx:
+        return goto_yx, ind_list
 
+    # ** many already have been set in previous function/method
     plot[y, x] = set_to  # setting start point
     ind_list.append((y, x))  # setting start point in list already in list from previous
     while ext != 1:
@@ -2375,6 +2290,9 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
 def back_track(ind_list, plot):
     length = len(ind_list)
+    # if len(ind_list)-1 <= 0:
+    #     pass
+    # else:
     del ind_list[-1]
 
     for i in range(length):

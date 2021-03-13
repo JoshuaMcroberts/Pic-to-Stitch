@@ -5,6 +5,8 @@ from tkinter import *
 from PIL import Image, ImageTk, ImageFilter, ImageOps
 import tkinter.messagebox
 import numpy as np
+from prompt_toolkit import selection
+
 import plot_objects as po
 import stitch_objects as so
 
@@ -1120,12 +1122,19 @@ def create_image_plot():
                 col_sub_obj = j
 
                 col_sub_obj.process_matrix()
-
                 col_sub_obj.create_pathing_lists()
+
+                out_image = create_section_image(col_sub_obj.matrix, images[1])
+                col_sub_obj.section_image = out_image
 
                 objects.append(col_sub_obj)
 
             count += 1
+
+            count = 1
+        for ob in objects:
+            ob.ob_id = count
+            count +=1
 
     if test == 1:
 
@@ -1154,12 +1163,31 @@ def create_image_plot():
         images[1] = out_image
         display_cy_image()
         # add image to object
+    id = 1
 
     for i in objects:
+
         matrix = i.matrix
+        stitch_list = []
+        stitch_list.append(i.ob_outline)
+        stitch_list.append(i.ob_run_fill)
+        stitch_list.append(i.ob_fill_all)
 
-        po.print_plot(matrix)
+        for j in stitch_list:
+            if count == 0:
+                print("Object {} Outline".format(id))
+            elif count == 1:
+                print("Object {} "
+                      "Running Fill")
+            elif count == 2:
+                print("Full fill")
+            po.stitch_test(matrix, j)
+            if count < 2:
+                count += 1
 
+        id += 1
+        # po.print_plot(matrix)
+    stitch_type_pop()
 
 # new
 def image_object():
@@ -1529,6 +1557,200 @@ def auto_load():
     display_cy_image()
 
 
+def stitch_type_pop():
+    global pop
+    global section_image_list
+    section_image_list = []
+    checkbox_list = []
+    stitch_drop_list = []
+    len_drop_list = []
+    order_drop_list = []
+
+    length = len(objects)
+    pop = Toplevel(second_frame)
+    pop.title("Colour Sample")
+    pop_geometry(700, 50 + 35 * length)
+    count_list = []
+    pop_frame1 = Frame(pop)
+    pop_frame1.pack()
+    count = 1
+
+    pop_label_1 = Label(pop_frame1, text='Object ID')
+    pop_label_1.grid(row=0, column=0, padx=5, pady=5)
+    pop_label_1 = Label(pop_frame1, text='Colour')
+    pop_label_1.grid(row=0, column=1, padx=5)
+    pop_label_1 = Label(pop_frame1, text='Stitch Type')
+    pop_label_1.grid(row=0, column=2, padx=5)
+    pop_label_1 = Label(pop_frame1, text='Max Stitch Length')
+    pop_label_1.grid(row=0, column=3, padx=5)
+    pop_label_1 = Label(pop_frame1, text='Order')
+    pop_label_1.grid(row=0, column=4, padx=5)
+    pop_label_1 = Label(pop_frame1, text='Remove Object')
+    pop_label_1.grid(row=0, column=5, padx=5)
+    pop_label_1 = Label(pop_frame1, text='Highlight')
+    pop_label_1.grid(row=0, column=6, padx=5)
+    len_count = 0
+
+    for ob in objects:
+
+        # object ID = if not set then set, then display
+        ob_id = ob.ob_id
+        pop_label_1 = Label(pop_frame1, text=ob_id)
+        pop_label_1.grid(row=count, column=0, padx=5)
+
+        # object colour = get then display
+        col = ob.colour
+        hex_col = rgb_to_hex(col)
+        pop_label_1 = Label(pop_frame1, width=5, bg=hex_col)
+        pop_label_1.grid(row=count, column=1, padx=5, pady=5)
+
+        # stitch type drop down = create
+        select = StringVar()
+        select.set("Stitch Outline")
+        stitch_drop = OptionMenu(pop_frame1, select, "Stitch Outline", "Running Stitch Fill", "Fill Stitch")
+        stitch_drop.config(width=18)
+        stitch_drop.grid(row=count, column=2,  padx=5)
+        stitch_drop_list.append(select)
+
+        # max stitch len dropdown = create
+        lengths = ["0.3mm", "0.5mm", "1.0mm", "1.2mm", "1.5mm", "2.0mm", "2.5mm", "3.0mm", "3.5mm", "4.0mm", "4.5mm",
+                   "5.0mm"]
+        stitch_len = StringVar()
+        stitch_len.set("0.3mm")
+        len_drop = OptionMenu(pop_frame1, stitch_len, *lengths)
+        len_drop.config(width=5)
+        len_drop.grid(row=count, column=3, padx=5)
+        len_drop_list.append(stitch_len)
+
+        # stitch order  = set then display
+        object_count = []
+        for i in enumerate(objects):
+            object_count.append(i[0]+1)
+
+        order = IntVar()
+        order.set(count)
+        order_drop = OptionMenu(pop_frame1, order, *object_count)
+        order_drop.config(width=5)
+        order_drop.grid(row=count, column=4, padx=5)
+        order_drop_list.append(order)
+
+        # remove
+        checked = IntVar()
+        checkbox = Checkbutton(pop_frame1, variable=checked)
+        checkbox.grid(row=count, column=5, padx=5)
+        checkbox_list.append(checked)
+
+        # display section image
+        section_image_list.append(ob.section_image)
+        var = str(count - 1)
+        print(var)
+        # exec("display_section_image(section_image_list[" + var + "])")
+        exec("pop_button = Button(pop_frame1, text='Display', command=lambda: display_section_image(section_image_list["
+             +"" + var + "]))\npop_button.grid(row=count, column=6, padx=5)")
+        count += 1
+
+    for i in range(length + 1):
+        count_list.append(len_count)
+        len_count += 1
+
+    hi = 0
+    if hi == 23:
+
+        for pixel in pixel_list:
+
+            ind = pixel_list.index(pixel)
+            index = "index_" + str(count - 1)
+            index_list.append(index)
+
+            exec(index + ".set(0)")
+
+            hex_colour = rgb_to_hex(pixel)
+
+            pop_label = Label(pop_frame1, text=count)
+            pop_label.grid(row=count, column=0)
+
+            colour_label = Label(pop_frame1, width=20, bg=hex_colour)
+            colour_label.grid(row=count, pady=5, column=1)
+
+            pix_count = colour_count[ind]
+
+            per = pix_count / total_pix
+            per = per * 100
+            per_text = "{:.1f}%".format(per)
+            per_label = Label(pop_frame1, text=per_text)
+            per_label.grid(row=count, column=2, padx=10)
+
+            exec("drop = OptionMenu(pop_frame1," + index + ", *count_list)")
+            exec("drop.grid(row=count, column=3)")
+
+            count += 1
+
+    pop_button = Button(pop_frame1, text="OK", command=lambda: [pop.destroy()])
+    pop_button.grid(row=count + 1, column=4, pady=10, columnspan=2)
+    pop_button = Button(pop_frame1, text="Print", command=lambda: [print_lists(stitch_drop_list, len_drop_list, checkbox_list, order_drop_list)])
+    pop_button.grid(row=count + 1, column=3, pady=10, )
+    pop_button = Button(pop_frame1, text="Back", command=lambda: [pop.destroy()])
+    pop_button.grid(row=count + 1, column=1, pady=10, columnspan=2)
+
+
+def print_lists(a, b, c, d):
+    a_str = ""
+    b_str = ""
+    c_str = ""
+    d_str = ""
+    for i in a:
+        a_str = a_str + " " + str(i.get())
+
+    for i in b:
+        b_str = b_str + " " + str(i.get())
+
+    for i in c:
+        c_str = c_str + " " + str(i.get())
+
+    for i in d:
+        d_str = d_str + " " + str(i.get())
+
+    print("Stitch Type")
+    print(a_str)
+    print("Stitch Length")
+    print(b_str)
+    print("Delete Y/N")
+    print(c_str)
+    print("Order Change")
+    print(d_str)
+
+
+def display_section_image(image):
+    images[1] = image
+    display_cy_image()
+
+
+def rgb_to_hex(pixel):
+    test = 0
+
+    hex_r = hex(pixel[0])
+    n_hex_r = hex_r.replace("0x", "")
+    if len(n_hex_r) == 1:
+        n_hex_r = "0" + n_hex_r
+
+    hex_g = hex(pixel[1])
+    n_hex_g = hex_g.replace("0x", "")
+    if len(n_hex_g) == 1:
+        n_hex_g = "0" + n_hex_g
+
+    hex_b = hex(pixel[2])
+    n_hex_b = hex_b.replace("0x", "")
+    if len(n_hex_b) == 1:
+        n_hex_b = "0" + n_hex_b
+
+    hex_colour = "#" + n_hex_r + n_hex_g + n_hex_b
+    if test == 1:
+        print("New colour hex: ", hex_colour, " RGB Hex: ", hex_r, hex_g, hex_b, " Change RGB Hex: ", n_hex_r, n_hex_g,
+              n_hex_b)
+
+    return hex_colour
+
+
 def colour_select_pop():
     global pop
     global floor_choice
@@ -1679,24 +1901,8 @@ def manuel_merge_pop():
 
         exec(index + ".set(0)")
 
-        hex_r = hex(pixel[0])
-        n_hex_r = hex_r.replace("0x", "")
-        if len(n_hex_r) == 1:
-            n_hex_r = "0" + n_hex_r
+        hex_colour = rgb_to_hex(pixel)
 
-        hex_g = hex(pixel[1])
-        n_hex_g = hex_g.replace("0x", "")
-        if len(n_hex_g) == 1:
-            n_hex_g = "0" + n_hex_g
-
-        hex_b = hex(pixel[2])
-        n_hex_b = hex_b.replace("0x", "")
-        if len(n_hex_b) == 1:
-            n_hex_b = "0" + n_hex_b
-
-        hex_colour = "#" + n_hex_r + n_hex_g + n_hex_b
-        print("New colour hex: ", hex_colour, " RGB Hex: ", hex_r, hex_g, hex_b, " Change RGB Hex: ",
-              n_hex_r, n_hex_g, n_hex_b)
         pop_label = Label(pop_frame1, text=count)
         pop_label.grid(row=count, column=0)
 
