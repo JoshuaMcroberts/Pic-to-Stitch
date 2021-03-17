@@ -1,4 +1,5 @@
 import numpy as np
+import a_star_pathing as asp
 
 
 class Plot:
@@ -97,6 +98,8 @@ class ColourPlot(Plot):
         return ref_plot
 
     def process_colour_plot(self, main_plot):
+        test = 0
+
         ref_plot = self.ref_plot
         plot = self.matrix
         ob_count = self.object_count
@@ -114,10 +117,12 @@ class ColourPlot(Plot):
                 if point == col_letter:
                     count += 1
                     max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), 8, count, col_num)
-                    print_plot(ref_plot)
-                    print("")
+                    if test == 1:
+                        print_plot(ref_plot)
+                        print("")
                     reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, count, col_num, 1)
-                    print_plot(ref_plot)
+                    if test == 1:
+                        print_plot(ref_plot)
                 i += 1
         self.ref_plot = ref_plot
 
@@ -192,10 +197,37 @@ class ObjectPlot(ColourPlot):
         self.ob_fill_all = []
         self.ob_outline = []
         self.ob_run_fill = []
+        self.ob_stitch_type = ""
+        self.ob_max_stitch_length = 0
+        self.ob_stitch_list = []
         self.colour = colour
         self.ref_plot = self.create_ref_plot(2)
         self.ob_parts_list = []
         self.section_image = int()
+
+    def set_stitch_type(self, val):
+        self.ob_stitch_type = val
+
+    def get_stitch_type(self):
+        return self.ob_stitch_type
+
+    def set_stitch_len(self, val):
+        self.ob_max_stitch_length = val
+
+    def get_stitch_len(self):
+        return self.ob_max_stitch_length
+
+    def set_stitch_list(self, val):
+        self.ob_stitch_list = val
+
+    def get_stitch_list(self):
+        return self.ob_stitch_list
+
+    def set_ob_colour(self, val):
+        self.colour = val
+
+    def get_ob_colour(self):
+        return self.colour
 
     def process_colour_plot(self, main_plot):
         test = 0
@@ -222,10 +254,14 @@ class ObjectPlot(ColourPlot):
             if point == col_letter_list[0]:     # Sets the background colour
 
                 max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), l_p, val, col_num)
-                print_plot(ref_plot)
-                print("")
+
+                if test == 1:
+                    print_plot(ref_plot)
+                    print("")
                 reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, val, col_num, 2)
-                print_plot(ref_plot)
+
+                if test == 1:
+                    print_plot(ref_plot)
 
         for y, row in enumerate(ref_plot):
             for x, point in enumerate(row):
@@ -233,10 +269,12 @@ class ObjectPlot(ColourPlot):
                 if point == col_letter_list[1]:
 
                     max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), 8, "1", "a")
-                    print_plot_advanced(ref_plot)
-                    print("")
+                    if test == 1:
+                        print_plot_advanced(ref_plot)
+                        print("")
                     reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, "1", 2, 1)
-                    print_plot_advanced(ref_plot)
+                    if test == 1:
+                        print_plot_advanced(ref_plot)
 
         for y, row in enumerate(ref_plot):
             for x, point in enumerate(row):
@@ -244,12 +282,14 @@ class ObjectPlot(ColourPlot):
                 if point == col_letter_list[0]:
 
                     max_yx, min_yx, ind_list = get_object_outline(ref_plot, ref_plot, (y, x), 8, "2", 2)
-                    print_plot_advanced(ref_plot)
-                    print("")
+                    if test == 1:
+                        print_plot_advanced(ref_plot)
+                        print("")
                     reversible_mine_sweeper_fill(ref_plot, ref_plot, max_yx, min_yx, "2", "b", 2)
-                    print_plot_advanced(ref_plot)
+                    if test == 1:
+                        print_plot_advanced(ref_plot)
 
-    def create_pathing_lists(self):
+    def outline_running_stitch(self):
         test = 0
         plot = self.matrix.copy()
 
@@ -261,15 +301,15 @@ class ObjectPlot(ColourPlot):
                 if point == 1:
                     out = get_object_outline(plot, new_plot, (y, x), 8, 1, 1)
                     ind_list = out[2]
-                    self.ob_outline = ind_list  # Outline co-or list
+                    self.ob_stitch_list = ind_list  # Outline co-or list
                     b_val = 1
                     break
             if b_val == 1:
                 break
 
-        self.running_stitch_fill()
-
-        self.fill_stitch_fill()
+        # self.running_stitch_fill()
+        #
+        # self.fill_stitch_fill()
 
     def process_matrix(self):
         plot = self.matrix
@@ -314,7 +354,7 @@ class ObjectPlot(ColourPlot):
                     anw, yx = check_for_number(new_plot, 1)
 
                     ind_list = get_object_outline_fill(plot, new_plot, yx, 8, count, 1, ind_list)
-                    self.ob_run_fill = ind_list
+                    self.ob_stitch_list = ind_list
                     b_val = 1
                     break
             if b_val == 1:
@@ -330,7 +370,7 @@ class ObjectPlot(ColourPlot):
         max_yx = (len(plot), len(plot[0]))
         br_val = 0
         ind_list = []
-        start_val = 0
+        end_at = 0
 
         # works
         p_row = ["0"] * len(ref_plot[0])    # create blank polt make template plot
@@ -378,10 +418,10 @@ class ObjectPlot(ColourPlot):
                 print("y: {} plot val: {}".format(y, p_a))
 
             if p_a == 1 and tem_p_a == "2":
-                start_val = (y, min_x)
+                end_at = (y, min_x)
                 break
             elif p_b == 1 and tem_p_b == "2":
-                start_val = (y, min_x + 1)
+                end_at = (y, min_x + 1)
                 break
             else:
                 print("not set")
@@ -389,19 +429,19 @@ class ObjectPlot(ColourPlot):
         if test == 1:
             print(ind_list)
 
-        end_p = ind_list[-1]
+        start_at = ind_list[-1]
 
-        print("Start Val: {}".format(start_val))
-        print("end Point: {}".format(end_p))
+        print("Start Val: {}".format(end_at))
+        print("end Point: {}".format(start_at))
 
-        if start_val == end_p:
+        if end_at == start_at:
             pass
         else:
-            goto, ind_list = move_to(plot, start_val, end_p, 2, 1, ind_list)
+            goto, ind_list = asp.move_to_a_star(plot, end_at, start_at, ind_list)
 
-        ind_list = get_object_fill_stitch(template, plot, start_val, max_yx, min_yx, ind_list)
+        ind_list = get_object_fill_stitch(template, plot, end_at, max_yx, min_yx, ind_list)
 
-        self.ob_fill_all = ind_list
+        self.ob_stitch_list = ind_list
                 
     def print_ob_part_list(self):
         if not self.ob_parts_list:
@@ -1007,9 +1047,9 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
             bol, yx = check_for_number(ref_plot, 1)
 
             if bol:
-                yx, ind_list = move_to(plot, yx, ind_list[-1], set_to, 1, ind_list)
+                yx, ind_list = asp.move_to_a_star(plot, yx, ind_list[-1], ind_list)
                 y, x = yx
-                print("Move_ Set ({},{})".format(y, x))
+                print("OF Move_to Set ({},{})".format(y, x))
                 ref_plot[y, x] = set_to
                 loop = 0
             else:
@@ -1024,7 +1064,7 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
 
 
 def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
-    test = 0
+    test = 2
 
     s_y, s_x = start_yx
     y = s_y
@@ -1076,7 +1116,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 anw, yx = check_for_number(new_plot, "1")
 
                 if anw:
-                    yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)
+                    # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)
+                    yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                     y, x = yx
                     direct = 1
 
@@ -1095,7 +1136,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1141,7 +1183,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1177,7 +1220,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1217,7 +1261,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1249,8 +1294,10 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                 if anw:
-                    yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)
+                    # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)
+                    yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                     y, x = yx
+
                     direct = 1
                 else:
                     ext = 1  # if false, all areas have been visited, exit while loop
@@ -1264,7 +1311,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:     # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1304,7 +1352,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        # yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1339,7 +1388,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1378,7 +1427,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = move_to(plot_c, yx, ind_list[-1], 4, 1, ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1396,8 +1445,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 break
         if br_val == 1:
             break
+    if s2_yx != ind_list[-1]:
+        s2_yx, ind_list = asp.move_to_a_star(plot_c, s2_yx, ind_list[-1], ind_list)
 
-    s2_yx, ind_list = move_to(plot_c, s2_yx, ind_list[-1], 4, 1, ind_list)
     y, x = s2_yx
     direct = 1
     ext = 0
@@ -1432,7 +1482,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 if anw:
                     y, x = yx
                     plot_c[y, x] = 2
-                    yx, ind_list = move_to(plot_no_change, yx, ind_list[-1], 4, 1, ind_list)
+                    yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
                     y, x = yx
                     direct = 1
                 else:
@@ -1505,7 +1555,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     if anw:
                         y, x = yx
                         plot_c[y, x] = 2
-                        yx, ind_list = move_to(plot_no_change, yx, ind_list[-1], 4, 1, ind_list)
+                        yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
                         y, x = yx
                         direct = 1
                     else:
@@ -1538,7 +1588,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 if anw:
                     y, x = yx
                     plot_c[y, x] = 2
-                    yx, ind_list = move_to(plot_no_change, yx, ind_list[-1], 4, 1, ind_list)
+                    yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
                     y, x = yx
                     direct = 1
                 else:
@@ -1608,7 +1658,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     if anw:
                         y, x = yx
                         plot_c[y, x] = 2
-                        yx, ind_list = move_to(plot_no_change, yx, ind_list[-1], 4, 1, ind_list)
+                        yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
                         y, x = yx
                         direct = 1
                     else:
@@ -1631,17 +1681,22 @@ def compare_plots(plot1, val1, plot2, val2):
 
 
 def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
-    test = 0
+    test = 2
     col_num = look_for  # value 1
     ref_plot = main_plot.copy()
     plot = main_plot.copy()    # untouched plot with just 0's and 1's
     plot_9 = main_plot.copy()
+    bl_plot = main_plot.copy()
     f_y, f_x = goto_yx
     y, x = start_yx
     og_ind_list = passed_ind_list
     ind_list = []
+    check = 0
 
-    print("Move_to \n", og_ind_list)
+    if test == 1 or test == 2 or test ==3:
+        print("Move_to \n", og_ind_list)
+        print_plot(main_plot)
+        print_plot(plot)
 
     one = [1, 8, 2, 7, 3, 6, 4, 5]
     two = [2, 1, 3, 8, 4, 7, 5, 6]
@@ -1650,7 +1705,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     fiv = [5, 4, 6, 3, 7, 2, 8, 1]
     six = [6, 5, 7, 4, 8, 3, 1, 2]
     sev = [7, 6, 8, 5, 1, 4, 2, 3]
-    eig = [8, 7, 1, 6, 2, 5, 3, 4]
+    eig = [8, 7, 1, 6, 2, 5, 4, 3]
     search_patterns = [one, two, thr, fou, fiv, six, sev, eig]
 
     ext = 0
@@ -1660,7 +1715,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     point_c = next_point(start_yx, goto_yx)
     s_pat = search_patterns[point_c - 1]
 
-    if test == 2:
+    if test == 2 or test == 3:
         print("GoTo: {} Start: {}".format(goto_yx, start_yx))
 
     bol = isinstance(ref_plot[0, 0], str)
@@ -1677,6 +1732,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     while ext != 1:
 
         for i in range(1):
+
             row_num = len(plot)
             cul_num = len(plot[0])
             points = []
@@ -1764,7 +1820,10 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         ind_list.append((y, x))  # add point to list
                         cur_yx = (y, x)  # combine current y, x
                         point_c = next_point(cur_yx, goto_yx)  # get next position to check
-                        print(point_c)
+
+                        if test == 2:
+                            print(point_c)
+
                         s_pat = search_patterns[point_c - 1]  # change to new search pattern
                         ind = 0
                         break
@@ -1799,7 +1858,8 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                     cur_yx = (y, x)  # combine current y, x
                     point_c = next_point(cur_yx, goto_yx)  # get next position to check
                     s_pat = search_patterns[point_c - 1]  # change to new search pattern
-                    print(point_c-1, "\n", s_pat)
+                    if test == 2:
+                        print(point_c-1, "\n", s_pat)
                     ind = 0
                     break
 
@@ -1831,15 +1891,22 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
             if y - 1 >= 0 and x - 1 >= 0:  # check if next point is within the plot limits
                 n_point = plot[y - 1, x - 1]  # set next point
-
+                # print("1: {}, cur: {}".format(n_point, col_num))
                 if n_point == col_num:  # check against colour_number
                     pon_a = plot[y, x - 1]
                     pon_b = plot[y - 1, x]
 
                     if pon_a == pon_b and pon_a == set_to:
 
-                        plot_9[y - 1, x - 1] = 9
-                        plot = plot_9
+                        # plot_9[y - 1, x - 1] = 9
+                        plot_9[y, x] = 0
+
+                        if test == 2:
+                            print("Set 0:({},{}) Set 9: ({},{})".format(y, x, y - 1, x - 1))
+                            print_plot(plot_9)
+                            print_plot(plot)
+
+                        plot = plot_9.copy()
                         y, x = start_yx
                         ind_list.clear()
 
@@ -1947,8 +2014,16 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
                     if pon_a == pon_b and pon_a == set_to:
 
-                        plot_9[y - 1, x + 1] = 9
-                        plot = plot_9
+                        # plot_9[y - 1, x + 1] = 9
+                        plot_9[y, x] = 0
+
+                        if test == 2:
+                            print("Set 0:({},{}) Set 9: ({},{})".format(y, x, y - 1, x + 1))
+                            print_plot(plot_9)
+                            print_plot(plot)
+
+                        plot = plot_9.copy()
+
                         y, x = start_yx
                         ind_list.clear()
 
@@ -1956,6 +2031,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         # y, x = yx
                         if test == 2:
                             print("You just crossed a line buddy")
+
                             print("Restart\nGoTo: {} Start: {}".format(goto_yx, start_yx))
                         point_c = next_point(start_yx, goto_yx)  # get next position to check
                         s_pat = search_patterns[point_c - 1]  # change to new search pattern
@@ -1979,6 +2055,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
                             if test == 1 or test == 2:  # testing console comments
                                 print("Set ({},{})".format(y, x))
+
 
                             plot[y, x] = set_to  # set point
                             ind_list.append((y, x))  # add point to list
@@ -2026,6 +2103,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         if test == 1 or test == 2:  # testing console comments
                             print("Set ({},{})".format(y, x))
 
+
                         plot[y, x] = set_to  # set point
                         ind_list.append((y, x))  # add point to list
                         cur_yx = (y, x)  # combine current y, x
@@ -2057,8 +2135,14 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
                     if pon_a == pon_b and pon_a == set_to:
 
-                        plot_9[y + 1, x + 1] = 9
-                        plot = plot_9
+                        # plot_9[y + 1, x + 1] = 9
+                        plot_9[y, x] = 0
+                        if test == 2:
+                            print("Set 0:({},{}) Set 9: ({},{})".format(y, x, y + 1, x + 1))
+                            print_plot(plot_9)
+                            print_plot(plot)
+
+                        plot = plot_9.copy()
                         y, x = start_yx
                         ind_list.clear()
 
@@ -2066,6 +2150,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         # y, x = yx
                         if test == 2:
                             print("You just crossed a line buddy")
+
                             print("Restart\nGoTo: {} Start: {}".format(goto_yx, start_yx))
                         point_c = next_point(start_yx, goto_yx)  # get next position to check
                         s_pat = search_patterns[point_c - 1]  # change to new search pattern
@@ -2138,6 +2223,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         if test == 1 or test == 2:  # testing console comments
                             print("Set ({},{})".format(y, x))
 
+
                         plot[y, x] = set_to  # set point
                         ind_list.append((y, x))  # add point to list
                         cur_yx = (y, x)  # combine current y, x
@@ -2168,19 +2254,28 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
                     if pon_a == pon_b and pon_a == set_to:
 
-                        plot_9[y + 1, x - 1] = 9
-                        plot = plot_9
+                        # plot_9[y + 1, x - 1] = 9
+                        plot_9[y, x] = 0
+
+                        if test == 2:
+                            print("Set 0:({},{}) Set 9: ({},{})".format(y, x, y + 1, x - 1))
+                            print_plot(plot_9)
+                            print_plot(plot)
+
+                        plot = plot_9.copy()
                         y, x = start_yx
                         ind_list.clear()
 
                         if test == 2:
                             print("You just crossed a line buddy")
+
                             print("Restart\nGoTo: {} Start: {}".format(goto_yx, start_yx))
                         # ind_list, yx = back_track(ind_list, plot)  # back_track until a new valid space is found
                         # y, x = yx
 
                         point_c = next_point(start_yx, goto_yx)  # get next position to check
                         s_pat = search_patterns[point_c - 1]  # change to new search pattern
+                        ind = 0  # reset search pattern start
 
                     else:
                         if y + 1 == f_y and x - 1 == f_x:  # check if next point is destination
@@ -2204,10 +2299,10 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                             if test == 1 or test == 2:  # testing console comments
                                 print("Set ({},{})".format(y, x))
 
+
                             plot[y, x] = set_to  # set point
                             ind_list.append((y, x))  # add point to list
                             cur_yx = (y, x)  # combine current y, x
-
                             point_c = next_point(cur_yx, goto_yx)  # get next position to check
                             s_pat = search_patterns[point_c - 1]  # change to new search pattern
                             ind = 0  # reset search pattern start
@@ -2250,6 +2345,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                         if test == 1 or test == 2:  # testing console comments
                             print("Set ({},{})".format(y, x))
 
+
                         plot[y, x] = set_to  # set point
                         ind_list.append((y, x))  # add point to list
                         cur_yx = (y, x)  # combine current y, x
@@ -2265,11 +2361,67 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
                 else:
                     ind += 1  # if not, set to the next position
 
+        # Nine
+        elif l_point == 9:
+
+            # check += 1
+
+            if check == 2:
+
+                if test == 1:
+                    print("# Nine")
+                print_plot(bl_plot)
+                bl_plot[y, x] = 9
+                print("0 at ({},{})".format(y, x))
+                plot = bl_plot.copy()
+                y, x = start_yx
+                bl_plot[y, x] = set_to
+                print("4 at ({},{})".format(y, x))
+                ind_list.clear()
+
+                if test == 2:
+                    print("Restart 9\nGoTo: {} Start: {}".format(goto_yx, start_yx))
+                # ind_list, yx = back_track(ind_list, plot)  # back_track until a new valid space is found
+                # y, x = yx
+
+                point_c = next_point(start_yx, goto_yx)  # get next position to check
+                print("Point_C: {}".format(point_c))
+
+                print_plot(plot)
+                s_pat = search_patterns[point_c - 1]  # change to new search pattern
+                ind = 0  # reset search pattern start
+                check = 0
+
+            else:
+                point_c = next_point(start_yx, goto_yx)  # get next position to check
+
+                if point_c == 1:
+                    point_c = 5
+                elif point_c == 2:
+                    point_c = 6
+                elif point_c == 3:
+                    point_c = 7
+                elif point_c == 4:
+                    point_c = 8
+                elif point_c == 5:
+                    point_c = 1
+                elif point_c == 6:
+                    point_c = 2
+                elif point_c == 7:
+                    point_c = 3
+                elif point_c == 8:
+                    point_c = 4
+
+                s_pat = search_patterns[point_c - 1]  # change to new search pattern
+                ind = 0  # reset search pattern start
+
         if loop_c > 1:  # if loop_count is more then 1 move_to is trapped
 
             if test == 2:   # testing console comments
 
                 print("Move_to trapped\nRun back_track")
+                print(ind_list)
+                # print_plot(plot)
 
             ind_list, yx = back_track(ind_list, plot)   # back_track until a new valid space is found
             y, x = yx
@@ -2282,14 +2434,262 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     del ind_list[0]
     for i in ind_list:
         og_ind_list.append(i)
-
-    print("Move_to Ind: \n", ind_list)
-    print("Move_to End: \n", og_ind_list)
+    if test == 2 or test == 3:
+        print("Move_to Ind: \n", ind_list)
+        print("Move_to End: \n", og_ind_list)
     return goto_yx, og_ind_list
 
 
+def find_path(main_plot, goto_yx, start_yx):
+    test = 0
+
+    f_y, f_x = goto_yx
+    y, x = start_yx
+    col_num = 1
+
+    p_row = [1] * len(main_plot[0])  # create blank plot make template plot
+    plot = np.array([p_row] * len(main_plot))
+
+    if test == 1 or test == 2 or test == 3:
+        print("test in find_path")
+        # asp.print_node_plot(main_plot)
+        # print_plot(plot)
+
+    ext = 0
+
+    h = 0
+    l_point = next_point(start_yx, goto_yx)
+
+    if test == 2 or test == 3:
+        print("Start: {} GoTo: {}".format(start_yx, goto_yx))
+
+    if start_yx == goto_yx:
+        return h
+
+    while ext != 1:
+
+        # One
+        if l_point == 1:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# One")
+
+            n_point = plot[y - 1, x - 1]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+                h += 14
+
+                if y - 1 == f_y and x - 1 == f_x:   # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:   # else record valid point
+                    y -= 1  # set y to y - 1
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    cur_yx = (y, x)
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Two
+        elif l_point == 2:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Two")
+
+            n_point = plot[y - 1, x]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+                h += 10
+
+                if y - 1 == f_y and x == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}". format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    y -= 1  # set y to y - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Three
+        elif l_point == 3:  # check if this point is within the plot limits
+
+            if test == 1:  # set this point
+                print("# Three")
+
+            n_point = plot[y - 1, x + 1]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y - 1 == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+                    y -= 1  # set y to y - 1
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Four
+        elif l_point == 4:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Four")
+
+            n_point = plot[y, x + 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{} +10)".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Five
+        elif l_point == 5:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Five")
+
+            n_point = plot[y + 1, x + 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y + 1 == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Six
+        elif l_point == 6:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Six")
+
+            n_point = plot[y + 1, x]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y + 1 == f_y and x == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Seven
+        elif l_point == 7:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Seven")
+
+            n_point = plot[y + 1, x - 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y + 1 == f_y and x - 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Eight
+        elif l_point == 8:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Eight")
+
+            n_point = plot[y, x - 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y == f_y and x - 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h  # if true then break loop and return h
+
+                else:  # else record valid point
+
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+
 def back_track(ind_list, plot):
+    test = 0
     length = len(ind_list)
+
     # if len(ind_list)-1 <= 0:
     #     pass
     # else:
@@ -2305,6 +2705,8 @@ def back_track(ind_list, plot):
             return ind_list, (p_y, p_x)
 
         else:
+            if test == 1:
+                print(" Delete Point: ({},{})".format(p_y, p_x))
             del ind_list[-1]
 
 
@@ -2497,14 +2899,14 @@ def print_plot(plot):
 
             if bol:
                 if point == "0":
-                    p_row = p_row + ". "
+                    p_row = p_row + "."
                 else:
-                    p_row = p_row + point + " "
+                    p_row = p_row + point
             else:
                 if point == 0:
-                    p_row = p_row + ". "
+                    p_row = p_row + "."
                 else:
-                    p_row = p_row + str(point) + " "
+                    p_row = p_row + str(point)
 
         print(p_row)
 

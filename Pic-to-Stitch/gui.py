@@ -1,11 +1,10 @@
 import tkinter as tk
 from tkinter import filedialog
 from tkinter import *
-# from tkinter.ttk import *
 from PIL import Image, ImageTk, ImageFilter, ImageOps
 import tkinter.messagebox
 import numpy as np
-from prompt_toolkit import selection
+
 
 import plot_objects as po
 import stitch_objects as so
@@ -1070,6 +1069,7 @@ def object_create():
 # new - used
 def create_image_plot():
 
+    objects.clear()
     image = images[1]
     pixel_matrix = np.array(image)
     image_copy = pixel_matrix.copy()
@@ -1122,7 +1122,6 @@ def create_image_plot():
                 col_sub_obj = j
 
                 col_sub_obj.process_matrix()
-                col_sub_obj.create_pathing_lists()
 
                 out_image = create_section_image(col_sub_obj.matrix, images[1])
                 col_sub_obj.section_image = out_image
@@ -1133,61 +1132,35 @@ def create_image_plot():
 
             count = 1
         for ob in objects:
-            ob.ob_id = count
-            count +=1
+            ob.ob_id = "# " + str(count)
+            count += 1
 
-    if test == 1:
+    # id = 1
 
-        col_obj = main_plot.col_matrix_list[0]
-
-        col_obj.process_colour_plot(main_plot.matrix)
-        col_obj.create_object_sub_plot()
-        # col_obj.print_ob_matrix_list()
-
-        col_sub_obj = col_obj.ob_matrix_list[0]
-        po.print_plot(col_sub_obj.ref_plot)
-
-        # not needed?
-        # col_sub_obj.process_colour_plot(main_plot.matrix)
-        po.print_plot_advanced(col_sub_obj.ref_plot)
-
-        # not needed?
-        # col_sub_obj.create_pathing_lists()
-        # col_sub_obj.print_ob_part_list()
-        col_sub_obj.running_stitch_fill()
-        # col_sub_obj.fill_stitch_fill()
-
-        po.stitch_test(col_sub_obj.matrix, col_sub_obj.ob_run_fill)
-        out_image = create_section_image(col_sub_obj.matrix, images[1])
-        col_sub_obj.section_image = out_image
-        images[1] = out_image
-        display_cy_image()
-        # add image to object
-    id = 1
-
-    for i in objects:
-
-        matrix = i.matrix
-        stitch_list = []
-        stitch_list.append(i.ob_outline)
-        stitch_list.append(i.ob_run_fill)
-        stitch_list.append(i.ob_fill_all)
-
-        for j in stitch_list:
-            if count == 0:
-                print("Object {} Outline".format(id))
-            elif count == 1:
-                print("Object {} "
-                      "Running Fill")
-            elif count == 2:
-                print("Full fill")
-            po.stitch_test(matrix, j)
-            if count < 2:
-                count += 1
-
-        id += 1
+    # for i in objects:
+    #
+    #     matrix = i.matrix
+    #     stitch_list = []
+    #     stitch_list.append(i.ob_outline)
+    #     stitch_list.append(i.ob_run_fill)
+    #     stitch_list.append(i.ob_fill_all)
+    #
+    #     for j in stitch_list:
+    #         if count == 0:
+    #             print("Object {} Outline".format(id))
+    #         elif count == 1:
+    #             print("Object {} "
+    #                   "Running Fill")
+    #         elif count == 2:
+    #             print("Full fill")
+    #         po.stitch_test(matrix, j)
+    #         if count < 2:
+    #             count += 1
+    #
+    #     id += 1
         # po.print_plot(matrix)
     stitch_type_pop()
+
 
 # new
 def image_object():
@@ -1561,66 +1534,145 @@ def stitch_type_pop():
     global pop
     global section_image_list
     section_image_list = []
-    checkbox_list = []
     stitch_drop_list = []
     len_drop_list = []
     order_drop_list = []
+    checkbox_list = []
+
+    # set lists
+    for i in range(len(objects)):
+        s_stitch = StringVar()
+        s_stitch.set("Stitch Outline")
+        stitch_drop_list.append(s_stitch)
+        l_stitch = StringVar()
+        l_stitch.set("0.3mm")
+        len_drop_list.append(l_stitch)
+        ord = IntVar()
+        ord.set(i + 1)
+        order_drop_list.append(ord)
+        che = IntVar()
+        che.set(0)
+        checkbox_list.append(che)
 
     length = len(objects)
     pop = Toplevel(second_frame)
-    pop.title("Colour Sample")
-    pop_geometry(700, 50 + 35 * length)
+    pop.title("Set Stitches")
+    pop_geometry(700, 55 + 35 * length)
     count_list = []
     pop_frame1 = Frame(pop)
     pop_frame1.pack()
+    pop_frame2 = Frame(pop)
+    pop_frame2.pack()
+    pop_frame3 = Frame(pop)
+    pop_frame3.pack()
     count = 1
 
-    pop_label_1 = Label(pop_frame1, text='Object ID')
-    pop_label_1.grid(row=0, column=0, padx=5, pady=5)
-    pop_label_1 = Label(pop_frame1, text='Colour')
-    pop_label_1.grid(row=0, column=1, padx=5)
-    pop_label_1 = Label(pop_frame1, text='Stitch Type')
+    pop_label_1 = Label(pop_frame1, width=6, text='Object ID')
+    pop_label_1.grid(row=0, column=0, padx=0, pady=5)
+    pop_label_1 = Label(pop_frame1, width=7, text='Colour')
+    pop_label_1.grid(row=0, column=1, padx=10)
+    pop_label_1 = Label(pop_frame1, width=15, text='Stitch Type')
     pop_label_1.grid(row=0, column=2, padx=5)
-    pop_label_1 = Label(pop_frame1, text='Max Stitch Length')
+    pop_label_1 = Label(pop_frame1, width=15, text='Max Stitch Length')
     pop_label_1.grid(row=0, column=3, padx=5)
-    pop_label_1 = Label(pop_frame1, text='Order')
+    pop_label_1 = Label(pop_frame1, width=8, text='Order')
     pop_label_1.grid(row=0, column=4, padx=5)
-    pop_label_1 = Label(pop_frame1, text='Remove Object')
-    pop_label_1.grid(row=0, column=5, padx=5)
-    pop_label_1 = Label(pop_frame1, text='Highlight')
-    pop_label_1.grid(row=0, column=6, padx=5)
+    pop_label_1 = Label(pop_frame1, width=14, text='Remove Object')
+    pop_label_1.grid(row=0, column=5, padx=10)
+    pop_label_1 = Label(pop_frame1, width=8, text='Highlight')
+    pop_label_1.grid(row=0, column=6)
     len_count = 0
 
-    for ob in objects:
+    frame2(objects, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list, pop_frame2)
+
+    for i in range(length + 1):
+        count_list.append(len_count)
+        len_count += 1
+
+    pop_button = Button(pop_frame3, text="OK", command=lambda: [process_stitch_choices(objects, section_image_list, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list),pop.destroy()])
+    pop_button.grid(row=1, column=4, pady=10, columnspan=2, padx=10)
+    pop_button = Button(pop_frame3, text="Update Order",
+                        command=lambda: [reorder_list(objects, section_image_list, stitch_drop_list, len_drop_list,  order_drop_list, checkbox_list, pop_frame2)])
+    pop_button.grid(row=1, column=3, pady=10, padx=5)
+    pop_button = Button(pop_frame3, text="Back", command=lambda: [pop.destroy()])
+    pop_button.grid(row=1, column=1, pady=10, columnspan=2, padx=10)
+
+
+def reorder_list(objects, section_image, stitch_type, stitch_len, order, del_list, pop_frame2):
+    test = 0
+
+    for i, val in enumerate(order):
+        val = val.get()
+        if i + 1 != val:
+            print("Not E: {}, {}".format(i+1, val))
+            ob_copy = objects[i]
+            del objects[i]
+            objects.insert(val - 1, ob_copy)
+
+            sec_copy = section_image[i]
+            del section_image[i]
+            section_image.insert(val - 1, sec_copy)
+
+            typ_copy = stitch_type[i]
+            del stitch_type[i]
+            stitch_type.insert(val - 1, typ_copy)
+            print(typ_copy)
+            len_copy = stitch_len[i]
+            del stitch_len[i]
+            stitch_len.insert(val - 1, len_copy)
+
+            del_copy = del_list[i]
+            del del_list[i]
+            del_list.insert(val - 1, del_copy)
+
+        else:
+
+            print("Equal: {}, {}".format(i+1, val))
+    if test == 2:
+        print_lists(stitch_type, stitch_len, order, del_list)
+    frame2(objects, stitch_type, stitch_len, order, del_list, pop_frame2)
+    if test == 2:
+        print_lists(stitch_type, stitch_len, order, del_list)
+
+
+def frame2(ob_list, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list, pop_frame2):
+    test = 0
+    count = 1
+    if test == 2:
+        print_lists(stitch_drop_list, len_drop_list, order_drop_list, checkbox_list)
+
+    for ob in ob_list:
 
         # object ID = if not set then set, then display
         ob_id = ob.ob_id
-        pop_label_1 = Label(pop_frame1, text=ob_id)
+        pop_label_1 = Label(pop_frame2, width=6, text=ob_id)
         pop_label_1.grid(row=count, column=0, padx=5)
 
         # object colour = get then display
         col = ob.colour
         hex_col = rgb_to_hex(col)
-        pop_label_1 = Label(pop_frame1, width=5, bg=hex_col)
+        pop_label_1 = Label(pop_frame2, width=5, bg=hex_col)
         pop_label_1.grid(row=count, column=1, padx=5, pady=5)
 
         # stitch type drop down = create
         select = StringVar()
-        select.set("Stitch Outline")
-        stitch_drop = OptionMenu(pop_frame1, select, "Stitch Outline", "Running Stitch Fill", "Fill Stitch")
-        stitch_drop.config(width=18)
+        de = stitch_drop_list[count-1]
+        select.set(de.get())
+        stitch_drop = OptionMenu(pop_frame2, select, "Stitch Outline", "Running Stitch Fill", "Fill Stitch")
+        stitch_drop.config(width=15)
         stitch_drop.grid(row=count, column=2,  padx=5)
-        stitch_drop_list.append(select)
+        stitch_drop_list[count-1] = select
 
         # max stitch len dropdown = create
         lengths = ["0.3mm", "0.5mm", "1.0mm", "1.2mm", "1.5mm", "2.0mm", "2.5mm", "3.0mm", "3.5mm", "4.0mm", "4.5mm",
                    "5.0mm"]
         stitch_len = StringVar()
-        stitch_len.set("0.3mm")
-        len_drop = OptionMenu(pop_frame1, stitch_len, *lengths)
+        de = len_drop_list[count-1]
+        stitch_len.set(de.get())
+        len_drop = OptionMenu(pop_frame2, stitch_len, *lengths)
         len_drop.config(width=5)
-        len_drop.grid(row=count, column=3, padx=5)
-        len_drop_list.append(stitch_len)
+        len_drop.grid(row=count, column=3, padx=15)
+        len_drop_list[count-1] = stitch_len
 
         # stitch order  = set then display
         object_count = []
@@ -1628,69 +1680,83 @@ def stitch_type_pop():
             object_count.append(i[0]+1)
 
         order = IntVar()
+        de = order_drop_list[count - 1]
         order.set(count)
-        order_drop = OptionMenu(pop_frame1, order, *object_count)
+        order_drop = OptionMenu(pop_frame2, order, *object_count)
         order_drop.config(width=5)
         order_drop.grid(row=count, column=4, padx=5)
-        order_drop_list.append(order)
+        order_drop_list[count - 1] = order
 
         # remove
         checked = IntVar()
-        checkbox = Checkbutton(pop_frame1, variable=checked)
+        de = checkbox_list[count - 1]
+        checked.set(de.get())
+        checkbox = Checkbutton(pop_frame2, variable=checked)
         checkbox.grid(row=count, column=5, padx=5)
-        checkbox_list.append(checked)
+        checkbox.config(width=12)
+        checkbox_list[count-1] = checked
 
         # display section image
         section_image_list.append(ob.section_image)
         var = str(count - 1)
-        print(var)
-        # exec("display_section_image(section_image_list[" + var + "])")
-        exec("pop_button = Button(pop_frame1, text='Display', command=lambda: display_section_image(section_image_list["
+        exec("pop_button = Button(pop_frame2, text='Display', command=lambda: display_section_image(section_image_list["
              +"" + var + "]))\npop_button.grid(row=count, column=6, padx=5)")
         count += 1
+    pop_frame2.config()
 
-    for i in range(length + 1):
-        count_list.append(len_count)
-        len_count += 1
 
-    hi = 0
-    if hi == 23:
+def process_stitch_choices(objects, section_images, stitch_type, stitch_len, order, del_list):
+    test = 0
 
-        for pixel in pixel_list:
+    ext = 0
+    while ext != 1:     # check for del in list
 
-            ind = pixel_list.index(pixel)
-            index = "index_" + str(count - 1)
-            index_list.append(index)
+        if 1 in del_list:   # if del in list then remove
+            ind = del_list.index(1)
 
-            exec(index + ".set(0)")
+            del del_list[ind]
+            del objects[ind]
+            del stitch_len[ind]
+            del stitch_type[ind]
+            del order[ind]
+            del section_images[ind]
+        else:   # else break
+            ext = 1
 
-            hex_colour = rgb_to_hex(pixel)
+    for i, ob in enumerate(objects):
 
-            pop_label = Label(pop_frame1, text=count)
-            pop_label.grid(row=count, column=0)
+        stitch = stitch_type[i]
+        stitch = stitch.get()
+        print(stitch)
+        if stitch == "Stitch Outline":
+            if test == 1:
+                print("Objects {} set with Outline Running Stitch".format(i+1))
+            ob.outline_running_stitch()
+            ob.set_stitch_type("Outline Running Stitch")
 
-            colour_label = Label(pop_frame1, width=20, bg=hex_colour)
-            colour_label.grid(row=count, pady=5, column=1)
+        elif stitch == "Running Stitch Fill":
+            if test == 1:
+                print("Objects {} set with Running Stitch Fill".format(i+1))
+            ob.running_stitch_fill()
+            ob.set_stitch_type("Running Stitch Fill")
 
-            pix_count = colour_count[ind]
+        elif stitch == "Fill Stitch":
+            if test == 1:
+                print("Objects {} set with Fill Stitch".format(i+1))
+            ob.fill_stitch_fill()
+            ob.set_stitch_type("Fill Stitch")
 
-            per = pix_count / total_pix
-            per = per * 100
-            per_text = "{:.1f}%".format(per)
-            per_label = Label(pop_frame1, text=per_text)
-            per_label.grid(row=count, column=2, padx=10)
+        stitch_len_int = [3, 5, 9, 12, 15, 21, 24, 30, 36, 39, 45, 51]
+        stitch_len_str = ["0.3mm", "0.5mm", "1.0mm", "1.2mm", "1.5mm", "2.0mm", "2.5mm", "3.0mm", "3.5mm", "4.0mm",
+                          "4.5mm", "5.0mm"]
 
-            exec("drop = OptionMenu(pop_frame1," + index + ", *count_list)")
-            exec("drop.grid(row=count, column=3)")
+        max_len = stitch_len[i]
+        ind = stitch_len_str.index(max_len.get())
+        val = stitch_len_int[ind]
 
-            count += 1
+        ob.set_stitch_len(val)
 
-    pop_button = Button(pop_frame1, text="OK", command=lambda: [pop.destroy()])
-    pop_button.grid(row=count + 1, column=4, pady=10, columnspan=2)
-    pop_button = Button(pop_frame1, text="Print", command=lambda: [print_lists(stitch_drop_list, len_drop_list, checkbox_list, order_drop_list)])
-    pop_button.grid(row=count + 1, column=3, pady=10, )
-    pop_button = Button(pop_frame1, text="Back", command=lambda: [pop.destroy()])
-    pop_button.grid(row=count + 1, column=1, pady=10, columnspan=2)
+    print("Object Set Finished")
 
 
 def print_lists(a, b, c, d):
@@ -1714,9 +1780,9 @@ def print_lists(a, b, c, d):
     print(a_str)
     print("Stitch Length")
     print(b_str)
-    print("Delete Y/N")
-    print(c_str)
     print("Order Change")
+    print(c_str)
+    print("Delete Y/N")
     print(d_str)
 
 
@@ -2414,6 +2480,7 @@ def get_colour_diff(pixels, pixel):
 
     return dif_val
 
+
 #not used
 def background_detect():  # not finished
     pixel_list = []
@@ -3060,9 +3127,9 @@ def create_section_image(ref_plot, image):
                 print("Value: {} Null: {}".format(val, null))
 
             if val == 255:
-                val = val - 50
+                val = val - 70
             elif val == 0:
-                val = val + 70
+                val = val + 90
 
             tup = (val, val, val)
             g_image[y, x] = tup
@@ -3165,24 +3232,7 @@ def load_image():
     display_cy_image()
 
 
-# class GuiWindow:
-#
-#     def __init__(self, name):
-#         # list
-#         # from PIL.ImageTk import PhotoImage
-#         self.name = name
-#         self.loaded_image = ""
-#         self.images = []
-#         self.undo = []
-#         self.temp_images = []
-#         self.objects = []
-#         # filepath
-#         # og_img
-#         self.global og_display
-#         self.global cy_display
-#         self.global average_pixel_count
-#
-#     def gui_window(self):
+
 root = tk.Tk()
 root.title("Pic-to-Stitch")
 # Open in full screen
