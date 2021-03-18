@@ -229,6 +229,9 @@ class ObjectPlot(ColourPlot):
     def get_ob_colour(self):
         return self.colour
 
+    def get_ob_matrix(self):
+        return self.matrix
+
     def process_colour_plot(self, main_plot):
         test = 0
         ref_plot = self.ref_plot
@@ -2440,7 +2443,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     return goto_yx, og_ind_list
 
 
-def find_path(main_plot, goto_yx, start_yx):
+def find_path(main_plot, goto_yx, start_yx, ind_list):
     test = 0
 
     f_y, f_x = goto_yx
@@ -2464,7 +2467,7 @@ def find_path(main_plot, goto_yx, start_yx):
         print("Start: {} GoTo: {}".format(start_yx, goto_yx))
 
     if start_yx == goto_yx:
-        return h
+        return h, ind_list
 
     while ext != 1:
 
@@ -2482,7 +2485,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y - 1 == f_y and x - 1 == f_x:   # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:   # else record valid point
                     y -= 1  # set y to y - 1
@@ -2491,6 +2494,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +14".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2508,7 +2512,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y - 1 == f_y and x == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}". format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2517,6 +2521,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +10".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2535,7 +2540,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y - 1 == f_y and x + 1 == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
                     y -= 1  # set y to y - 1
@@ -2544,6 +2549,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +14".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2562,7 +2568,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y == f_y and x + 1 == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2571,6 +2577,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{} +10)".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2589,7 +2596,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y + 1 == f_y and x + 1 == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2599,8 +2606,8 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +14".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
-
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
         # Six
@@ -2618,7 +2625,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y + 1 == f_y and x == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2627,6 +2634,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +10".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2645,7 +2653,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y + 1 == f_y and x - 1 == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2655,6 +2663,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +14".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
@@ -2673,7 +2682,7 @@ def find_path(main_plot, goto_yx, start_yx):
                 if y == f_y and x - 1 == f_x:  # check if next point is destination
                     if test == 2:
                         print("return h: {}".format(h))
-                    return h  # if true then break loop and return h
+                    return h, ind_list  # if true then break loop and return h and ind_list
 
                 else:  # else record valid point
 
@@ -2682,6 +2691,7 @@ def find_path(main_plot, goto_yx, start_yx):
                     if test == 1 or test == 2:  # testing console comments
                         print("({},{}) +10".format(y, x))
 
+                    ind_list.append((y, x))
                     cur_yx = (y, x)  # combine current y, x
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 

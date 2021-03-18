@@ -16,6 +16,7 @@ images = []
 undo = []
 temp_images = []
 objects = []
+hoop_code = int()
 # filepath
 # og_img
 global og_display
@@ -182,6 +183,7 @@ def sizing_check(hoopchoice, customcheck):
     hoop_height = IntVar()
     img_w = int()
     img_h = int()
+    global hoop_code
 
     go = int()
     try:
@@ -1029,7 +1031,7 @@ def object_create():
                 c_colour = image_copy[y, x]
                 print("Image: ", image_copy[y, x])
                 print("C_Colour: ", c_colour)
-                s_object = so.StitchObjects(c_colour, count, img_height, img_width)
+                s_object = so.StitchObjects(c_colour, count, img_height, img_width, hoop_code)
 
                 find_outline(image_copy, plot, s_object, 8, [0, 0])
 
@@ -1589,7 +1591,7 @@ def stitch_type_pop():
         count_list.append(len_count)
         len_count += 1
 
-    pop_button = Button(pop_frame3, text="OK", command=lambda: [process_stitch_choices(objects, section_image_list, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list),pop.destroy()])
+    pop_button = Button(pop_frame3, text="OK", command=lambda: [process_stitch_choices(objects, section_image_list, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list),so.create_stitch_objects(objects),pop.destroy()])
     pop_button.grid(row=1, column=4, pady=10, columnspan=2, padx=10)
     pop_button = Button(pop_frame3, text="Update Order",
                         command=lambda: [reorder_list(objects, section_image_list, stitch_drop_list, len_drop_list,  order_drop_list, checkbox_list, pop_frame2)])
@@ -2408,21 +2410,25 @@ def get_surrounding_pixels_5x5(pixel_matrix, y, x):
 
 
 def janome_colours():
-    janome_colour_list = [(0, 0, 0), (0, 181, 82), (101, 194, 200), (11, 47, 132), (110, 57, 55), (112, 169, 226),
-                          (12, 137, 24), (127, 194, 28), (132, 49, 84), (136, 155, 155), (151, 5, 51), (152, 214, 189),
-                          (152, 243, 254), (156, 100, 69), (160, 184, 204), (163, 145, 102), (167, 108, 61),
-                          (168, 0, 67), (171, 90, 150), (172, 156, 199), (178, 225, 227), (180, 90, 48),
-                          (181, 148, 116), (195, 0, 126), (196, 227, 157), (198, 238, 203), (199, 151, 50),
-                          (2, 87, 181), (20, 50, 156), (204, 153, 0), (208, 186, 176), (215, 189, 164), (22, 95, 167),
-                          (226, 161, 136), (227, 190, 129), (228, 195, 93), (229, 229, 229), (230, 101, 30),
-                          (230, 150, 90), (238, 113, 175), (240, 156, 150), (240, 240, 240), (245, 219, 139),
-                          (246, 105, 160), (247, 242, 151), (249, 153, 183), (250, 179, 129), (252, 241, 33),
-                          (253, 51, 163), (253, 245, 181), (255, 0, 0), (255, 102, 0), (255, 157, 0), (255, 204, 0),
-                          (255, 187, 187), (255, 255, 220), (255, 189, 227), (255, 255, 23), (255, 71, 32),
-                          (255, 9, 39), (255, 90, 39), (255, 96, 72), (255, 186, 94), (29, 84, 120), (35, 115, 54),
-                          (4, 145, 123), (47, 89, 51), (6, 72, 13), (7, 22, 80), (72, 26, 5), (76, 181, 143),
-                          (84, 5, 113), (89, 91, 97), (91, 210, 181), (92, 38, 37), (96, 148, 24),  (96, 133, 65),
-                          (98, 49, 189)]
+    janome_colour_list = [(0, 0, 0), (240, 240, 240), (255, 255, 23), (255, 102, 0), (47, 89, 51), (35, 115, 54),
+                            (101, 194, 200), (171, 90, 150), (246, 105, 160), (255, 0, 0),
+                            (156, 100, 69), (11, 47, 132), (228, 195, 93), (72, 26, 5),
+                            (172, 156, 199), (253, 245, 181), (249, 153, 183), (250, 179, 129),
+                            (215, 189, 164), (151, 5, 51), (160, 184, 204), (127, 194, 28),
+                            (229, 229, 229), (136, 155, 155), (152, 214, 189), (178, 225, 227),
+                            (152, 243, 254), (112, 169, 226), (29, 84, 120), (7, 22, 80),
+                            (255, 187, 187), (255, 96, 72), (255, 90, 39), (226, 161, 136),
+                            (181, 148, 116), (245, 219, 139), (255, 204, 0), (255, 189, 227),
+                            (195, 0, 126), (168, 0, 67), (84, 5, 113), (255, 9, 39),
+                            (198, 238, 203), (96, 133, 65), (96, 148, 24), (6, 72, 13),
+                            (91, 210, 181), (76, 181, 143), (4, 145, 123), (89, 91, 97),
+                            (255, 255, 220), (230, 101, 30), (230, 150, 90), (240, 156, 150),
+                            (167, 108, 61), (180, 90, 48), (110, 57, 55), (92, 38, 37),
+                            (98, 49, 189), (20, 50, 156), (22, 95, 167), (196, 227, 157),
+                            (253, 51, 163), (238, 113, 175), (132, 49, 84), (163, 145, 102),
+                            (12, 137, 24), (247, 242, 151), (204, 153, 0), (199, 151, 50),
+                            (255, 157, 0), (255, 186, 94), (252, 241, 33), (255, 71, 32),
+                            (0, 181, 82), (2, 87, 181), (208, 186, 176), (227, 190, 129)]
 
     image = images[1]
     pixel_matrix = np.array(image)
@@ -2976,6 +2982,7 @@ def undo_hoop_choice():
 
 def image_resize(hoop_size, option, new_w, new_h):
     # Message box
+
     image = images[0]
     img_w, img_h = image.size
     px = 3.77
@@ -2987,22 +2994,27 @@ def image_resize(hoop_size, option, new_w, new_h):
     if option == 1:
 
         if hoop_size == 1:
+            hoop_code = 0
             print('4x4" hoop')
             set_w = 415
             set_h = 415
         elif hoop_size == 2:
+            hoop_code = 1
             print('2x2" hoop')
             set_w = 188
             set_h = 188
         elif hoop_size == 3:
+            hoop_code = 2
             print('5.5x8" hoop')
             set_w = 529
             set_h = 756
         elif hoop_size == 4:
+            hoop_code = 3
             print('5x4" hoop')
             set_w = 476
             set_h = 415
         elif hoop_size == 5:
+            hoop_code = 4
             print('8x8" hoop')
             set_w = 756
             set_h = 756

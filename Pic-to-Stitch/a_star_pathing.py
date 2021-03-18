@@ -189,7 +189,8 @@ def set_node(node, plot, start_yx, goto_yx, g, l_p):
     if test == 1:
         print("\n[] set_node function")
 
-    h = po.find_path(plot, goto_yx, start_yx)
+    rlist = []
+    h, rlist = po.find_path(plot, goto_yx, start_yx, rlist)
     node.set_h(h)
     node.set_g(g)
     f = g + h
