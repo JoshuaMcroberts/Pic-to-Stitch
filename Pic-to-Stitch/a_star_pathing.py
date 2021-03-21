@@ -12,44 +12,82 @@ class Node:
         self.co_or = (0, 0)
 
     def set_co_or(self, val):
+        test = 5
+        if test == 5:
+            print("set_co_or - Node - a_start_pathing.py")
         self.co_or = val
 
     def set_h(self, val):
+        test = 5
+        if test == 5:
+            print("set_h - Node - a_start_pathing.py")
         self.h = val
 
     def set_g(self, val):
+        test = 5
+        if test == 5:
+            print("set_g - Node - a_start_pathing.py")
         self.g = val
 
     def set_f(self, val):
+        test = 5
+        if test == 5:
+            print("set_f - Node - a_start_pathing.py")
         self.f = val
 
     def set_l_point(self, val):
+        test = 5
+        if test == 5:
+            print("set_l_point - Node - a_start_pathing.py")
         self.l_point = val
 
     def get_f(self):
+        test = 5
+        if test == 5:
+            print("get_f - Node - a_start_pathing.py")
         return self.f
 
     def get_h(self):
+        test = 5
+        if test == 5:
+            print("get_h - Node - a_start_pathing.py")
         return self.h
 
     def get_g(self):
+        test = 5
+        if test == 5:
+            print("get_g - Node - a_start_pathing.py")
         return self.g
 
     def get_l_point(self):
+        test = 5
+        if test == 5:
+            print("get_l_point - Node - a_start_pathing.py")
         return self.l_point
 
     def get_co_or(self):
+        test = 5
+        if test == 5:
+            print("get_co_or - Node - a_start_pathing.py")
         return self.co_or
 
     def printe(self):
+        test = 5
+        if test == 5:
+            print("printe - Node - a_start_pathing.py")
         print("H: {}\nF: {}\nG: {}\nCo-or: {}\nLast Point: {}".format(self.h, self.f, self.g, self.co_or, self.l_point))
 
     def point_set_print(self):
+        test = 5
+        if test == 5:
+            print("point_set_print - Node - a_start_pathing.py")
         print("Co_or: {} L_p: {}".format(self.co_or, self.l_point))
 
 
 def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
-    test = 0
+    test = 5
+    if test == 5:
+        print("move_to_a_star - a_start_pathing.py")
 
     open_list = []
     closed_list = []
@@ -110,7 +148,6 @@ def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
                 print("\nopen")
                 print_node_list(open_list)
 
-            ext = 1
             break
 
         y, x = node_yx
@@ -184,7 +221,9 @@ def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
 
 
 def set_node(node, plot, start_yx, goto_yx, g, l_p):
-    test = 0
+    test = 5
+    if test == 5:
+        print("set_node - a_start_pathing.py")
 
     if test == 1:
         print("\n[] set_node function")
@@ -201,7 +240,9 @@ def set_node(node, plot, start_yx, goto_yx, g, l_p):
 
 
 def lowest_f(open_list):
-    test = 0
+    test = 5
+    if test == 5:
+        print("lowest_f - a_start_pathing.py")
 
     if test == 1:
         print("\n[] Search Open List")
@@ -240,7 +281,10 @@ def lowest_f(open_list):
 
 
 def get_surrounding_nodes(plot, y, x):
-    test = 0
+    test = 5
+    if test == 5:
+        print("get_surrounding_nodes - a_start_pathing.py")
+
     if test == 2:
         print("\n[] get_surrounding_nodes function")
 
@@ -251,8 +295,10 @@ def get_surrounding_nodes(plot, y, x):
     b = y + 1
     c = x - 1
     d = x + 1
+
     if test == 1:
         print("Centre: ({},{})".format(y, x))
+
     if y > 0:
         p_a = plot[a, x]
         if p_a != 0:
@@ -308,12 +354,17 @@ def get_surrounding_nodes(plot, y, x):
             points.append((y, d, 10, (y, x)))
             if test == 1:
                 print(" Sur_4: ({},{})".format(y, d))
+
     return points
 
 
 def print_node_plot(node_plot):
+    test = 5
+    if test == 5:
+        print("print_node_plot - a_start_pathing.py")
 
     print("\n[] print_node_plot function")
+
     print_val = " \n"
     for y, row in enumerate(node_plot):
 
@@ -325,6 +376,9 @@ def print_node_plot(node_plot):
 
 
 def print_node_list(node_list):
+    test = 5
+    if test == 5:
+        print("print_node_list - a_start_pathing.py")
 
     print("\n[] print_list_plot function")
     print_val = " \n"

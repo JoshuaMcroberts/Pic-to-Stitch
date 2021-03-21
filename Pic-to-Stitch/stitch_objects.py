@@ -1,5 +1,5 @@
 import numpy as np
-import plot_objects as po
+
 
 janome_colour_list = [(0, 0, 0), (240, 240, 240), (255, 255, 23), (255, 102, 0), (47, 89, 51), (35, 115, 54),
                       (101, 194, 200), (171, 90, 150), (246, 105, 160), (255, 0, 0),
@@ -24,7 +24,7 @@ janome_colour_list = [(0, 0, 0), (240, 240, 240), (255, 255, 23), (255, 102, 0),
 
 class StitchObject:
 
-    def __init__(self, passed_colour, stitch_list, max_stitch_len, matrix, hoop_code):  # hoop_code my not be needed
+    def __init__(self, passed_colour, stitch_list, max_stitch_len, matrix):  # hoop_code my not be needed
         self.stitch_list = stitch_list
         self.jump_to_list = []
         self.emb_stitch_list = []
@@ -37,23 +37,45 @@ class StitchObject:
         blank_plot = np.array([p_row] * len(matrix))
         self.matrix = blank_plot
         self.set_colour()
-        self.hoop_code = hoop_code
 
     def get_stitch_list(self):
+        test = 5
+        if test == 5:
+            print("get_stitch_list - StitchObject - stitch_objects.py")
         return self.stitch_list
 
     def set_colour(self):
-        colour_tup = self.colour
+        test = 5
+        if test == 5:
+            print("set_colour - StitchObject - stitch_objects.py")
 
-        if colour_tup in janome_colour_list:
-            colour_num = janome_colour_list.index(colour_tup)
-            colour_num += 1
-            self.colour = colour_num
+        colour_tup = self.colour
+        global janome_colour_list
+        if test == 1:
+            print("nope")
+
+        for i, col in enumerate(janome_colour_list):
+            if test == 1:
+                print(colour_tup, " ", col)
+            if colour_tup[0] == col[0]:
+                if colour_tup[1] == col[1]:
+                    if colour_tup[2] == col[2]:
+                        colour_num = i
+                        colour_num += 1
+                        if test == 1:
+                            print("Set Colour to num {}".format(colour_num))
+                        self.colour = colour_num
 
     def get_colour(self):
+        test = 5
+        if test == 5:
+            print("get_colour - StitchObject - stitch_objects.py")
         return self.colour
 
     def process_stitch_list(self):
+        test = 5
+        if test == 5:
+            print("process_stitch_list - StitchObject - stitch_objects.py")
 
         l_p = self.stitch_list[0]
         for i in self.stitch_list:
@@ -63,16 +85,20 @@ class StitchObject:
             x_val = cur_x - l_x
             l_p = i
             self.emb_stitch_list.append((x_val, y_val))   # very important, yx flipped to xy
-        print(self.emb_stitch_list)
+
+        if test == 1:
+            print(self.emb_stitch_list)
 
 
 def create_stitch_objects(objects):
-    test = 0
+    test = 5
+    if test == 5:
+        print("create_stitch_objects - stitch_objects.py")
+
     stitch_ob_list = []
 
     for ob in objects:
         ob_colour = ob.get_ob_colour()
-        # ob_id = ob.get_ob_id()
         ob_stitch_list = ob.get_stitch_list()
         ob_stitch_len = ob.get_stitch_len()
         ob_matrix = ob.get_ob_matrix()
