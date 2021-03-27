@@ -1,6 +1,5 @@
 import datetime
 import plot_objects as po
-import stitch_objects as so
 
 mata_file = object
 
@@ -8,6 +7,9 @@ mata_file = object
 class MataObject:
 
     def __init__(self, stitch_objects, hoop_code):
+        test = 5
+        if test == 5:
+            print("class MataObjects - mata_objects.py")
 
         self.stitch_objects = stitch_objects                # set
         self.colour_change = self.set_colour_change_list()  # set
@@ -32,6 +34,10 @@ class MataObject:
         self.set_extent()
 
     def set_stitch_lists(self):
+        test = 5
+        if test == 5:
+            print("set_stitch_lists - class MataObjects - mata_objects.py")
+
         stitch_lists = []
         for stitch_ob in self.stitch_objects:
             s_list = stitch_ob.get_stitch_list()
@@ -39,6 +45,9 @@ class MataObject:
         return stitch_lists
 
     def set_colour_change_list(self):
+        test = 5
+        if test == 5:
+            print("set_colour_change_list - class MataObjects - mata_objects.py")
         colour_change = []
         for stitch_ob in self.stitch_objects:
             colour = stitch_ob.get_colour()
@@ -46,6 +55,9 @@ class MataObject:
         return colour_change
 
     def set_stitch_count(self):     # set after both emb lists
+        test = 5
+        if test == 5:
+            print("set_stitch_count - class MataObjects - mata_objects.py")
         stitches = 0
         for i in self.emb_stitch_lists:
             stitches += len(i)
@@ -56,13 +68,17 @@ class MataObject:
         self.stitch_count = stitches
 
     def set_extent(self):
-
+        test = 5
+        if test == 5:
+            print("set_extent - class MataObjects - mata_objects.py")
         v = round(len(self.matrix) / 2)
         h = round(len(self.matrix[0]) / 2)
         self.extent1 = [h, v, h, v]
 
     def process_stitch_lists(self):
-
+        test = 5
+        if test == 5:
+            print("process_stitch_lists - class MataObjects - mata_objects.py")
         for i, st_list in enumerate(self.stitch_lists):
 
             for ind, yx in enumerate(st_list):
@@ -81,14 +97,17 @@ class MataObject:
                 l_p = j
                 emb_stitch_list.append((x_val, y_val))   # very important, yx flipped to xy
             # process stitches - max stitch value
-            print("Step 1 Stitches: ")
-            for each in emb_stitch_list:
-                print(each)
+            if test == 1:
+                print("Step 1 Stitches: ")
+                for each in emb_stitch_list:
+                    print(each)
             s_list = process_stitch_list(emb_stitch_list, self.stitch_objects[i].stitch_len)
             self.emb_stitch_lists.append(s_list)
 
     def create_jump_to_lists(self):
-        test = 1
+        test = 5
+        if test == 5:
+            print("create_jump_to_lists - class MataObjects - mata_objects.py")
         width = len(self.matrix[0])
         height = len(self.matrix)
 
@@ -99,8 +118,7 @@ class MataObject:
         for i in self.stitch_lists:     # connecting centre to stitch list start and ends to starts
             index_list = []
             goto_yx = i[0]
-            # print(i)
-            # print("goto: {} start: {}".format(goto_yx, start_yx))
+
             h, index_list = po.find_path(self.matrix, goto_yx, start_yx, index_list)
             index_list.append(i[0])
             index_list.insert(0, start_yx)
@@ -109,7 +127,7 @@ class MataObject:
             self.jump_to_lists.append(index_list)
             if test == 1:
                 print("\nJump   list: {}".format(index_list))
-                # print("stitch list: {}".format(i))
+
                 print("stitch list: ")
                 for each in i:
                     print(each)
@@ -132,12 +150,14 @@ class MataObject:
                 emb_jump_to_list.append((x_val, y_val))  # very important, yx flipped to xy
 
             j_list = process_stitch_list(emb_jump_to_list, 126)
-            # del j_list[0]
-            # j_list = emb_jump_to_list
+
             self.emb_jump_to_lists.append(j_list)
 
 
 def create_mata_object(stitch_objects, hoop_code):
+    test = 5
+    if test == 5:
+        print("create_mata_object - mata_objects.py")
     global mata_file
     mata_file = MataObject(stitch_objects, hoop_code)
     mata_file.create_jump_to_lists()
@@ -146,8 +166,10 @@ def create_mata_object(stitch_objects, hoop_code):
 
 
 def process_stitch_list(stitch_list, max_len):
-    test = 0
-    # last_p = stitch_list[0]
+    test = 5
+    if test == 5:
+        print("process_stitch_list - mata_objects.py")
+
     emb_stitches = []
     stitch = []
     for ind, cur_p in enumerate(stitch_list):
@@ -212,12 +234,14 @@ def process_stitch_list(stitch_list, max_len):
             emb_stitches.append((s_x, s_y))
 
     if test == 1:
-
         print("End Last: {} Cur: {} Stitch: {}".format(last_p, cur_p, stitch))
     return emb_stitches
 
 
 def print_mata_info():
+    test = 5
+    if test == 5:
+        print("print_mata_info - mata_objects.py")
     offset = mata_file.offset
     flag = mata_file.flags
     date = mata_file.date
@@ -278,5 +302,4 @@ def print_mata_info():
         print("Jump List {}:\n  {}".format(i, j_list))
         print("Stitch List {}:\n  {}".format(i, s_list))
 
-    # sit = [(0, 1), (0, 1), (0, 1), (0, -1), (0, -1), (0, -1), (0, 1), (0, -1), (0, 1), (0, -1), (0, -1), (0, -1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1), (0, 1)]
-    # print(process_stitch_list(sit, 3))
+

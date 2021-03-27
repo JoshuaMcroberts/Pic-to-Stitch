@@ -1,27 +1,16 @@
-import tkinter as tk
 from tkinter import filedialog
-from tkinter import *
-
-
-# filename = "tm"
-# file = open("C:/Users/Joshu/Desktop/" + filename + ".jef", "wb")
-# #
-# #
-# int_1 = [124, 0, 0, 0, 20, 0, 0, 16, 65, 0, 0, 1, 200, 34, 20, 0, 0, 16, 65, 0, 0, 1]
-# # words = ["t", "h", "i", "s", "t", "h", "e", "t", "i", "m", "e", "2", "0", ":", "0", "0"]
-# # word = "2021"
 
 
 def write_to_file(mata_file):
-    test = 1
+    test = 5
+    if test == 5:
+        print("write_to_file - writer.py")
+
     f = filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
-    f = open(f, 'wb')
-    if f is None:  # asksaveasfile return `None` if dialog closed with "cancel".
+    if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
         return
 
-    # print(four_byte_int(20))
-    # print(co_or_byte((23, -68)))
-
+    f = open(f, 'wb')
 
     # write all bytes here
 
@@ -94,7 +83,6 @@ def write_to_file(mata_file):
     for i in range(len(col_change_list)):
         f.write(b'\x0d\x00\x00\x00')
 
-
     # xy's
     jump_lists = mata_file.emb_jump_to_lists
     stitch_lists = mata_file.emb_stitch_lists
@@ -121,33 +109,23 @@ def write_to_file(mata_file):
     f.write(b'\x80\x10')
     # End 8010
 
-
     f.close()
 
 
 def four_byte_int(val):     # returns byte to be written
+    test = 5
+    if test == 5:
+        print("four_byte_int - writer.py")
     val = val.to_bytes(4, byteorder='little', signed=True)
     return val
 
 
 def co_or_byte(co_or):      # returns byte to be written
+    test = 0
+    if test == 5:
+        print("co_or_byte - writer.py")
     x_co, y_co = co_or
     n_x = x_co.to_bytes(1, byteorder='little', signed=True)
     n_y = y_co.to_bytes(1, byteorder='little', signed=True)
     return n_x, n_y
 
-
-
-
-
-
-
-
-# file.write(bytes(word, 'utf-8'))
-
-
-# file.write(bytes(word, 'ascii'))
-#
-# file.close()
-#
-# write_to_file(0)

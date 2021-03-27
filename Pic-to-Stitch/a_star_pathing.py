@@ -12,61 +12,61 @@ class Node:
         self.co_or = (0, 0)
 
     def set_co_or(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_co_or - Node - a_start_pathing.py")
         self.co_or = val
 
     def set_h(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_h - Node - a_start_pathing.py")
         self.h = val
 
     def set_g(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_g - Node - a_start_pathing.py")
         self.g = val
 
     def set_f(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_f - Node - a_start_pathing.py")
         self.f = val
 
     def set_l_point(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_l_point - Node - a_start_pathing.py")
         self.l_point = val
 
     def get_f(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_f - Node - a_start_pathing.py")
         return self.f
 
     def get_h(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_h - Node - a_start_pathing.py")
         return self.h
 
     def get_g(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_g - Node - a_start_pathing.py")
         return self.g
 
     def get_l_point(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_l_point - Node - a_start_pathing.py")
         return self.l_point
 
     def get_co_or(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_co_or - Node - a_start_pathing.py")
         return self.co_or
@@ -85,7 +85,7 @@ class Node:
 
 
 def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
-    test = 5
+    test = 1
     if test == 5:
         print("move_to_a_star - a_start_pathing.py")
 
@@ -221,7 +221,7 @@ def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
 
 
 def set_node(node, plot, start_yx, goto_yx, g, l_p):
-    test = 5
+    test = 0
     if test == 5:
         print("set_node - a_start_pathing.py")
 
@@ -240,7 +240,7 @@ def set_node(node, plot, start_yx, goto_yx, g, l_p):
 
 
 def lowest_f(open_list):
-    test = 5
+    test = 0
     if test == 5:
         print("lowest_f - a_start_pathing.py")
 
@@ -281,7 +281,7 @@ def lowest_f(open_list):
 
 
 def get_surrounding_nodes(plot, y, x):
-    test = 5
+    test = 0
     if test == 5:
         print("get_surrounding_nodes - a_start_pathing.py")
 
@@ -359,34 +359,34 @@ def get_surrounding_nodes(plot, y, x):
 
 
 def print_node_plot(node_plot):
-    test = 5
+    test = 0
     if test == 5:
         print("print_node_plot - a_start_pathing.py")
 
-    print("\n[] print_node_plot function")
+        print("\n[] print_node_plot function")
 
-    print_val = " \n"
-    for y, row in enumerate(node_plot):
+        print_val = " \n"
+        for y, row in enumerate(node_plot):
 
-        for x, node in enumerate(row):
-            co = node.get_co_or()
-            print_val = print_val + str(co) + " "
-        print_val = print_val + "\n"
-    print(print_val)
+            for x, node in enumerate(row):
+                co = node.get_co_or()
+                print_val = print_val + str(co) + " "
+            print_val = print_val + "\n"
+        print(print_val)
 
 
 def print_node_list(node_list):
-    test = 5
+    test = 0
     if test == 5:
         print("print_node_list - a_start_pathing.py")
 
-    print("\n[] print_list_plot function")
-    print_val = " \n"
+        print("\n[] print_list_plot function")
+        print_val = " \n"
 
-    for x, node in enumerate(node_list):
-        co = node.get_co_or()
-        lp = node.get_l_point()
-        print_val = print_val + str(co) + " " + str(lp) + "\n"
+        for x, node in enumerate(node_list):
+            co = node.get_co_or()
+            lp = node.get_l_point()
+            print_val = print_val + str(co) + " " + str(lp) + "\n"
 
-    print(print_val)
+        print(print_val)
 

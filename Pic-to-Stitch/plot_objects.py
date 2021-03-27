@@ -14,7 +14,7 @@ class Plot:
         self.col_matrix_list = []
 
     def set_num_list(self, colour_list):
-        test = 5
+        test = 0
         if test == 5:
             print("set_num_list - class Plot - plot_objects.py")
 
@@ -22,18 +22,23 @@ class Plot:
         self.col_amount = len(self.col_list)
 
     def set_matrix_w_h(self):
-        test = 5
+        test = 0
         if test == 5:
             print("set_matrix_w_h - class Plot - plot_objects.py")
 
         self.matrix_width = len(self.matrix[0])
         self.matrix_height = len(self.matrix)
 
-    def create_sub_plot(self):
-        test = 5
+    def create_sub_plot(self, main):
+        test = 0
         if test == 5:
             print("create_sub_plot - class Plot - plot_objects.py")
 
+        message = "Starting Object Creation..." # progress pop in main
+        main.bar("Object Creation", message, 10, 0)
+        main.bar_update_message(message)
+
+        msg_count = 1
         for i in range(self.col_amount):
             if test == 1:
                 print(i)
@@ -51,6 +56,10 @@ class Plot:
 
             col_plot = ColourPlot(plot, i+1, colour)
             self.col_matrix_list.append(col_plot)
+
+            msg = "Colour Plot " + str(msg_count) + " Created..."   # update progress pop in main
+            main.bar_update_message(msg)
+            msg_count += 1
 
     def print_col_matrix_list(self):
         test = 5
@@ -90,9 +99,9 @@ class ColourPlot(Plot):
         self.ob_matrix_list = []
 
     def create_ref_plot(self, arg):
-        test = 5
+        test = 0
         if test == 5:
-            print("create_ref_plot - class Plot - plot_objects.py")
+            print("create_ref_plot - class ColourPlot - plot_objects.py")
 
         self.set_matrix_w_h()
         if arg == 1:
@@ -117,22 +126,27 @@ class ColourPlot(Plot):
                 ref_plot[y, x] = val
         return ref_plot
 
-    def process_colour_plot(self, main_plot):
-        test = 5
+    def process_colour_plot(self, main, col_count, main_plot):
+        test = 0
         if test == 5:
-            print("process_colour_plot - class Plot - plot_objects.py")
+            print("process_colour_plot - class ColourPlot - plot_objects.py")
 
         ref_plot = self.ref_plot
         col_num = self.col_num
         col_letter = "a"
         count = 0
         i = 0
+        msg_count = 1
 
         for y, row in enumerate(ref_plot):
 
             for x, point in enumerate(row):
 
                 if point == col_letter:
+                    msg = "Colour Plot " + str(col_count) + " - Processing Section " + str(msg_count) + "..."
+                    main.bar_update_message(msg)
+                    main.bar_update_progress(msg_count, 0.3, 0)
+
                     count += 1
                     max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), 8, count, col_num)
                     if test == 1:
@@ -141,13 +155,14 @@ class ColourPlot(Plot):
                     reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, count, col_num, 1)
                     if test == 1:
                         print_plot(ref_plot)
+                    msg_count += 1
                 i += 1
         self.ref_plot = ref_plot
 
     def set_object_count(self):
-        test = 5
+        test = 0
         if test == 5:
-            print("set_object_count - class Plot - plot_objects.py")
+            print("set_object_count - class ColourPlot - plot_objects.py")
 
         plot = self.ref_plot
         num = []
@@ -167,9 +182,9 @@ class ColourPlot(Plot):
         self.object_count = val
 
     def create_object_sub_plot(self):
-        test = 5
+        test = 0
         if test == 5:
-            print("sizing_check - class Plot - plot_objects.py")
+            print("create_object_sub_plot - class ColourPlot - plot_objects.py")
 
         self.set_object_count()
 
@@ -196,7 +211,7 @@ class ColourPlot(Plot):
     def print_ob_matrix_list(self):
         test = 5
         if test == 5:
-            print("print_ob_matrix_list - class Plot - plot_objects.py")
+            print("print_ob_matrix_list - class ColourPlot - plot_objects.py")
 
         if not self.ob_matrix_list:
             if test == 1:
@@ -378,7 +393,7 @@ class ObjectPlot(ColourPlot):
                 break
 
     def process_matrix(self):
-        test = 5
+        test = 0
         if test == 5:
             print("process_matrix - class ObjectPlot - plot_objects.py")
 
@@ -561,7 +576,7 @@ def stitch_test(plot, ind_list):
 
 
 def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_num):
-    test = 5
+    test = 0
     if test == 5:
         print("get_object_outline - plot_objects.py")
 
@@ -1213,7 +1228,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
             if b > max_x:
                 new_plot = compare_plots(plot_c, 1, template, "2")
-                if test == 1:
+                if test == 2:
                     print_plot(new_plot)
                 anw, yx = check_for_number(new_plot, "1")
 
@@ -1233,7 +1248,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
                 if template[a, b] == "1":  # hit already completed section
                     new_plot = compare_plots(plot_c, 1, template, "2")
-                    print_plot(new_plot)
+                    if test == 2:
+                        print_plot(new_plot)
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
@@ -1279,7 +1295,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
                 if template[y, b] == "1":  # hit already completed section
                     new_plot = compare_plots(plot_c, 1, template, "2")
-                    print_plot(new_plot)
+                    if test == 2:
+                        print_plot(new_plot)
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
@@ -1315,7 +1332,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
                 if template[c, b] == "1":  # hit already completed section
                     new_plot = compare_plots(plot_c, 1, template, "2")
-                    print_plot(new_plot)
+                    if test == 2:
+                        print_plot(new_plot)
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
@@ -1353,9 +1371,11 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     if test == 2:
                         print("Else  Set: ({},{})". format(y, x))
                 else:
-                    print("Else  Right 1 move_to")
+                    if test == 2:
+                        print("Else  Right 1 move_to")
                     new_plot = compare_plots(plot_c, 1, template, "2")
-                    print_plot(new_plot)
+                    if test == 2:
+                        print_plot(new_plot)
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
@@ -1401,7 +1421,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
             # if position 3
             elif y - 1 >= 0 and plot_c[c, b] == 1:
-                print(template[y, b])
+                if test == 2:
+                    print(template[y, b])
                 if template[c, b] == "1":   # hit already completed section
                     new_plot = compare_plots(plot_c, 1, template, "2")
                     if test == 2:
@@ -1470,7 +1491,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     elif plot_c[c, x] == 0 and template[y, x] == "2":
                         direct = 1
                     elif template[y, x] == "2":
-                        print("error 2 right position 4")
+                        if test == 2:
+                            print("error 2 right position 4")
                     elif template[y, x] == "0":
                         pass
                     # look at the nest 2's column
@@ -2541,7 +2563,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
 
 
 def find_path(main_plot, goto_yx, start_yx, ind_list):
-    test = 5
+    test = 0
     if test == 5:
         print("find_path - plot_objects.py")
 
@@ -2820,7 +2842,7 @@ def back_track(ind_list, plot):
 
 
 def next_point(yx_st, yx_fn):
-    test = 5
+    test = 0
     if test == 5:
         print("next_point - plot_objects.py")
     start_p = 1
@@ -2873,7 +2895,7 @@ def next_point(yx_st, yx_fn):
 
 
 def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, col_num, arg):
-    test = 5
+    test = 0
     if test == 5:
         print("reversible_mine_sweeper_fill - plot_objects.py")
 
@@ -2915,7 +2937,7 @@ def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, co
                                 pass
                             else:
 
-                                if test >= 1:
+                                if test == 1:
                                     print("Fill Set({},{})".format(y, x))
                                 ref_plot[y, x] = set_to
                                 change = 1
@@ -2938,7 +2960,7 @@ def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, co
                             if set_to not in points:
                                 pass
                             else:
-                                if test >= 1:
+                                if test == 1:
                                     print("Re Fill ({},{})".format(y, x))
                                 ref_plot[y, x] = set_to
                                 change = 1
@@ -3069,7 +3091,7 @@ def print_plot_advanced(plot):
 
 
 def get_surrounding_points(plot, out_plot, y, x, col_num):
-    test = 5
+    test = 0
     if test == 5:
         print("get_surrounding_point - class Plot - plot_objects.py")
 
@@ -3169,7 +3191,7 @@ def get_surrounding_points(plot, out_plot, y, x, col_num):
 
 
 def valid_position(main_plot, y, x, col_num, con_col):
-    test = 5
+    test = 0
     if test == 5:
         print("valid_position - class Plot - plot_objects.py")
 
@@ -3187,7 +3209,7 @@ def valid_position(main_plot, y, x, col_num, con_col):
 
 
 def get_surrounding_points_5x5(main_plot, y, x):
-    test = 5
+    test = 0
     if test == 5:
         print("get_surrounding_points_5x5 - class Plot - plot_objects.py")
 
@@ -3303,7 +3325,7 @@ def get_surrounding_points_5x5(main_plot, y, x):
 
 
 def count_list(points):
-    test = 5
+    test = 0
     if test == 5:
         print("count_list - class Plot - plot_objects.py")
 
@@ -3338,7 +3360,7 @@ def count_list(points):
 
 
 def t_w_p_logic(col_num, con_col, val_list, amount_list):
-    test = 5
+    test = 0
     if test == 5:
         print("t_w_p_logic - class Plot - plot_objects.py")
 
