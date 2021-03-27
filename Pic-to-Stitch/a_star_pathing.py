@@ -85,7 +85,7 @@ class Node:
 
 
 def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
-    test = 1
+    test = 5
     if test == 5:
         print("move_to_a_star - a_start_pathing.py")
 

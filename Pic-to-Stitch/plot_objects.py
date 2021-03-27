@@ -1806,6 +1806,7 @@ def compare_plots(plot1, val1, plot2, val2):
     return blank_plot
 
 
+# do not delete
 def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     test = 5
     if test == 5:

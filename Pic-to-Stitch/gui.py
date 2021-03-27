@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import *
-from tkinter import filedialog
 from tkinter import ttk
+from tkinter import filedialog
 import tkinter.messagebox
 import time
 
@@ -32,6 +32,7 @@ class Gui:
         self.hoop_code = int()
         self.section_image_list = []
         self.pro_pop = ""
+        self.value = 0
 
         global og_display
         global cy_display
@@ -39,8 +40,6 @@ class Gui:
         self.root = tk.Tk()
         self.root.title("Pic-to-Stitch")
         self.root.iconbitmap("Icon_2.ico")
-        # self.root.iconmask("Icon_2.ico")
-        self.root.iconphoto("Icon_2.ico")
 
         # Open in full screen
         self.root.wm_state("zoomed")
@@ -61,7 +60,7 @@ class Gui:
         edit_menu.add_command(label="Redo", command=redo)
 
         # # ** Toolbar **
-        # toolbar = Frame(self.root)
+        toolbar = Frame(self.root)
         #
         # insert_button = Button(toolbar, text="Insert Image", command=self.you_sure)
         # insert_button.pack(side=LEFT, padx=2, pady=2)
@@ -79,9 +78,9 @@ class Gui:
         # process5_button.pack(side=LEFT, padx=2, pady=2)
         # process6_button = Button(toolbar, text="Jan Colour", command=lambda: [im.janome_colours(self)])
         # process6_button.pack(side=LEFT, padx=2, pady=2)
-        # process7_button = Button(toolbar, text="Create Plot", command=lambda: [im.create_image_plot(self),
-        #                                                                        self.stitch_type_pop()])
-        # process7_button.pack(side=LEFT, padx=2, pady=2)
+        process7_button = Button(toolbar, text="Create Plot", command=lambda: [im.create_image_plot(self),
+                                                                               self.stitch_type_pop()])
+        process7_button.pack(side=LEFT, padx=2, pady=2)
         # process8_button = Button(toolbar, text="print", command=lambda: [mo.print_mata_info()])
         # process8_button.pack(side=LEFT, padx=2, pady=2)
         # process9_button = Button(toolbar, text="progress", command=lambda: [self.new()])
@@ -89,7 +88,7 @@ class Gui:
         # button_h = str(toolbar.winfo_height())
         # process9_button = Button(toolbar, text=button_h, height=1, command=lambda: [self.update_right_pane(4)])
         # process9_button.pack(side=LEFT, padx=2, pady=2)
-        # toolbar.pack(side=TOP, fill=X)
+        toolbar.pack(side=TOP, fill=X)
 
         # Main Frame
         self.main_pane = Frame(self.root)
@@ -138,7 +137,7 @@ class Gui:
         self.right_button_1.grid(row=5, column=4, padx=10)
         self.right_button_1.grid_forget()
         self.right_button_2 = Button(self.right_bot, text="Insert Image",
-                                     command=lambda: [self.you_sure(), self.update_right_pane(1)])
+                                     command=lambda: [self.load_image(), self.update_right_pane(1)])
         self.right_button_2.grid(row=5, column=2, padx=10)
         self.right_button_4 = Button(self.right_bot, text="Denoise", width=7, command=lambda: [self.run_denoise()])
         self.right_button_4.grid(row=5, column=3, padx=10)
@@ -247,7 +246,7 @@ class Gui:
 
             # action - button
             self.right_button_2.configure(text="Insert Image",
-                                     command=lambda: [self.you_sure(), self.update_right_pane(1)])
+                                     command=lambda: [self.load_image(), self.update_right_pane(1)])
             self.right_button_2.grid(row=5, column=2, padx=10)
 
             # next - button
@@ -419,7 +418,7 @@ class Gui:
             # action
             self.right_button_2.grid(row=5, column=2, padx=10)
             self.right_button_2.configure(text="Insert Image",
-                                          command=lambda: [self.you_sure(), self.update_right_pane(1)])
+                                          command=lambda: [self.load_image(), self.update_right_pane(1)])
 
             # next
             self.right_button_1.grid(row=5, column=4, padx=10)
@@ -769,6 +768,13 @@ class Gui:
     def bar_des(self):
         self.pro_pop.destroy()
 
+    # def save_file(mata_file):
+    #     f = tk.filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
+    #     if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
+    #         return
+    #     else:
+    #         wo.write_to_file(mata_file, f)
+
     def error_message(self, message):
         test = 0
         if test == 5:
@@ -1064,7 +1070,7 @@ class Gui:
                                                                         mo.create_mata_object(
                                                                         so.create_stitch_objects(self.objects),
                                                                         self.hoop_code),
-                                                                        wo.write_to_file(mo.mata_file),
+                                                                        save_file(mo.mata_file),
                                                                         self.update_right_pane(6)]) # nearlyt pop.destroy()])
 
         pop_button.grid(row=1, column=4, pady=10, columnspan=2, padx=10)
@@ -2779,6 +2785,14 @@ def process_stitch_choices(main, objects, section_images, stitch_type, stitch_le
 
     if test == 1:
         print("Object Set Finished")
+
+
+def save_file(mata_file):
+    f = filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
+    if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
+        return
+    else:
+        wo.write_to_file(mata_file, f)
 
 
 def print_lists(a, b, c, d):

@@ -1,16 +1,12 @@
-from tkinter import filedialog
 
 
-def write_to_file(mata_file):
+
+def write_to_file(mata_file, file_path):
     test = 5
     if test == 5:
         print("write_to_file - writer.py")
 
-    f = filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
-    if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
-        return
-
-    f = open(f, 'wb')
+    f = open(file_path, 'wb')
 
     # write all bytes here
 
@@ -113,7 +109,7 @@ def write_to_file(mata_file):
 
 
 def four_byte_int(val):     # returns byte to be written
-    test = 5
+    test = 0
     if test == 5:
         print("four_byte_int - writer.py")
     val = val.to_bytes(4, byteorder='little', signed=True)
@@ -128,4 +124,3 @@ def co_or_byte(co_or):      # returns byte to be written
     n_x = x_co.to_bytes(1, byteorder='little', signed=True)
     n_y = y_co.to_bytes(1, byteorder='little', signed=True)
     return n_x, n_y
-

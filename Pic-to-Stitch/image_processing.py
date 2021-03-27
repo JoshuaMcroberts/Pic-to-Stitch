@@ -167,7 +167,7 @@ def floor_step(pixel, floors):
 
 
 def pix_restrict(main):     # og first different colour
-    test = 4
+    test = 5
     if test == 5:
         print("pix_restrict image_processing.py")
 
@@ -258,11 +258,37 @@ def pix_restrict(main):     # og first different colour
 
         # make a list of the colours that appear the least
         # make into a percentage formula
-        # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
-        # value = 2000
-        value = pix_total / 100
-        value = value * 4
-        value = round(value)
+
+        if main.value == 0:
+            # order colour list ordered
+            amount_list = colour_count.copy()
+            print(amount_list)
+            amount_list.sort()
+            print(amount_list)
+            amount_list.reverse()
+            print(amount_list)
+            # delete lower 80% of list
+            l_len = len(amount_list)
+            valid_cols = l_len*0.2
+            valid_cols = round(valid_cols)
+            print(valid_cols)
+            value = amount_list[valid_cols-2]
+            value = value/1000
+            value = np.ceil(value)
+            main.value = value*1000
+
+            # get the lowest value in list
+            # set as value
+            value = main.value
+
+        else:
+            value = main.value
+            # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
+            # value = 2000
+
+            # value = pix_total / 100
+            # value = value * 4
+            # value = round(value)`
         index_list = []
         for i in colour_count:
 
@@ -567,7 +593,6 @@ def pix_change(main):
                 pixels, pixel_yx = get_surrounding_pixels_3x3(pixel_matrix, y, x)
                 cur_pix = image_copy[y, x]
 
-                # if cur_pix != in list:
                 val = 0
                 for i, pix_a in enumerate(pixels):
                     if cur_pix[0] == pix_a[0]:
@@ -575,7 +600,7 @@ def pix_change(main):
                             if cur_pix[2] == pix_a[2]:
                                 val = 1
                                 break
-                # print("3x3")
+
                 if val == 0:
                     pixel_list = []
                     colour_count = []
@@ -640,7 +665,7 @@ def pix_change(main):
                             if cur_pix[2] == pix_a[2]:
                                 val = 1
                                 break
-               # print("5x5")
+
                 if val == 0:
                     pixels, pixel_yx = get_surrounding_pixels_3x3(pixel_matrix, y, x)
                     pixel_yx_og += pixel_yx
@@ -730,7 +755,7 @@ def pix_change(main):
                             if cur_pix[2] == pix_a[2]:
                                 val = 1
                                 break
-        #         print("7x7")
+
                 if val == 0:
                     pixels, pixel_yx = get_surrounding_pixels_5x5(pixel_matrix, y, x)
                     pixel_yx_og += pixel_yx
@@ -822,7 +847,7 @@ def pix_change(main):
                             if cur_pix[2] == pix_a[2]:
                                 val = 1
                                 break
-        #         print("9x9")
+
                 if val == 0:
                     pixels, pixel_yx = get_surrounding_pixels_7x7(pixel_matrix, y, x)
                     pixels_og += pixels
