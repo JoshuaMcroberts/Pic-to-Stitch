@@ -39,13 +39,13 @@ class StitchObject:
         self.set_colour()
 
     def get_stitch_list(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_stitch_list - StitchObject - stitch_objects.py")
         return self.stitch_list
 
     def set_colour(self):
-        test = 5
+        test = 0
         if test == 5:
             print("set_colour - StitchObject - stitch_objects.py")
 
@@ -67,13 +67,13 @@ class StitchObject:
                         self.colour = colour_num
 
     def get_colour(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_colour - StitchObject - stitch_objects.py")
         return self.colour
 
     def process_stitch_list(self):
-        test = 5
+        test = 0
         if test == 5:
             print("process_stitch_list - StitchObject - stitch_objects.py")
 
@@ -91,7 +91,7 @@ class StitchObject:
 
 
 def create_stitch_objects(objects):
-    test = 5
+    test = 0
     if test == 5:
         print("create_stitch_objects - stitch_objects.py")
 

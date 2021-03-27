@@ -21,7 +21,7 @@ class MataObject:
         self.extent3 = [-1, -1, -1, -1]  # set
         self.extent4 = [-1, -1, -1, -1]  # set
         self.extent5 = [-1, -1, -1, -1]  # set
-        self.emb_stitch_lists = [[(0, 0), (30, 0), (0, -30), (27, 0)]]  # set by method
+        self.emb_stitch_lists = [[(0, 0), (30, 0), (0, -30), (-27, 0)]]  # set by method
         self.emb_jump_to_lists = [[(0, 0), (-18, 18)]]  # set by method
 
 
@@ -30,6 +30,14 @@ class TestWriter(unittest.TestCase):
     @classmethod
     def setUpClass(self):
         self.mata = MataObject()
+
+        self.mata_bytes = b'\x7c\x00\x00\x00\x14\x00\x00\x00\x32\x30\x32\x31\x30\x33\x32\x37\x31\x30\x32\x36\x31\x30' \
+                          b'\x30\x30\x01\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00' \
+                          b'\x06\x00\x00\x00\x06\x00\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
+                          b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
+                          b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x06\x00\x00\x00\x06\x00\x00\x00\x06\x00' \
+                          b'\x00\x00\x06\x00\x00\x00\x4b\x00\x00\x00\x0d\x00\x00\x00\x80\x02\x00\x00\x80\x02\xee\x12' \
+                          b'\x00\x00\x1e\x00\x00\xe2\xe5\x00\x80\x10'
 
     @classmethod
     def tearDownClass(self):
@@ -57,3 +65,7 @@ class TestWriter(unittest.TestCase):
     def test_write_to_file(self):
         file_path = "write_test_ob.jef"
         w.write_to_file(self.mata, file_path)
+        file = open(file_path, "rb")
+        file_bytes = file.read()
+        self.assertEqual(self.mata_bytes, file_bytes)
+        file.close()

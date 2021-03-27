@@ -7,7 +7,7 @@ mata_file = object
 class MataObject:
 
     def __init__(self, stitch_objects, hoop_code):
-        test = 5
+        test = 0
         if test == 5:
             print("class MataObjects - mata_objects.py")
 
@@ -34,7 +34,7 @@ class MataObject:
         self.set_extent()
 
     def set_stitch_lists(self):
-        test = 5
+        test = 0
         if test == 5:
             print("set_stitch_lists - class MataObjects - mata_objects.py")
 
@@ -45,7 +45,7 @@ class MataObject:
         return stitch_lists
 
     def set_colour_change_list(self):
-        test = 5
+        test = 0
         if test == 5:
             print("set_colour_change_list - class MataObjects - mata_objects.py")
         colour_change = []
@@ -55,7 +55,7 @@ class MataObject:
         return colour_change
 
     def set_stitch_count(self):     # set after both emb lists
-        test = 5
+        test = 0
         if test == 5:
             print("set_stitch_count - class MataObjects - mata_objects.py")
         stitches = 0
@@ -68,7 +68,7 @@ class MataObject:
         self.stitch_count = stitches
 
     def set_extent(self):
-        test = 5
+        test = 0
         if test == 5:
             print("set_extent - class MataObjects - mata_objects.py")
         v = round(len(self.matrix) / 2)
@@ -76,7 +76,7 @@ class MataObject:
         self.extent1 = [h, v, h, v]
 
     def process_stitch_lists(self):
-        test = 5
+        test = 0
         if test == 5:
             print("process_stitch_lists - class MataObjects - mata_objects.py")
         for i, st_list in enumerate(self.stitch_lists):
@@ -105,7 +105,7 @@ class MataObject:
             self.emb_stitch_lists.append(s_list)
 
     def create_jump_to_lists(self):
-        test = 5
+        test = 0
         if test == 5:
             print("create_jump_to_lists - class MataObjects - mata_objects.py")
         width = len(self.matrix[0])
@@ -155,7 +155,7 @@ class MataObject:
 
 
 def create_mata_object(stitch_objects, hoop_code):
-    test = 5
+    test = 0
     if test == 5:
         print("create_mata_object - mata_objects.py")
     global mata_file
@@ -166,7 +166,7 @@ def create_mata_object(stitch_objects, hoop_code):
 
 
 def process_stitch_list(stitch_list, max_len):
-    test = 5
+    test = 0
     if test == 5:
         print("process_stitch_list - mata_objects.py")
 

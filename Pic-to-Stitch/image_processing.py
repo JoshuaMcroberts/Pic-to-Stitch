@@ -87,7 +87,6 @@ def image_resize(main, image, hoop_size, option, new_w, new_h):
     return image
 
 
-# ** Working **
 def auto_colour_step(main):
     test = 0
     if test == 5 or test == 1:
@@ -158,7 +157,7 @@ def auto_colour_step(main):
 def floor_step(pixel, floors):
     test = 0
     if test == 5:
-        print("floor_step gui.py")
+        print("floor_step image_processing.py")
 
     max_val = 2**8 - 1
     coarseness = max_val / floors
@@ -167,7 +166,7 @@ def floor_step(pixel, floors):
 
 
 def pix_restrict(main):     # og first different colour
-    test = 5
+    test = 4
     if test == 5:
         print("pix_restrict image_processing.py")
 
@@ -259,36 +258,37 @@ def pix_restrict(main):     # og first different colour
         # make a list of the colours that appear the least
         # make into a percentage formula
 
-        if main.value == 0:
-            # order colour list ordered
-            amount_list = colour_count.copy()
-            print(amount_list)
-            amount_list.sort()
-            print(amount_list)
-            amount_list.reverse()
-            print(amount_list)
-            # delete lower 80% of list
-            l_len = len(amount_list)
-            valid_cols = l_len*0.2
-            valid_cols = round(valid_cols)
-            print(valid_cols)
-            value = amount_list[valid_cols-2]
-            value = value/1000
-            value = np.ceil(value)
-            main.value = value*1000
+        # if main.value == 0:
+        #     # order colour list ordered
+        #     amount_list = colour_count.copy()
+        #     print(amount_list)
+        #     amount_list.sort()
+        #     print(amount_list)
+        #     amount_list.reverse()
+        #     print(amount_list)
+        #     # delete lower 80% of list
+        #     l_len = len(amount_list)
+        #     valid_cols = l_len*0.2
+        #     valid_cols = round(valid_cols)
+        #     print(valid_cols)
+        #     value = amount_list[valid_cols-2]
+        #     value = value/1000
+        #     value = np.ceil(value)
+        #     main.value = value*1000
+        #
+        #     # get the lowest value in list
+        #     # set as value
+        #     value = main.value
+        #
+        # else:
+        #     value = main.value
+        #     # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
+        #     # value = 2000
 
-            # get the lowest value in list
-            # set as value
-            value = main.value
+        value = pix_total / 100
+        value = value * 4
+        value = round(value)
 
-        else:
-            value = main.value
-            # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
-            # value = 2000
-
-            # value = pix_total / 100
-            # value = value * 4
-            # value = round(value)`
         index_list = []
         for i in colour_count:
 
@@ -559,12 +559,11 @@ def check_delete(deleted_list, pixel):
 
 
 def pix_change(main):
-    test = 1
+    test = 4
     if test == 5:
-        print("pix_change gui.py")
+        print("pix_change image_processing.py")
 
     global pix
-
 
     if len(main.images) == 2:
 
@@ -575,16 +574,20 @@ def pix_change(main):
         col_num = len(pixel_matrix[0])
         total_pix = row_num * col_num
 
+        # progress bar create and update
         message = "Running 3x3 Search..."
         main.bar("Denoise", message, total_pix, 1)
         main.bar_update_progress(0, 0, 1)
+        # end
 
         # 3x3
         set_3 = 0
         msg_count = 0
         for y, row in enumerate(pixel_matrix):
 
+            # progress bar update
             main.bar_update_progress(msg_count, 0, 1)
+            # end
 
             for x, pix in enumerate(row):
                 if test == 2:
@@ -613,11 +616,12 @@ def pix_change(main):
                             print("3 Cur: {} set: {} Q".format(cur_pix, pixel_list[0]))
                             set_3 += 1
 
+                            # progress bar update
                             msg = "Running 3x3 Search...(Pixels Changed: " + str(set_3) + ")"
                             main.bar_update_message(msg)
+                            # end
+
                     else:
-                        #    get inner lists
-                        #    find most common pixel
                         max_colour = max(colour_count)
                         ind = colour_count.index(max_colour)
                         new_pixel = pixel_list[ind]
@@ -633,14 +637,16 @@ def pix_change(main):
                                             print("3 Cur: {} set: {} L".format(cur_pix, new_pixel))
                                         set_3 += 1
 
+                                        # progress bar update
                                         msg = "Running 3x3 Search...(Pixels Changed: " + str(set_3) + ")"
                                         main.bar_update_message(msg)
+                                        # end
                 msg_count += 1
 
+        # progress bar reset
         message = "Running 5x5 Search..."
         main.bar_reset(message, 0, total_pix, 1)
-
-                        # break
+        # end
 
         # 5x5
         set_a = 0
@@ -648,7 +654,9 @@ def pix_change(main):
         msg_count = 0
         for y, row in enumerate(pixel_matrix):
 
+            # progress bar update
             main.bar_update_progress(msg_count, 0, 1)
+            # end
 
             for x, pix in enumerate(row):
                 if test == 2:
@@ -657,7 +665,6 @@ def pix_change(main):
                 pixels_og, pixel_yx_og = get_surrounding_pixels_5x5(pixel_matrix, y, x)
                 cur_pix = image_copy[y, x]
 
-                # if cur_pix != in list:
                 val = 0
                 for i, pix_a in enumerate(pixels_og):
                     if cur_pix[0] == pix_a[0]:
@@ -723,14 +730,16 @@ def pix_change(main):
                                     image_copy[img_y, img_x] = new_pix
                                     set_a += 1
 
+                                    # progress bar update
                                     msg = "Running 5x5 Search...(Pixels Changed: " + str(set_a) + ")"
                                     main.bar_update_message(msg)
+                                    # end
                 msg_count += 1
 
-
+        # progress bar reset
         message = "Running 7x7 Search..."
         main.bar_reset(message, 0, total_pix, 1)
-                # break
+        # end
 
         # 7x7
         set_b = 0
@@ -738,7 +747,9 @@ def pix_change(main):
         msg_count = 0
         for y, row in enumerate(pixel_matrix):
 
+            # progress bar update
             main.bar_update_progress(msg_count, 0, 1)
+            # end
 
             for x, pix in enumerate(row):
                 if test == 2:
@@ -747,7 +758,6 @@ def pix_change(main):
                 pixels_og, pixel_yx_og = get_surrounding_pixels_7x7(pixel_matrix, y, x)
                 cur_pix = image_copy[y, x]
 
-                # if cur_pix != in list:
                 val = 0
                 for i, pix_a in enumerate(pixels_og):
                     if cur_pix[0] == pix_a[0]:
@@ -816,13 +826,16 @@ def pix_change(main):
                                     image_copy[img_y, img_x] = new_pix
                                     set_b += 1
 
-                                    msg = "Running 7x7 Search...(Pixels Changed: " + str(set_a) + ")"
+                                    # progress bar update
+                                    msg = "Running 7x7 Search...(Pixels Changed: " + str(set_b) + ")"
                                     main.bar_update_message(msg)
+                                    # end
                 msg_count += 1
-                    # break
 
+        # progress bar reset
         message = "Running 9x9 Search..."
         main.bar_reset(message, 0, total_pix, 1)
+        # end
 
         # 9x9
         set_c = 0
@@ -830,7 +843,9 @@ def pix_change(main):
         msg_count = 0
         for y, row in enumerate(pixel_matrix):
 
+            # progress bar update
             main.bar_update_progress(msg_count, 0, 1)
+            # end
 
             for x, pix in enumerate(row):
                 if test == 2:
@@ -839,7 +854,6 @@ def pix_change(main):
                 pixels_og, pixel_yx_og = get_surrounding_pixels_9x9(pixel_matrix, y, x)
                 cur_pix = image_copy[y, x]
 
-                # if cur_pix != in list:
                 val = 0
                 for i, pix_a in enumerate(pixels_og):
                     if cur_pix[0] == pix_a[0]:
@@ -911,12 +925,16 @@ def pix_change(main):
                                     image_copy[img_y, img_x] = new_pix
                                     set_c += 1
 
-                                    msg = "Running 9x9 Search...(Pixels Changed: " + str(set_a) + ")"
+                                    # progress bar update
+                                    msg = "Running 9x9 Search...(Pixels Changed: " + str(set_c) + ")"
                                     main.bar_update_message(msg)
+                                    # end
 
                 msg_count += 1
-                    # break
+
+        # progress bar destroy
         main.bar_des()
+        # end
 
         out_img = Image.fromarray(image_copy, "RGB")
         main.undo_list.append(main.images[1])
@@ -936,7 +954,7 @@ def pix_change(main):
 def count_colour_list(pixels, pixel_list, colour_count, combine_count):
     test = 0
     if test == 5:
-        print("count_colour_list gui.py")
+        print("count_colour_list image_processing.py")
 
     for x, pix in enumerate(pixels):
 
@@ -976,7 +994,7 @@ def count_colour_list(pixels, pixel_list, colour_count, combine_count):
 def get_surrounding_pixels_3x3(pixel_matrix, y, x):
     test = 0
     if test == 5:
-        print("get_surrounding_pixels_3x3 gui.py")
+        print("get_surrounding_pixels_3x3 image_processing.py")
 
     row_num = len(pixel_matrix)
     col_num = len(pixel_matrix[0])
@@ -1027,7 +1045,7 @@ def get_surrounding_pixels_3x3(pixel_matrix, y, x):
 def get_surrounding_pixels_5x5(pixel_matrix, y, x):
     test = 0
     if test == 5:
-        print("get_surrounding_pixels_5x5 gui.py")
+        print("get_surrounding_pixels_5x5 image_processing.py")
 
     row_num = len(pixel_matrix)
     col_num = len(pixel_matrix[0])
@@ -1121,7 +1139,7 @@ def get_surrounding_pixels_5x5(pixel_matrix, y, x):
 def get_surrounding_pixels_7x7(pixel_matrix, y, x):
     test = 0
     if test == 5:
-        print("get_surrounding_pixels_7x7 gui.py")
+        print("get_surrounding_pixels_7x7 image_processing.py")
 
     row_num = len(pixel_matrix)
     col_num = len(pixel_matrix[0])
@@ -1233,7 +1251,7 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
 def get_surrounding_pixels_9x9(pixel_matrix, y, x):
     test = 0
     if test == 5:
-        print("get_surrounding_pixels_9x9 gui.py")
+        print("get_surrounding_pixels_9x9 image_processing.py")
 
     row_num = len(pixel_matrix)
     col_num = len(pixel_matrix[0])
@@ -1379,7 +1397,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
 def get_man_merge_vals(main, change_list, pixel_list):
     test = 4
     if test == 5:
-        print("get_man_merge_vals gui.py")
+        print("get_man_merge_vals image_processing.py")
 
     image = main.images[1]
     val_list = []
@@ -1593,7 +1611,7 @@ def count_colour(pixel_matrix, pixel_list, colour_count, combine_count):
 def sort_algorithm(pixel_list, combine_value, colour_count):
     test = 0
     if test == 5:
-        print("sort_algorithm gui.py")
+        print("sort_algorithm image_processing.py")
 
     for i in range(len(combine_value)-1):
         min_index = i
@@ -1608,7 +1626,6 @@ def sort_algorithm(pixel_list, combine_value, colour_count):
         colour_count[i], colour_count[min_index] = colour_count[min_index], colour_count[i]
 
 
-# new - used
 def create_image_plot(main):
     test = 0
     if test == 5 or test == 1:
@@ -1700,6 +1717,7 @@ def create_image_plot(main):
         ob.ob_id = "# " + str(count)
         count += 1
     main.bar_des()
+
 
 def create_section_image(ref_plot, image):
     test = 0

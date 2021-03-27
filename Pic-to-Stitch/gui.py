@@ -2,11 +2,10 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
-import tkinter.messagebox
 import time
 
 
-from PIL import Image, ImageTk, ImageFilter, ImageOps
+from PIL import Image, ImageTk
 
 import numpy as np
 
@@ -31,7 +30,7 @@ class Gui:
         self.objects = []
         self.hoop_code = int()
         self.section_image_list = []
-        self.pro_pop = ""
+        self.pro_pop = 0
         self.value = 0
 
         global og_display
@@ -39,7 +38,8 @@ class Gui:
         global average_pixel_count
         self.root = tk.Tk()
         self.root.title("Pic-to-Stitch")
-        self.root.iconbitmap("Icon_2.ico")
+        self.root.iconbitmap("Pic-to-Stitch_32x32.ico")
+        # self.root.iconbitmap("Icon_2.ico")
 
         # Open in full screen
         self.root.wm_state("zoomed")
@@ -58,37 +58,6 @@ class Gui:
         edit_menu = Menu(menu)
         menu.add_cascade(label="Edit", menu=edit_menu)
         edit_menu.add_command(label="Redo", command=redo)
-
-        # # ** Toolbar **
-        toolbar = Frame(self.root)
-        #
-        # insert_button = Button(toolbar, text="Insert Image", command=self.you_sure)
-        # insert_button.pack(side=LEFT, padx=2, pady=2)
-        # print_button = Button(toolbar, text="Size", command=self.hoop_size_select)
-        # print_button.pack(side=LEFT, padx=2, pady=2)
-        # image_button = Button(toolbar, text="Denoise", command=lambda: [im.pix_change(self)])
-        # image_button.pack(side=LEFT, padx=2, pady=2)
-        # process1_button = Button(toolbar, text="Colour", command=lambda: [im.auto_colour_step(self)])
-        # process1_button.pack(side=LEFT, padx=2, pady=2)
-        # process3_button = Button(toolbar, text="Colour Merge", command=lambda: [im.pix_restrict(self)])
-        # process3_button.pack(side=LEFT, padx=2, pady=2)
-        # process4_button = Button(toolbar, text="Image Stats", command=self.stats)
-        # process4_button.pack(side=LEFT, padx=2, pady=2)
-        # process5_button = Button(toolbar, text="Manuel Merge", command=lambda: [self.manuel_merge_pop()])
-        # process5_button.pack(side=LEFT, padx=2, pady=2)
-        # process6_button = Button(toolbar, text="Jan Colour", command=lambda: [im.janome_colours(self)])
-        # process6_button.pack(side=LEFT, padx=2, pady=2)
-        process7_button = Button(toolbar, text="Create Plot", command=lambda: [im.create_image_plot(self),
-                                                                               self.stitch_type_pop()])
-        process7_button.pack(side=LEFT, padx=2, pady=2)
-        # process8_button = Button(toolbar, text="print", command=lambda: [mo.print_mata_info()])
-        # process8_button.pack(side=LEFT, padx=2, pady=2)
-        # process9_button = Button(toolbar, text="progress", command=lambda: [self.new()])
-        # process9_button.pack(side=LEFT, padx=2, pady=2)
-        # button_h = str(toolbar.winfo_height())
-        # process9_button = Button(toolbar, text=button_h, height=1, command=lambda: [self.update_right_pane(4)])
-        # process9_button.pack(side=LEFT, padx=2, pady=2)
-        toolbar.pack(side=TOP, fill=X)
 
         # Main Frame
         self.main_pane = Frame(self.root)
@@ -190,44 +159,9 @@ class Gui:
         self.root.mainloop()
 
     def update_right_pane(self, option):
-
         test = 0
-        if test == 1:
-            # self.right_pane = tk.Frame(self.main_pane, width=30)  # , bg="red"
-            # self.right_pane.pack(fill=BOTH, expand=False, side=RIGHT)
-            # self.right_top = tk.Frame(self.right_pane)
-            # self.right_top.pack()
-            # self.right_mid = tk.Frame(self.right_pane)
-            # self.right_mid.pack()
-            # self.right_bot = tk.Frame(self.right_pane)
-            # self.right_bot.pack()
-            # sizing_label_1 = Label(self.right_top, width=50, height=10, bg="orange")  # width = 1/5 of display or minimum 50
-            # sizing_label_1.grid(row=0, column=0, columnspan=5)
-            #
-            # title_label = Label(self.right_top, text="Step - Title", width=10)  # width = 1/5 of display or minimum 50
-            # title_label.grid(row=2, column=0, pady=5, columnspan=2)
-            #
-            # sizing_label_2 = Label(self.right_top, bg="orange")  # width = 1/5 of display or minimum 50
-            # sizing_label_2.grid(row=3, column=0)
-            #
-            # info_text = Text(self.right_top, width=35, height=20, borderwidth=2,
-            #                  relief="sunken")  # width = 1/5 of display or minimum 50
-            # info_text.grid(row=3, column=1, columnspan=3)
-            # info_scroll = Scrollbar(self.right_top)
-            # info_scroll.grid(row=3, column=4, sticky=W + N + S)
-            # info_scroll.config(command=info_text.yview)
-            # info_text.config(yscrollcommand=info_scroll.set)
-            #
-            # sizing_label_3 = Label(self.right_top, width=50, bg="orange")  # width = 1/5 of display or minimum 50
-            # sizing_label_3.grid(row=4, column=0, columnspan=5)
-            #
-            # right_button_1 = Button(self.right_bot, text="Next", width=7, command=lambda: [do_nothing()])
-            # right_button_1.grid(row=5, column=3)
-            # right_button_2 = Button(self.right_bot, text="Update Order", command=lambda: [do_nothing()])
-            # right_button_2.grid(row=5, column=2)
-            # right_button_3 = Button(self.right_bot, text="Back", width=7, command=lambda: [do_nothing()])
-            # right_button_3.grid(row=5, column=1)0
-            pass
+        if test == 5:
+            print("update_right_pane - class Gui - gui.py")
 
         if option == 0:
             # textbox
@@ -246,7 +180,7 @@ class Gui:
 
             # action - button
             self.right_button_2.configure(text="Insert Image",
-                                     command=lambda: [self.load_image(), self.update_right_pane(1)])
+                                          command=lambda: [self.load_image(), self.update_right_pane(1)])
             self.right_button_2.grid(row=5, column=2, padx=10)
 
             # next - button
@@ -255,7 +189,8 @@ class Gui:
         # Size Set
         elif option == 1:
             # textbox
-            instructions = "HOOP SIZE:\n\n- Select one form the list of hoop sizes below.\n\n(Optional)\n- Select the 'Custom Size' option for more sizing control"
+            instructions = "HOOP SIZE:\n\n- Select one form the list of hoop sizes below.\n\n" \
+                           "(Optional)\n- Select the 'Custom Size' option for more sizing control"
             self.info_text.configure(state=NORMAL)
             self.info_text.replace(1.0, END, instructions)
             self.info_text.configure(state=DISABLED)
@@ -274,9 +209,9 @@ class Gui:
             self.right_button_2.grid_forget()
 
             # next - button
-            self.right_button_1.grid(row=5, column=4, padx=10)
+            self.right_button_1.grid(row=5, column=4, padx=10)  # self.update_right_pane(2), im.auto_colour_step(self)
             self.right_button_1.configure(state=NORMAL, text="Next",
-                                          command=lambda: [self.sizing_check(hoop_choice.get(), custom.get())])  # self.update_right_pane(2), im.auto_colour_step(self)
+                                          command=lambda: [self.sizing_check(hoop_choice.get(), custom.get())])
 
         # Colour Level
         elif option == 2:
@@ -305,7 +240,8 @@ class Gui:
         # Colour Merge
         elif option == 3:
             # textbox
-            instructions = "COLOUR MERGE:\n\n- Select the 'Colour Merge' button until no more changes are made in the image"
+            instructions = "COLOUR MERGE:\n\n- Select the 'Colour Merge' button until no more changes are made in " \
+                           "the image"
             self.info_text.configure(state=NORMAL)
             self.info_text.replace(1.0, END, instructions)
             self.info_text.configure(state=DISABLED)
@@ -368,6 +304,8 @@ class Gui:
             # update - button - update
             self.right_button_2.configure(text="Update Merge",
                                           command=lambda: [self.run_man_merge()])
+            self.right_button_2.grid(row=5, column=2, padx=10)
+
             # next - button - lock until action - update
             self.right_button_1.configure(state=DISABLED, command=lambda: [self.update_right_pane(5),
                                                                            im.janome_colours(self)])
@@ -395,11 +333,14 @@ class Gui:
             self.right_display.pack()
 
             # back - button - update
+            self.right_button_3.grid(row=5, column=1, padx=10)
+
             # update - button - update
             self.right_button_4.grid_forget()
             self.right_button_2.configure(text="Create Objects",
-                                          command=lambda: [im.create_image_plot(self),self.stitch_type_instruction() ,self.stitch_type_pop(),
-                                                           print(self.undo_function_list)])
+                                          command=lambda: [self.run_create_objects()])
+            self.right_button_2.grid(row=5, column=2, padx=10)
+
             # next - button - lock until action - update
             self.right_button_1.grid_forget()
             pass
@@ -425,6 +366,9 @@ class Gui:
             self.right_button_1.configure(state=NORMAL, text="Exit", command=lambda: [self.root.destroy()])
 
     def run_colour_merge(self):
+        test = 0
+        if test == 5:
+            print("run_colour_merge - class Gui - gui.py")
         self.right_button_1.configure(state=DISABLED)
         self.right_button_2.configure(state=DISABLED)
         self.right_button_3.configure(state=DISABLED)
@@ -434,6 +378,9 @@ class Gui:
         self.right_button_3.configure(state=NORMAL)
 
     def run_man_merge(self):
+        test = 0
+        if test == 5:
+            print("run_man_merge - class Gui - gui.py")
         self.right_button_1.configure(state=DISABLED)
         self.right_button_2.configure(state=DISABLED)
         self.right_button_3.configure(state=DISABLED)
@@ -448,12 +395,41 @@ class Gui:
         self.right_button_4.update()
 
     def run_denoise(self):
+        test = 0
+        if test == 5:
+            print("bar_denoise - class Gui - gui.py")
         self.right_button_1.configure(state=DISABLED)
         self.right_button_2.configure(state=DISABLED)
         self.right_button_3.configure(state=DISABLED)
         self.right_button_4.configure(state=DISABLED)
         self.right_button_4.update()
+
         im.pix_change(self)
+        self.reset_canvas(), self.manuel_merge_pop()
+
+        self.right_button_1.configure(state=NORMAL)
+        self.right_button_2.configure(state=NORMAL)
+        self.right_button_3.configure(state=NORMAL)
+        self.right_button_4.configure(state=NORMAL)
+        self.right_button_4.update()
+
+    def run_create_objects(self):
+        test = 0
+        if test == 5:
+            print("run_create_objects - class Gui - gui.py")
+        self.undo_list.append(self.images[1])
+        self.undo_function_list.append(5)
+
+        self.right_button_1.configure(state=DISABLED)
+        self.right_button_2.configure(state=DISABLED)
+        self.right_button_3.configure(state=DISABLED)
+        self.right_button_4.configure(state=DISABLED)
+        self.right_button_4.update()
+
+        im.create_image_plot(self)
+        self.stitch_type_instruction()
+        self.stitch_type_pop()
+
         self.right_button_1.configure(state=NORMAL)
         self.right_button_2.configure(state=NORMAL)
         self.right_button_3.configure(state=NORMAL)
@@ -461,6 +437,10 @@ class Gui:
         self.right_button_4.update()
 
     def stitch_type_instruction(self):
+        test = 0
+        if test == 5:
+            print("stitch_type_instruction - class Gui -  gui.py")
+
         instructions = "STITCH SETTINGS:\n\n- Select the 'Display' button to highlight the object on the image\n\n" \
                        "- Choose the Stitch Type and Maximum Stitch length for each object\n\n" \
                        "- Remove objects from the final design by selecting the checkbox\n\n" \
@@ -471,9 +451,12 @@ class Gui:
         self.info_text.configure(state=DISABLED)
 
         self.right_button_2.grid_forget()
+        self.right_button_3.grid_forget()
 
     def undo_method(self):
-        test = 1
+        test = 0
+        if test == 5:
+            print("undo_method - class Gui - gui.py")
 
         if len(self.undo_function_list) == 1:
             fun = self.undo_function_list.pop(-1)
@@ -501,23 +484,32 @@ class Gui:
             self.display_cy_image()
 
     def undo_check(self, c_from):
+        test = 0
+        if test == 5:
+            print("undo_check - class Gui - gui.py")
+
         print(self.undo_function_list)
         # print(self.undo_function_list[-1])
         if self.undo_function_list[-1] == 2:
             self.undo_method()
             im.auto_colour_step(self)
-        if self.undo_function_list[-1] == 4:
+        elif self.undo_function_list[-1] == 4:
             self.undo_method()
             self.reset_canvas()
             self.manuel_merge_pop()
-        if self.undo_function_list[-1] == 3 and c_from == 4:
-            self.reset_canvas()
-            self.manuel_merge_pop()
-            self.right_button_3.configure(command=lambda: [self.undo_check(3)])
-        if self.undo_function_list[-1] == 3 and c_from == 3:
+        elif self.undo_function_list[-1] == 3 and c_from == 4:
+            # self.reset_canvas()
+            # self.manuel_merge_pop()
+            self.undo_method()
+            # self.right_button_3.configure(command=lambda: [self.undo_check(3)])
+        elif self.undo_function_list[-1] == 3 and c_from == 3:
             self.undo_method()
 
     def reset_canvas(self):
+        test = 0
+        if test == 5:
+            print("reset_canvas - class Gui - gui.py")
+
         self.right_display.destroy()
         self.right_display = tk.Frame(self.right_mid)
         self.right_display.pack()
@@ -540,19 +532,20 @@ class Gui:
         can_h = display_canvas.winfo_height()
         display_canvas.create_window((can_w / 2, can_h / 2), window=self.display_frame, anchor="center")
 
-    def you_sure(self):
-        test = 0
-        if test == 5:
-            print("you_sure - class Gui - gui.py")
-        answer = tkinter.messagebox.askquestion("", "Are you sure you want to load a new image")
-        if answer == "yes":
-            self.load_image()
-
     # Load Image from file function
     def load_image(self):
         test = 4
         if test == 5:
             print("load_image - class Gui - gui.py")
+
+        self.images = []
+        self.temp_images = []
+        self.objects = []
+        self.hoop_code = int()
+        self.section_image_list = []
+        self.undo_list.clear()
+        self.undo_function_list.clear()
+        self.value = 0
 
         file_path = filedialog.askopenfilename(defaultextension=".png", filetypes=(("All Files", "*.*"),
                                                                                    ("JPEG", "*.jpg"), ("PNG", "*.png")))
@@ -563,10 +556,8 @@ class Gui:
 
         og_img = Image.open(file_path)
         cy_img = og_img
-        # global self.loaded_image
+
         self.loaded_image = og_img
-        self.undo_list.clear()
-        self.undo_function_list.clear()
         self.undo_list.append(og_img)
         self.undo_function_list.append(0)
         length = len(self.images)
@@ -645,10 +636,6 @@ class Gui:
         lock = IntVar()
         custom = IntVar()
 
-        # pop = Toplevel(self.second_frame)
-        # pop.title("Hoop Size")
-        # self.pop_geometry(300, 250)
-
         pop_frame1 = Frame(self.right_display)
         pop_frame1.pack()
         pop_label_1 = Label(pop_frame1, text='Select a Hoop Size:')
@@ -674,8 +661,6 @@ class Gui:
         r_button_2 = Radiobutton(pop_frame1, variable=hoop_choice, value=5)
         r_button_2.grid(row=5, column=1)
 
-        # separator = ttk.Separator(pop_frame1, orient='horizontal')
-        # separator.place(relx=0, rely=0.4, relwidth=1, relheight=1)
         custom = IntVar()
         custom_check = Checkbutton(pop_frame1, variable=custom, command=self.custom_option)
         custom_check.grid(row=6, column=1)
@@ -689,11 +674,6 @@ class Gui:
         global pop_frame3
         pop_frame3 = Frame(self.right_display)
         pop_frame3.pack()
-        # pop_button = Button(pop_frame3, text="OK",
-        #                     command=lambda: [self.sizing_check(hoop_choice.get(), custom.get())])  # pop.destory
-        # pop_button.grid(row=8, column=1, pady=10)
-        # pop_button = Button(pop_frame3, text="Back", command=lambda: [self.undo_hoop_choice(), pop.destroy()])
-        # pop_button.grid(row=8, column=0, pady=10)
 
     def pop_geometry(self, width, height):
         test = 0
@@ -704,6 +684,20 @@ class Gui:
         pop_height = height
         pop_x = self.centre_width - (pop_width / 2)
         pop_y = self.centre_height - (pop_height / 2)
+        pop.geometry(f'{pop_width}x{pop_height}+{int(pop_x)}+{int(pop_y)}')
+        pop.update()
+
+    def pop_geometry_progress(self, width, height):
+        test = 0
+        if test == 5:
+            print("pop_geometry_progress - class Gui - gui.py")
+
+        pop_width = width
+        pop_height = height
+        win_height = self.centre_height / 4
+        win_height += self.centre_height
+        pop_x = self.centre_width - (pop_width / 2)
+        pop_y = win_height - (pop_height / 2)
         pop.geometry(f'{pop_width}x{pop_height}+{int(pop_x)}+{int(pop_y)}')
         pop.update()
 
@@ -751,29 +745,44 @@ class Gui:
             print("Error: Custom Size Checkbox Value")
 
     def bar(self, title, message, max, mode):
+        test = 0
+        if test == 5:
+            print("bar - class Gui - gui.py")
         self.pro_pop = ProgressPop(self, title, message, max, mode)
 
     def bar_update_progress(self, count, secs, mode):
+        test = 0
+        if test == 5:
+            print("bar_update_progress - class Gui - gui.py")
+
         if mode == 1:
             self.pro_pop.progress_update_progress_d(count, secs)
         else:
             self.pro_pop.progress_update_progress_ind(count, secs)
 
     def bar_update_message(self, message):
+        test = 0
+        if test == 5:
+            print("bar_update_message - class Gui - gui.py")
         self.pro_pop.progress_update_message(message)
 
+    def bar_update_object(self, object):
+        test = 0
+        if test == 5:
+            print("bar_update_object - class Gui - gui.py")
+        self.pro_pop.progress_update_object(object)
+
     def bar_reset(self, message, pro_val, max, mode):
+        test = 0
+        if test == 5:
+            print("bar_reset - class Gui - gui.py")
         self.pro_pop.progress_reset(message, pro_val, max, mode)
 
     def bar_des(self):
+        test = 0
+        if test == 5:
+            print("bar_des - class Gui - gui.py")
         self.pro_pop.destroy()
-
-    # def save_file(mata_file):
-    #     f = tk.filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
-    #     if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
-    #         return
-    #     else:
-    #         wo.write_to_file(mata_file, f)
 
     def error_message(self, message):
         test = 0
@@ -782,6 +791,7 @@ class Gui:
 
         error_message = Toplevel(self.second_frame)
         error_message.title("Error")
+        error_message.iconbitmap("Pic-to-Stitch_32x32.ico")
         error_width = 300
         error_height = 100
         error_x = self.centre_width - (error_width / 2)
@@ -789,8 +799,7 @@ class Gui:
         error_message.geometry(f'{error_width}x{error_height}+{int(error_x)}+{int(error_y)}')
         error_label = Label(error_message, text="Error: " + message)
         error_label.pack(pady=20)
-        error_button = Button(error_message, text="OK", command=lambda:
-        [error_message.destroy()])
+        error_button = Button(error_message, text="OK", width=10,  command=lambda:[error_message.destroy()])
         error_button.pack(pady=10)
 
     def warn_message(self, message, hoop, option, width, height):
@@ -804,6 +813,7 @@ class Gui:
         h = height
         warn_message = Toplevel(self.second_frame)
         warn_message.title("Warning")
+        warn_message.iconbitmap("Pic-to-Stitch_32x32.ico")
         warn_width = 280
         warn_height = 100
         warn_x = self.centre_width - (warn_width / 2)
@@ -979,7 +989,7 @@ class Gui:
         self.right_button_3.configure(state=NORMAL)
 
     def undo_hoop_choice(self):
-        test = 5
+        test = 0
         if test == 5:
             print("undo_hoop_choice - class Gui - gui.py")
 
@@ -1023,6 +1033,7 @@ class Gui:
         length = len(self.objects)
         pop = Toplevel(self.second_frame)
         pop.title("Set Stitches")
+        pop.iconbitmap("Pic-to-Stitch_32x32.ico")
         if length - 1 <= 0:
             ob_len = 0
         else:
@@ -1061,17 +1072,17 @@ class Gui:
 
         self.frame2(self.objects, stitch_drop_list, len_drop_list, order_drop_list, checkbox_list, pop_frame2, length)
 
-        pop_button = Button(pop_frame3, text="Save", command=lambda: [pop.destroy(), process_stitch_choices(self, self.objects,
-                                                                                           self.section_image_list,
-                                                                                           stitch_drop_list,
-                                                                                           len_drop_list,
-                                                                                           order_drop_list,
-                                                                                           checkbox_list),
-                                                                        mo.create_mata_object(
-                                                                        so.create_stitch_objects(self.objects),
-                                                                        self.hoop_code),
-                                                                        save_file(mo.mata_file),
-                                                                        self.update_right_pane(6)]) # nearlyt pop.destroy()])
+        pop_button = Button(pop_frame3, text="Save",
+                            command=lambda: [pop.destroy(), process_stitch_choices(self, self.objects,
+                                                                                   self.section_image_list,
+                                                                                   stitch_drop_list,
+                                                                                   len_drop_list,
+                                                                                   order_drop_list,
+                                                                                   checkbox_list),
+                                             mo.create_mata_object(so.create_stitch_objects(self.objects),
+                                                                   self.hoop_code),
+                                             save_file(mo.mata_file),
+                                             self.update_right_pane(6)])
 
         pop_button.grid(row=1, column=4, pady=10, columnspan=2, padx=10)
         pop_button = Button(pop_frame3, text="Update Order", command=lambda: [self.reorder_list(self.objects,
@@ -1082,7 +1093,7 @@ class Gui:
                                                                                                 checkbox_list,
                                                                                                 pop_frame2, len_count)])
         pop_button.grid(row=1, column=3, pady=10, padx=5)
-        pop_button = Button(pop_frame3, text="Back", command=lambda: [pop.destroy()])
+        pop_button = Button(pop_frame3, text="Back", command=lambda: [self.undo_method(), pop.destroy()])
         pop_button.grid(row=1, column=1, pady=10, columnspan=2, padx=10)
 
     def reorder_list(self, objects, section_image, stitch_type, stitch_len, order, del_list, pop_frame2, len_count):
@@ -1360,7 +1371,7 @@ class Gui:
         self.display_cy_image()
 
     def stats(self):
-        test = 1
+        test = 0
         if test == 5 or test == 1:
             print("stats - class Gui - gui.py")
 
@@ -1516,7 +1527,7 @@ class Gui:
     def display_section_image(self, val):
         test = 0
         if test == 5:
-            print("display_section_image gui.py")
+            print("display_section_image - Gui - gui.py")
 
         image = self.section_image_list[val]
         self.images[1] = image
@@ -1531,11 +1542,12 @@ class ProgressPop:
             print("class ProgressPop - gui.py")
         global pop
         self.max = max
+        self.object = ""
 
         pop = Toplevel(main.second_frame)
         pop.title(title)
-        pop.iconbitmap("C:/Users/Joshu/Desktop/Icon_2.ico")
-        main.pop_geometry(400, 100)
+        pop.iconbitmap("Pic-to-Stitch_32x32.ico")
+        main.pop_geometry_progress(400, 100)
         self.pop_frame1 = Frame(pop)
         self.pop_frame1.pack()
 
@@ -1559,17 +1571,18 @@ class ProgressPop:
     def progress_update_progress_d(self, count, secs):
         test = 0
         if test == 5:
-            print("progress_update_progress - class ProgressPop - gui.py")
-        one_per = count / self.max
-        cur_pro = one_per * 100
-        self.progress_bar['value'] = cur_pro
+            print("progress_update_progress_d - class ProgressPop - gui.py")
+        if count != 0:
+            one_per = count / self.max
+            cur_pro = one_per * 100
+            self.progress_bar['value'] = cur_pro
         self.progress_bar.update()
         time.sleep(secs)
 
     def progress_update_progress_ind(self, count, secs):
         test = 0
         if test == 5:
-            print("progress_update_progress - class ProgressPop - gui.py")
+            print("progress_update_progress_ind - class ProgressPop - gui.py")
         self.progress_bar['value'] += count + 9
         self.progress_bar.update()
         time.sleep(secs)
@@ -1578,7 +1591,15 @@ class ProgressPop:
         test = 0
         if test == 5:
             print("progress_update_message - class ProgressPop - gui.py")
-        self.bar_label.config(text=message)
+        text = self.object + message
+        self.bar_label.config(text=text)
+        self.progress_bar.update()
+
+    def progress_update_object(self, object):
+        test = 0
+        if test == 5:
+            print("progress_update_object - class ProgressPop - gui.py")
+        self.object = object
         self.progress_bar.update()
 
     def progress_reset(self, message, pro_val, max, mode):
@@ -1684,1039 +1705,8 @@ def plot_check(plot):
     return False
 
 
-#
-# # new
-# def check_index_list(ind_list, y, x):
-#     test = 5
-#     if test == 5:
-#         print("check_index_list gui.py")
-#
-#     try:
-#         a = ind_list.index((y, x))
-#     except ValueError:
-#         a = 0
-#     return a
-#
-#
-# # new
-# def check_fill(image_copy, plot, s_object, colour_list):
-#     test = 5
-#     if test == 5:
-#         print("check_fill gui.py")
-#
-#     col = s_object.object_id
-#     pixel_list = []
-#     colour_count = []
-#     combine_count = []
-#     state = 0
-#
-#     max_y, max_x = s_object.max_yx
-#     min_y, min_x = s_object.min_yx
-#
-#     for y, row in enumerate(plot):
-#         end = 1
-#         for x, point in enumerate(row):
-#             if x + 1 <= max_x:
-#                 n_point = row[x + 1]
-#
-#             if x + 1 > max_x or x < min_x or y > max_y or y < min_y:
-#                 pass
-#
-#             elif point == col and x + 1 < len(row - 1) and n_point == col:
-#                 end = 0
-#
-#             elif point == col and x + 1 < len(row - 1) and n_point == 0:
-#
-#                 if state == 0:
-#                     state = 1
-#                 elif state == 1:
-#                     state = 0
-#                 end = 0
-#
-#             elif point == 0 and x + 1 < len(row - 1) and n_point == col:
-#
-#                 if state == 1:
-#                     pixel_list.append(image_copy[y, x])
-#                     state = 0
-#                 end = 0
-#
-#             elif x == 0:
-#
-#                 if state == 1:
-#                     pixel_list.append(image_copy[y, x])
-#
-#             elif point != col and point != 0:
-#                 pass
-#
-#         if end == 1:
-#             break
-#
-#     count_colour_list(pixel_list, colour_list, colour_count, combine_count)
-#
-#     if len(colour_list) > 1:
-#         return False
-#     elif len(colour_list) == 1:
-#         return True
-#     else:
-#         return "fail"
-#
-#
-# # new
-# def find_fill(image_copy, plot, s_object):  # working on this 13/02/2021
-#     test = 5
-#     if test == 5:
-#         print("find_fill gui.py")
-#
-#     col = s_object.object_id
-#     pixel_list = []
-#     colour_list = []
-#     colour_count = []
-#     combine_count = []
-#     state = 0
-#
-#     max_y, max_x = s_object.max_yx
-#     min_y, min_x = s_object.min_yx
-#
-#     for y in plot:
-#         end = 1
-#         for x in y:
-#
-#             if x > max_x or x < min_x or y > max_y or y < min_y:
-#                 pass
-#
-#             if x == col and x + 1 < len(y - 1) and x + 1 == col:
-#                 end = 0
-#
-#             elif x == col and x + 1 < len(y - 1) and x + 1 == 0:
-#
-#                 if state == 0:
-#                     state = 1
-#                 elif state == 1:
-#                     state = 0
-#                 end = 0
-#
-#             elif x == 0 and x + 1 < len(y - 1) and x + 1 == col:
-#
-#                 if state == 1:
-#                     pixel_list.append(image_copy[y, x])
-#                     state = 0
-#                 end = 0
-#
-#             elif x == 0:
-#
-#                 if state == 1:
-#                     pixel_list.append(image_copy[y, x])
-#
-#             elif x != col and x != 0:
-#                 print("Pass")
-#
-#         if end == 1:
-#             break
-#
-#     count_colour_list(pixel_list, colour_list, colour_count, combine_count)
-#
-#     if len(colour_list) > 1:
-#         return False
-#     elif len(colour_list) == 1:
-#         return True
-#     else:
-#         return "error"
-#
-#
-# # new
-# def find_outline(image_copy, plot, s_object, start_pix, start_point):
-#     test = 5
-#
-#     if test == 5:
-#         print("find_outline gui.py")
-#
-#     ind_list = []
-#
-#     y, x = start_point
-#
-#     last_pix = start_pix
-#     count = 1
-#     c_colour = s_object.colour
-#     i = 0
-#     ind_list.append((y, x))
-#     plot[y, x] = count
-#     s_object.plot[y, x] = count
-#     if test == 1:
-#         print("Colour: ", c_colour)
-#
-#     for j in range(len(image_copy)*len(image_copy[0])):
-#
-#         # One
-#         if last_pix == 8:
-#             if test == 1:
-#                 print("#One")
-#             if y - 1 >= 0 and x - 1 >= 0:
-#
-#                 new_pix = image_copy[y - 1, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x-1]
-#                             pix_b = image_copy[y-1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#
-#                                 if (y - 1, x - 1) == ind_list[0]:
-#                                     break
-#
-#                                 else:
-#                                     y = y - 1
-#                                     x = x - 1
-#                                     plot[y, x] = count
-#                                     s_object.plot[y, x] = count
-#                                     ind_list.append((y, x))
-#                                     if test == 1:
-#                                         print("Set")
-#                                     last_pix = 5
-#
-#             if last_pix != 5:
-#                 last_pix = 1
-#
-#         # Two
-#         elif last_pix == 1:
-#             if test == 1:
-#                 print("#Two")
-#             if y - 1 >= 0:
-#
-#                 new_pix = image_copy[y - 1, x]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             if (y - 1, x) == ind_list[0]:
-#                                 break
-#
-#                             else:
-#                                 y = y - 1
-#                                 plot[y, x] = count
-#                                 s_object.plot[y, x] = count
-#                                 ind_list.append((y, x))
-#                                 if test == 1:
-#                                     print("Set")
-#                                 last_pix = 6
-#
-#             if last_pix != 6:
-#                 last_pix = 2
-#
-#         # Three
-#         elif last_pix == 2:
-#             if test == 1:
-#                 print("#Three")
-#             if y - 1 >= 0 and x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y - 1, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x + 1]
-#                             pix_b = image_copy[y - 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#
-#                                 if (y - 1, x + 1) == ind_list[0]:
-#                                     break
-#
-#                                 else:
-#                                     y = y - 1
-#                                     x = x + 1
-#                                     plot[y, x] = count
-#                                     s_object.plot[y, x] = count
-#                                     ind_list.append((y, x))
-#                                     if test == 1:
-#                                         print("Set")
-#                                     last_pix = 7
-#
-#             if last_pix != 7:
-#                 last_pix = 3
-#
-#         # Four
-#         elif last_pix == 3:
-#             if test == 1:
-#                 print("#Four")
-#             if x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             if (y, x + 1) == ind_list[0]:
-#                                 break
-#
-#                             else:
-#                                 x = x + 1
-#                                 plot[y, x] = count
-#                                 s_object.plot[y, x] = count
-#                                 ind_list.append((y, x))
-#                                 if test == 1:
-#                                     print("Set")
-#                                 last_pix = 8
-#
-#             if last_pix != 8:
-#                 last_pix = 4
-#
-#         # Five
-#         elif last_pix == 4:
-#             if test == 1:
-#                 print("#Five")
-#             if y + 1 < len(image_copy) and x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y + 1, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x + 1]
-#                             pix_b = image_copy[y + 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#
-#                                 if (y + 1, x + 1) == ind_list[0]:
-#                                     break
-#
-#                                 else:
-#                                     y = y + 1
-#                                     x = x + 1
-#                                     plot[y, x] = count
-#                                     s_object.plot[y, x] = count
-#                                     ind_list.append((y, x))
-#                                     if test == 1:
-#                                         print("Set")
-#                                     last_pix = 1
-#
-#             if last_pix != 1:
-#                 last_pix = 5
-#
-#         # Six
-#         elif last_pix == 5:
-#             if test == 1:
-#                 print("#Six")
-#             if y + 1 < len(image_copy):
-#
-#                 new_pix = image_copy[y + 1, x]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             if (y + 1, x) == ind_list[0]:
-#                                 break
-#
-#                             else:
-#                                 y = y + 1
-#                                 plot[y, x] = count
-#                                 s_object.plot[y, x] = count
-#                                 ind_list.append((y, x))
-#                                 if test == 1:
-#                                     print("Set")
-#                                 last_pix = 2
-#
-#             if last_pix != 2:
-#                 last_pix = 6
-#
-#         # Seven
-#         elif last_pix == 6:
-#             if test == 1:
-#                 print("#Seven")
-#             if y + 1 < len(image_copy) and x - 1 >= 0:
-#
-#                 new_pix = image_copy[y + 1, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x - 1]
-#                             pix_b = image_copy[y + 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#
-#                                 if (y + 1, x - 1) == ind_list[0]:
-#                                     break
-#
-#                                 else:
-#                                     y = y + 1
-#                                     x = x - 1
-#                                     plot[y, x] = count
-#                                     s_object.plot[y, x] = count
-#                                     ind_list.append((y, x))
-#                                     if test == 1:
-#                                         print("Set")
-#                                     last_pix = 3
-#
-#             if last_pix != 3:
-#                 last_pix = 7
-#
-#         # Eight
-#         elif last_pix == 7:
-#             if test == 1:
-#                 print("#Eight")
-#             if x - 1 >= 0:
-#
-#                 new_pix = image_copy[y, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             if (y, x - 1) == ind_list[0]:
-#                                 break
-#
-#                             else:
-#                                 x = x - 1
-#                                 plot[y, x] = count
-#                                 s_object.plot[y, x] = count
-#                                 ind_list.append((y, x))
-#                                 if test == 1:
-#                                     print("Set")
-#                                 last_pix = 4
-#
-#             if last_pix != 4:
-#                 last_pix = 8
-#
-#     max_y = 0
-#     min_y = 0
-#     max_x = 0
-#     min_x = 0
-#
-#     for k in ind_list:
-#         y, x = k
-#         if max_y < y:
-#             max_y = y
-#         if max_x < x:
-#             max_x = x
-#         if min_y > y:
-#             min_y = y
-#         if min_x > x:
-#             min_x = x
-#
-#     s_object.max_yx = (max_y, max_x)
-#     s_object.min_yx = (min_y, min_x)
-#     s_object.object_outline = ind_list
-#
-#     if test == 1:
-#         print_plot(plot)
-#
-#
-# def get_inside_object_colour(colour_list, colour):
-#     test = 5
-#     if test == 5:
-#         print("get_inside_object_colour gui.py")
-#
-#     if test == 1:
-#         print("Colour_list: ", colour_list)
-#     for i in colour_list:
-#         if i[0] == colour[0]:
-#             if i[1] == colour[1]:
-#                 if i[2] == colour[2]:
-#                     pass
-#                 else:
-#                     if test == 1:
-#                         print("i: ", i)
-#                     return i
-#             else:
-#                 if test == 1:
-#                     print("i: ", i)
-#                 return i
-#         else:
-#             if test == 1:
-#                 print("i: ", i)
-#             return i
-#
-#
-# def inner_outline_start(image_copy, plot, new_colour, s_object):
-#     test = 5
-#     if test == 5:
-#         print("inner_outline_start gui.py")
-#
-#     max_y, max_x = s_object.max_yx
-#     min_y, min_x = s_object.min_yx
-#     col = s_object.colour
-#     ob_id = s_object.object_id
-#     for y, row in enumerate(image_copy):
-#         for x, pixel in enumerate(row):
-#             p_x = plot[y, x]
-#             if test == 1:
-#                 print("p_x: ", p_x)
-#                 print("x: ", x)
-#
-#             if x > max_x or x < min_x or y > max_y or y < min_y:
-#                 pass
-#
-#             else:
-#                 n_pixel = row[x + 1]
-#                 if test == 1:
-#                     print("n_pixel: ", n_pixel)
-#                     print("new_colour: ", new_colour)
-#                 if pixel[0] == col[0]:
-#                     if pixel[1] == col[1]:
-#                         if pixel[2] == col[2]:
-#                             if new_colour is None:
-#                                 pass
-#                             elif n_pixel[0] == new_colour[0]:
-#                                 if n_pixel[1] == new_colour[1]:
-#                                     if n_pixel[2] == new_colour[2]:
-#
-#                                         if p_x != ob_id and p_x+1 == 0:
-#                                             start_co = [y, x]
-#                                             return start_co
-#
-#
-# # new
-# def object_create(main):
-#     test = 5
-#     if test == 5:
-#         print("object_create gui.py")
-#
-#     image = main.images[1]
-#
-#     pixel_matrix = np.array(image)
-#     image_copy = pixel_matrix.copy()
-#
-#     img_height = len(pixel_matrix)
-#     img_width = len(pixel_matrix[0])
-#
-#     # Create plot of image
-#     row = [0]*img_width
-#     plot = np.array([row]*img_height)
-#     count = 0
-#     i = 1
-#
-#     # find the first 0 in plot
-#     for y, row in enumerate(plot):
-#         for x, pixel in enumerate(row):
-#
-#             pixel = plot[y, x]
-#
-#             if pixel == 0:
-#                 count += 1
-#                 c_colour = image_copy[y, x]
-#                 if test == 1:
-#                     print("X: ", x)
-#                     print("Y: ", y)
-#                     print("Image: ", image_copy[y, x])
-#                     print("C_Colour: ", c_colour)
-#
-#                 s_object = so.StitchObjects(c_colour, count, img_height, img_width, hoop_code)
-#
-#                 find_outline(image_copy, plot, s_object, 8, [0, 0])
-#
-#                 while i != 0:
-#                     colour_list = []
-#                     val = check_fill(image_copy, plot, s_object, colour_list)
-#                     if test == 1:
-#                         print("Val: ", val)
-#
-#                     if val == "fail":
-#                         pass
-#                     elif val:
-#                         find_fill(image_copy, plot, s_object)
-#
-#                         break
-#                     else:
-#                         new_colour = get_inside_object_colour(colour_list, c_colour)
-#                         if test == 1:
-#                             print("new_cooler: ", new_colour)
-#                         inner_pix = inner_outline_start(image_copy, plot, new_colour, s_object)
-#
-#                         find_outline(image_copy, plot, s_object, 4, inner_pix)
-#                         # search for new_colour start
-#                         # use outline
-#                         if test == 1:
-#                             print("Loop: ", i)
-#                         if i > 20:
-#                             break
-#                     i += 1
-#
-#                 main.objects.append(s_object)
-#                 # save objects to list
-#                 if test == 1:
-#                     print("start")
-#                 break
-#             else:
-#                 if test == 1:
-#                     print("done")
-#     if test == 1:
-#         print_plot(plot)
-#
-#
-# # new
-# def image_object(main):
-#     image = main.images[1]
-#
-#     pixel_matrix = np.array(image)
-#     image_copy = pixel_matrix.copy()
-#     c_colour = image_copy[0, 0]
-#     img_height = len(pixel_matrix)
-#     img_width = len(pixel_matrix[0])
-#     # Create plot of image
-#     row = [0] * img_width
-#     plot = np.array([row] * img_height)
-#     count = 0
-#     i = 1
-#
-#     s_object = so.StitchObjects(c_colour, count, img_height, img_width)
-#
-#     find_outline(image_copy, plot, s_object, 8, [0, 0])
-#
-#
-# # new
-# def image_object1(main):
-#     test = 5
-#     if test == 5:
-#         print("image_object1 gui.py")
-#
-#     image = main.images[1]
-#     pixel_matrix = np.array(image)
-#     image_copy = pixel_matrix.copy()
-#
-#     row = [0]*len(pixel_matrix[0])
-#     plot = np.array([row]*len(pixel_matrix))
-#     ind_list = []
-#     plot_check_val = True
-#
-#     x = 0
-#     y = 0
-#     last_pix = 8
-#     count = 1
-#     c_colour = image_copy[y, x]
-#     i = 0
-#     a = 0
-#     while plot_check_val:
-#
-#         # One
-#         if last_pix == 8:
-#
-#             if y - 1 >= 0 and x - 1 >= 0:
-#
-#                 new_pix = image_copy[y - 1, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x-1]
-#                             pix_b = image_copy[y-1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#                                 y = y - 1
-#                                 x = x - 1
-#                                 plot[y, x] = count
-#                                 a = check_index_list(ind_list, y, x)
-#
-#                                 if a == 0:
-#                                     ind_list.append((y, x))
-#                                     last_pix = 5
-#                                 else:
-#                                     break
-#
-#             if last_pix != 5:
-#                 last_pix = 1
-#
-#         # Two
-#         elif last_pix == 1:
-#
-#             if y - 1 >= 0:
-#
-#                 new_pix = image_copy[y - 1, x]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#                             y = y - 1
-#                             plot[y, x] = count
-#
-#                             a = check_index_list(ind_list, y, x)
-#
-#                             if a == 0:
-#                                 ind_list.append((y, x))
-#                                 last_pix = 6
-#                             else:
-#                                 break
-#
-#             if last_pix != 6:
-#                 last_pix = 2
-#
-#         # Three
-#         elif last_pix == 2:
-#
-#             if y - 1 >= 0 and x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y - 1, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x + 1]
-#                             pix_b = image_copy[y - 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#                                 y = y - 1
-#                                 x = x + 1
-#                                 plot[y, x] = count
-#                                 a = check_index_list(ind_list, y, x)
-#
-#                                 if a == 0:
-#                                     ind_list.append((y, x))
-#                                     last_pix = 7
-#                                 else:
-#                                     break
-#
-#             if last_pix != 7:
-#                 last_pix = 3
-#
-#         # Four
-#         elif last_pix == 3:
-#
-#             if x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             x = x + 1
-#                             plot[y, x] = count
-#                             a = check_index_list(ind_list, y, x)
-#
-#                             if a == 0:
-#                                 ind_list.append((y, x))
-#                                 last_pix = 8
-#                             else:
-#                                 break
-#
-#             if last_pix != 8:
-#                 last_pix = 4
-#
-#         # Five
-#         elif last_pix == 4:
-#
-#             if y + 1 < len(image_copy) and x + 1 < len(image_copy[0]):
-#
-#                 new_pix = image_copy[y + 1, x + 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x + 1]
-#                             pix_b = image_copy[y + 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#                                 y = y + 1
-#                                 x = x + 1
-#                                 plot[y, x] = count
-#                                 a = check_index_list(ind_list, y, x)
-#
-#                                 if a == 0:
-#                                     ind_list.append((y, x))
-#                                     last_pix = 1
-#                                 else:
-#                                     break
-#
-#             if last_pix != 1:
-#                 last_pix = 5
-#
-#         # Six
-#         elif last_pix == 5:
-#
-#             if y + 1 < len(image_copy):
-#
-#                 new_pix = image_copy[y + 1, x]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#                             y = y + 1
-#
-#                             plot[y, x] = count
-#                             a = check_index_list(ind_list, y, x)
-#
-#                             if a == 0:
-#                                 ind_list.append((y, x))
-#                                 last_pix = 2
-#                             else:
-#                                 break
-#
-#             if last_pix != 2:
-#                 last_pix = 6
-#
-#         # Seven
-#         elif last_pix == 6:
-#
-#             if y + 1 < len(image_copy) and x - 1 >= 0:
-#
-#                 new_pix = image_copy[y + 1, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             pix_a = image_copy[y, x - 1]
-#                             pix_b = image_copy[y + 1, x]
-#
-#                             if pix_a[0] == c_colour[0]:
-#                                 if pix_a[1] == c_colour[1]:
-#                                     if pix_a[2] == c_colour[2]:
-#                                         comp_a = True
-#                                     else:
-#                                         comp_a = False
-#                                 else:
-#                                     comp_a = False
-#                             else:
-#                                 comp_a = False
-#
-#                             if pix_b[0] == c_colour[0]:
-#                                 if pix_b[1] == c_colour[1]:
-#                                     if pix_b[2] == c_colour[2]:
-#                                         comp_b = True
-#                                     else:
-#                                         comp_b = False
-#                                 else:
-#                                     comp_b = False
-#                             else:
-#                                 comp_b = False
-#
-#                             if comp_a or comp_b:
-#                                 y = y + 1
-#                                 x = x - 1
-#                                 plot[y, x] = count
-#                                 a = check_index_list(ind_list, y, x)
-#
-#                                 if a == 0:
-#                                     ind_list.append((y, x))
-#                                     last_pix = 3
-#                                 else:
-#                                     break
-#
-#             if last_pix != 3:
-#                 last_pix = 7
-#
-#         # Eight
-#         elif last_pix == 7:
-#
-#             if x - 1 >= 0:
-#
-#                 new_pix = image_copy[y, x - 1]
-#
-#                 if new_pix[0] == c_colour[0]:
-#                     if new_pix[1] == c_colour[1]:
-#                         if new_pix[2] == c_colour[2]:
-#
-#                             x = x - 1
-#                             plot[y, x] = count
-#                             a = check_index_list(ind_list, y, x)
-#
-#                             if a == 0:
-#                                 ind_list.append((y, x))
-#                                 last_pix = 4
-#                             else:
-#                                 break
-#
-#             if last_pix != 4:
-#                 last_pix = 8
-#
-#         i += 1
-#
-#     if test == 1:
-#         print_plot(plot)
-#
-#
-# # used for testing image processing
-# def auto_load(main):
-#     test = 5
-#     if test == 5:
-#         print("auto_load gui.py")
-#
-#     file_path = "C:/Users/Joshu/Desktop/Project C/Index.jpg"
-#     og_img = Image.open(file_path)
-#     cy_img = og_img
-#     global loaded_image
-#     loaded_image = og_img
-#
-#     length = len(main.images)
-#
-#     if length == 0:
-#         main.images.append(og_img)
-#         main.images.append(cy_img)
-#     else:
-#         main.images[0] = og_img
-#         main.images[1] = cy_img
-#
-#     main.display_og_image()
-#     main.display_cy_image()
-#
-
 def process_stitch_choices(main, objects, section_images, stitch_type, stitch_len, order, del_list):
-    test = 5
+    test = 0
     if test == 5:
         print("process_stitch_choices gui.py")
 
@@ -2737,16 +1727,22 @@ def process_stitch_choices(main, objects, section_images, stitch_type, stitch_le
         else:  # else break
             ext = 1
 
+    # progress bar creation
     message = "Creating Stitch Objects..."
     main.bar("Stitch Objects", message, len(objects), 1)
     main.bar_update_progress(0, 0.3, 1)
     msg_count = 1
+    # end
 
     for i, ob in enumerate(objects):
 
-        msg = "Processing Stitch Object " + str(msg_count) + "..."
+        # progress bar update
+        msg = "Processing..."
+        text_object = "Object " + str(msg_count) + " : "
+        main.bar_update_object(text_object)
         main.bar_update_message(msg)
-        main.bar_update_progress(msg_count, 0, 1)
+        main.bar_update_progress(msg_count, 0.1, 1)
+        # end
 
         stitch = stitch_type[i]
         stitch = stitch.get()
@@ -2756,19 +1752,19 @@ def process_stitch_choices(main, objects, section_images, stitch_type, stitch_le
         if stitch == "Stitch Outline":
             if test == 1:
                 print("Objects {} set with Outline Running Stitch".format(i + 1))
-            ob.outline_running_stitch()
+            ob.outline_running_stitch(main)
             ob.set_stitch_type("Outline Running Stitch")
 
         elif stitch == "Running Stitch Fill":
             if test == 1:
                 print("Objects {} set with Running Stitch Fill".format(i + 1))
-            ob.running_stitch_fill()
+            ob.running_stitch_fill(main)
             ob.set_stitch_type("Running Stitch Fill")
 
         elif stitch == "Fill Stitch":
             if test == 1:
                 print("Objects {} set with Fill Stitch".format(i + 1))
-            ob.fill_stitch_fill()
+            ob.fill_stitch_fill(main)
             ob.set_stitch_type("Fill Stitch")
 
         stitch_len_int = [3, 6, 9, 12, 15, 21, 24, 30, 36, 39, 45, 51]
@@ -2783,11 +1779,18 @@ def process_stitch_choices(main, objects, section_images, stitch_type, stitch_le
 
         msg_count += 1
 
+    # progress bar destroy
+    main.bar_des()
+    # end
+
     if test == 1:
         print("Object Set Finished")
 
 
 def save_file(mata_file):
+    test = 0
+    if test == 5:
+        print("save_file - gui.py")
     f = filedialog.asksaveasfilename(defaultextension=".jef", filetypes=(("Janome (*.jef)", ".jef"),))
     if f == "":  # asksaveasfile return `None` if dialog closed with "cancel".
         return
@@ -2826,16 +1829,6 @@ def print_lists(a, b, c, d):
     print(d_str)
 
 
-#
-# def display_section_image(main, image):
-#     test = 5
-#     if test == 5:
-#         print("display_section_image gui.py")
-#
-#     main.images[1] = image
-#     main.display_cy_image()
-
-
 def rgb_to_hex(pixel):
     test = 0
     if test == 5:
@@ -2862,266 +1855,6 @@ def rgb_to_hex(pixel):
               n_hex_b)
 
     return hex_colour
-
-
-#
-#
-# def get_down_right_pixel(pixel_matrix, y, x, deleted_list):
-#     test = 5
-#     if test == 5:
-#         print("get_down_right_pixel gui.py")
-#
-#     pixel_list = []
-#     change = 0
-#     count = 0
-#     while change == 0:
-#
-#         if count > 10:
-#             if test == 1:
-#                 print("stuck in a loop on: ", y + 1, ",", x + 1, " Val :", pixel_matrix[y, x])
-#             break
-#
-#         ny = y + 1
-#         while ny < len(pixel_matrix):
-#
-#             new_pix = pixel_matrix[ny, x]
-#
-#             if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-#                 break
-#
-#             val = check_delete(deleted_list, new_pix)
-#
-#             if val:
-#                 ny += 1
-#             else:
-#                 pixel_list.append(new_pix)
-#                 break
-#
-#         if len(pixel_list) > 0:
-#             change += 1
-#             break
-#
-#         nx = x + 1
-#         while nx < len(pixel_matrix[0]):
-#
-#             new_pix = pixel_matrix[y, nx]
-#
-#             if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-#                 break
-#
-#             val = check_delete(deleted_list, new_pix)
-#
-#             if val:
-#                 nx += 1
-#             else:
-#                 pixel_list.append(new_pix)
-#                 break
-#
-#         if len(pixel_list) > 0:
-#             change += 1
-#             break
-#
-#         ny = y - 1
-#         while ny >= 0:
-#
-#             new_pix = pixel_matrix[ny, x]
-#
-#             if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-#                 break
-#
-#             val = check_delete(deleted_list, new_pix)
-#
-#             if val:
-#                 ny -= 1
-#             else:
-#                 pixel_list.append(new_pix)
-#                 break
-#
-#         if len(pixel_list) > 0:
-#             change += 1
-#             break
-#
-#         nx = x - 1
-#         while nx >= 0:
-#
-#             new_pix = pixel_matrix[y, nx]
-#
-#             if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-#                 break
-#
-#             val = check_delete(deleted_list, new_pix)
-#
-#             if val:
-#                 nx -= 1
-#             else:
-#                 pixel_list.append(new_pix)
-#                 break
-#
-#         if len(pixel_list) > 0:
-#             change += 1
-#             break
-#         count += 1
-#
-#     if not pixel_list:
-#         pixel = (0, 0, 0)
-#         return pixel
-#     else:
-#         return pixel_list[0]
-#
-#
-#
-# def delete_list(main):
-#     test = 5
-#     if test == 5:
-#         print("delete_list gui.py")
-#
-#     global pix
-#     if test == 1:
-#         print("image merge")
-#
-#     if len(main.images) == 2:
-#         if test == 0:
-#             print("yup")
-#
-#         image = main.images[1]
-#         pixel_matrix = np.array(image)
-#         delete_colour = []
-#         pixel_list = []
-#         colour_count = []
-#
-#         for y, row in enumerate(pixel_matrix):
-#             for x, pix in enumerate(row):
-#                 if test == 1:
-#                     print("(Y,X): ", y, ",", x)
-#
-#                 # count the number of times a pixel appears
-#                 if len(pixel_list) == 0:
-#                     pixel_list.append(list(pix))
-#                     colour_count.append(1)
-#                 else:
-#                     count = 0
-#                     for i in pixel_list:
-#
-#                         if i[0] == pix[0]:
-#                             if i[1] == pix[1]:
-#                                 if i[2] == pix[2]:
-#                                     index = pixel_list.index(i)
-#
-#                                     ind = index
-#
-#                                     colour_count[ind] += 1
-#                                 else:
-#                                     count += 1
-#                             else:
-#                                 count += 1
-#                         else:
-#                             count += 1
-#
-#                         if count >= len(pixel_list):
-#                             pixel_list.append(list(pix))
-#                             colour_count.append(1)
-#                             break
-#
-#         # print list of all individual colours
-#
-#         e = 1
-#         for x in pixel_list:
-#             num = colour_count[e - 1]
-#             if test == 1:
-#                 print("Colour ", e, " Value: ", x, " Amount: ", num, )
-#             e += 1
-#
-#         # make a list of the colours that appear the least
-#         # make into a percentage formula
-#         # value = len(pixel_matrix) * len(pixel_matrix[0]) / colour
-#         value = 2000
-#         index_list = []
-#         for i in colour_count:
-#             if i <= value:
-#                 index = colour_count.index(i)
-#                 delete_colour.append(pixel_list[index])
-#                 index_list.append(index)
-#         if test == 1:
-#             print(delete_colour)
-#
-#
-# # not used
-# def process_1_colour_selection():
-#     test = 5
-#     if test == 5:
-#         print("process_1_colour_selection gui.py")
-#
-#     image = images[1]
-#     if test == 1:
-#         print("image colour mode: ", image.mode)
-#
-#     # change colour mode
-#     grey = image.convert("L")
-#
-#     # edge detection
-#     edge = image.filter(ImageFilter.FIND_EDGES)
-#
-#     # update cy_img in list
-#     images[1] = grey
-#     images[1] = edge
-#
-#     # display cy_img from list
-#     display_cy_image()
-#
-#
-# # def create_section_image(ref_plot, image):
-# #     test = 5
-# #     if test == 5:
-# #         print("create_section_image gui.py")
-# #
-# #     ref_plot = ref_plot.copy()
-# #     image_array = np.array(image)
-# #     grey_image = image.convert('LA')
-# #     n_g_image = np.array(grey_image)
-# #     g_image = image_array.copy()
-# #     if test == 1:
-# #         print("REFPLOT")
-# #         po.print_plot(ref_plot)
-# #
-# #     for y, row in enumerate(n_g_image):
-# #         for x, pixel in enumerate(row):
-# #
-# #             val, null = pixel
-# #
-# #             if test == 1:
-# #                 print("Value: {} Null: {}".format(val, null))
-# #
-# #             if val > 200:
-# #                 val = val - 70
-# #             elif val < 30:
-# #                 val = val + 90
-# #
-# #             tup = (val, val, val)
-# #             g_image[y, x] = tup
-# #             if test == 1:
-# #                 print("pixel value: {} RBG Pixel:{}".format(pixel, g_image[y, x]))
-# #
-# #     for y, row in enumerate(ref_plot):
-# #
-# #         for x, point in enumerate(row):
-# #             if test == 1:
-# #                 print(point.dtype)
-# #             if point == 1:
-# #                 if test == 1:
-# #                     print(" point == 1")
-# #
-# #                 points, yx_points = po.get_surrounding_points_5x5(ref_plot, y, x)
-# #
-# #                 for i, val in enumerate(points):
-# #
-# #                     if val == 1:
-# #                         g_image[y, x] = image_array[y, x]
-# #
-# #     out_image = Image.fromarray(g_image, "RGB")
-# #     if test == 1:
-# #         print_plot(g_image)
-# #         print_plot(image_array)
-# #     return out_image
 
 
 global main_window

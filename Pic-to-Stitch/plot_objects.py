@@ -255,62 +255,61 @@ class ObjectPlot(ColourPlot):
         self.section_image = int()
 
     def set_stitch_type(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_stitch_type - class ObjectPlot - plot_objects.py")
-
         self.ob_stitch_type = val
 
     def get_stitch_type(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_stitch_type - class ObjectPlot - plot_objects.py")
         return self.ob_stitch_type
 
     def set_stitch_len(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_stitch_len - class ObjectPlot - plot_objects.py")
         self.ob_max_stitch_length = val
 
     def get_stitch_len(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_stitch_len - class ObjectPlot - plot_objects.py")
         return self.ob_max_stitch_length
 
     def set_stitch_list(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_stitch_list - class ObjectPlot - plot_objects.py")
         self.ob_stitch_list = val
 
     def get_stitch_list(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_stitch_list - class ObjectPlot - plot_objects.py")
         return self.ob_stitch_list
 
     def set_ob_colour(self, val):
-        test = 5
+        test = 0
         if test == 5:
             print("set_ob_colour - class ObjectPlot - plot_objects.py")
         self.colour = val
 
     def get_ob_colour(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_ob_colour - class ObjectPlot - plot_objects.py")
         return self.colour
 
     def get_ob_matrix(self):
-        test = 5
+        test = 0
         if test == 5:
             print("get_ob_matrix - class ObjectPlot - plot_objects.py")
         return self.matrix
 
     def process_colour_plot(self, main_plot):
-        test = 5
+        test = 0
         if test == 5:
             print("process_colour_plot - class ObjectPlot - plot_objects.py")
         test = 0
@@ -372,8 +371,8 @@ class ObjectPlot(ColourPlot):
                     if test == 1:
                         print_plot_advanced(ref_plot)
 
-    def outline_running_stitch(self):
-        test = 5
+    def outline_running_stitch(self, main):
+        test = 0
         if test == 5:
             print("outline_running_stitch - class ObjectPlot - plot_objects.py")
         plot = self.matrix.copy()
@@ -386,6 +385,7 @@ class ObjectPlot(ColourPlot):
                 if point == 1:
                     out = get_object_outline(plot, new_plot, (y, x), 8, 1, 1)
                     ind_list = out[2]
+                    ind_list += ind_list[0:2]
                     self.ob_stitch_list = ind_list  # Outline co-or list
                     b_val = 1
                     break
@@ -405,33 +405,33 @@ class ObjectPlot(ColourPlot):
                     self.matrix[y, x] = 1
 
     # not used?
-    def get_ob_lines(self):
-        test = 5
-        if test == 5:
-            print("get_ob_lines - class ObjectPlot - plot_objects.py")
+    # def get_ob_lines(self):
+    #     test = 5
+    #     if test == 5:
+    #         print("get_ob_lines - class ObjectPlot - plot_objects.py")
+    #
+    #     if not self.ob_parts_list:
+    #         if test == 1:
+    #             print("not objects in list")
+    #
+    #     elif len(self.ob_parts_list) < 2:
+    #         if test == 1:
+    #             print("not enough data")
+    #
+    #     else:
+    #         base_plot = self.ob_parts_list[0]
+    #         ref_plot = self.ob_parts_list[1]
+    #         if test == 1:
+    #             print("Base")
+    #         print_plot(base_plot)
+    #         for y, row in enumerate(ref_plot):
+    #             for x, point in enumerate(row):
+    #                 if point == "1":
+    #                     base_plot[y, x] = "2"
+    #         return base_plot
 
-        if not self.ob_parts_list:
-            if test == 1:
-                print("not objects in list")
-
-        elif len(self.ob_parts_list) < 2:
-            if test == 1:
-                print("not enough data")
-
-        else:
-            base_plot = self.ob_parts_list[0]
-            ref_plot = self.ob_parts_list[1]
-            if test == 1:
-                print("Base")
-            print_plot(base_plot)
-            for y, row in enumerate(ref_plot):
-                for x, point in enumerate(row):
-                    if point == "1":
-                        base_plot[y, x] = "2"
-            return base_plot
-
-    def running_stitch_fill(self):
-        test = 5
+    def running_stitch_fill(self, main):
+        test = 0
         if test == 5:
             print("running_stitch_fill - class ObjectPlot - plot_objects.py")
 
@@ -447,15 +447,15 @@ class ObjectPlot(ColourPlot):
 
                     anw, yx = check_for_number(new_plot, 1)
 
-                    ind_list = get_object_outline_fill(plot, new_plot, yx, 8, count, 1, ind_list)
+                    ind_list = get_object_outline_fill(main, plot, new_plot, yx, 8, count, 1, ind_list)
                     self.ob_stitch_list = ind_list
                     b_val = 1
                     break
             if b_val == 1:
                 break
 
-    def fill_stitch_fill(self):
-        test = 5
+    def fill_stitch_fill(self, main):
+        test = 0
         if test == 5:
             print("fill_stitch_fill - class ObjectPlot - plot_objects.py")
 
@@ -537,9 +537,9 @@ class ObjectPlot(ColourPlot):
         if end_at == start_at:
             pass
         else:
-            goto, ind_list = asp.move_to_a_star(plot, end_at, start_at, ind_list)
+            goto, ind_list = asp.move_to_a_star(main, plot, end_at, start_at, ind_list)
 
-        ind_list = get_object_fill_stitch(template, plot, end_at, max_yx, min_yx, ind_list)
+        ind_list = get_object_fill_stitch(main, template, plot, end_at, max_yx, min_yx, ind_list)
 
         self.ob_stitch_list = ind_list
                 
@@ -557,22 +557,22 @@ class ObjectPlot(ColourPlot):
                 print_plot(item)
 
 
-def stitch_test(plot, ind_list):
-    test = 5
-    if test == 5:
-        print("stitch_test - plot_objects.py")
-
-    if test == 1:
-        print("Stitch TEST")
-    p_row = ["0"] * len(plot[0])
-    blank_plot = np.array([p_row] * len(plot))
-
-    for i in ind_list:
-        y, x = i
-        blank_plot[y, x] = "1"
-
-    if test == 1:
-        print_plot(blank_plot)
+# def stitch_test(plot, ind_list):
+#     test = 5
+#     if test == 5:
+#         print("stitch_test - plot_objects.py")
+#
+#     if test == 1:
+#         print("Stitch TEST")
+#     p_row = ["0"] * len(plot[0])
+#     blank_plot = np.array([p_row] * len(plot))
+#
+#     for i in ind_list:
+#         y, x = i
+#         blank_plot[y, x] = "1"
+#
+#     if test == 1:
+#         print_plot(blank_plot)
 
 
 def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_num):
@@ -627,9 +627,10 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
                             ref_plot[y, x] = set_to
                             ind_list.append((y, x))
                             l_point = 5
-                        if anw == 2:
+
+                        elif anw == 2:
                             pass
-                        if anw == 3:
+                        elif anw == 3:
                             pass
 
                     else:
@@ -701,9 +702,10 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
                             ref_plot[y, x] = set_to
                             ind_list.append((y, x))
                             l_point = 7
-                        if anw == 2:
+
+                        elif anw == 2:
                             pass
-                        if anw == 3:
+                        elif anw == 3:
                             pass
 
                     else:
@@ -778,9 +780,10 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
                             ref_plot[y, x] = set_to
                             ind_list.append((y, x))
                             l_point = 1
-                        if anw == 2:
+
+                        elif anw == 2:
                             pass
-                        if anw == 3:
+                        elif anw == 3:
                             pass
 
                     else:
@@ -852,9 +855,10 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
                             ref_plot[y, x] = set_to
                             ind_list.append((y, x))
                             l_point = 3
-                        if anw == 2:
+
+                        elif anw == 2:
                             pass
-                        if anw == 3:
+                        elif anw == 3:
                             pass
                     else:
                         if (y + 1, x - 1) == ind_list[0]:
@@ -895,6 +899,7 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
             if l_point != 4:
                 l_point = 8
 
+
     max_y = 0
     min_y = plot_h
     max_x = 0
@@ -921,10 +926,16 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
     return max_yx, min_yx, ind_list
 
 
-def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, col_num, ind_list):
-    test = 5
+def get_object_outline_fill(main, main_plot, ref_plot, start_yx, start_point, set_to, col_num, ind_list):
+    test = 0
     if test == 5:
         print("get_object_outline_fill - plot_objects.py")
+
+    # progress bar update
+    msg_count = 0
+    msg = "Getting Running Fill...(Points Set: " + str(msg_count) + ")"
+    main.bar_update_message(msg)
+    # end
 
     ref_plot = ref_plot.copy()
     plot = main_plot.copy()
@@ -981,6 +992,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     loop = 0        # reset loop check value
                     l_point = 5     # set loop start for next point
 
+                    msg_count += 1
+
             if l_point != 5:    # check if loop start was set
                 l_point = 1     # if not, set to the next position
 
@@ -1003,6 +1016,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     ind_list.append((y, x))     # add point to list
                     loop = 0        # reset loop check value
                     l_point = 6     # set loop start for next point
+
+                    msg_count += 1
 
             if l_point != 6:    # check if loop start was set
                 l_point = 2     # if not, set to the next position
@@ -1028,6 +1043,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     loop = 0        # reset loop check value
                     l_point = 7     # set loop start for next point
 
+                    msg_count += 1
+
             if l_point != 7:    # check if loop start was set
                 l_point = 3     # if not, set to the next position
 
@@ -1050,6 +1067,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     ind_list.append((y, x))     # add point to list
                     loop = 0        # reset loop check value
                     l_point = 8     # set loop start for next point
+
+                    msg_count += 1
 
             if l_point != 8:    # check if loop start was set
                 l_point = 4     # if not, set to the next position
@@ -1075,6 +1094,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     loop = 0        # reset loop check value
                     l_point = 1     # set loop start for next point
 
+                    msg_count +=1
+
             if l_point != 1:    # check if loop start was set
                 l_point = 5     # if not, set to the next position
 
@@ -1097,6 +1118,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     ind_list.append((y, x))     # add point to list
                     loop = 0        # reset loop check value
                     l_point = 2     # set loop start for next point
+
+                    msg_count += 1
 
             if l_point != 2:    # check if loop start was set
                 l_point = 6     # if not, set to the next position
@@ -1122,6 +1145,8 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     loop = 0        # reset loop check value
                     l_point = 3     # set loop start for next point
 
+                    msg_count += 1
+
             if l_point != 3:    # check if loop start was set
                 l_point = 7     # if not, set to the next position
 
@@ -1145,8 +1170,17 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
                     loop = 0        # reset loop check value
                     l_point = 4     # set loop start for next point
 
+                    msg_count += 1
+
             if l_point != 4:    # check if loop start was set
                 l_point = 8     # if not, set to the next position
+
+        if msg_count % 10 == 0:
+            # progress bar update
+            msg = "Getting Object Outline...(Points Set: " + str(msg_count) + ")"
+            main.bar_update_message(msg)
+            main.bar_update_progress(0, 0.001, 1)
+            # end
 
         if loop > 16:
 
@@ -1156,7 +1190,7 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
             bol, yx = check_for_number(ref_plot, 1)
 
             if bol:
-                yx, ind_list = asp.move_to_a_star(plot, yx, ind_list[-1], ind_list)
+                yx, ind_list = asp.move_to_a_star(main, plot, yx, ind_list[-1], ind_list)
                 y, x = yx
                 if test == 1:
                     print("OF Move_to Set ({},{})".format(y, x))
@@ -1175,10 +1209,16 @@ def get_object_outline_fill(main_plot, ref_plot, start_yx, start_point, set_to, 
     return ind_list
 
 
-def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
-    test = 5
+def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_list):
+    test = 0
     if test == 5:
         print("get_object_fill_stitch - plot_objects.py")
+
+    # progress bar update
+    msg_count = 0
+    msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
+    main.bar_update_message(msg)
+    # end
 
     s_y, s_x = start_yx
     y = s_y
@@ -1211,6 +1251,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 ind_list.append((y, x))     # add co-or to list
                 if test == 2:
                     print("D Set: ({},{})". format(y, x))
+
+                msg_count += 1
+
             else:                       # if not set direction var to 2
                 direct = 2
 
@@ -1233,7 +1276,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 anw, yx = check_for_number(new_plot, "1")
 
                 if anw:
-                    yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                    yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                     y, x = yx
                     direct = 1
 
@@ -1253,7 +1296,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1264,6 +1307,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     y = a
                     x = b
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Pos 5 Set: ({},{})".format(y, x))
 
@@ -1277,6 +1323,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                             ind_list.append((y, x))
                             if test == 2:
                                 print("Por 5 Set: ({},{})".format(y, x))
+
+                            msg_count += 1
+
                         else:
                             j = 1
 
@@ -1300,7 +1349,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1309,6 +1358,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 else:
                     x = x + 1
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Pos 4 Set: ({},{})".format(y, x))
 
@@ -1337,7 +1389,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1347,6 +1399,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     y = c
                     x = b
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Pos 3 Set: ({},{})".format(y, x))
                     if y + 1 >= len(plot_c) and template[y, x] == "0":
@@ -1368,6 +1423,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
                     y = y - 1
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Else  Set: ({},{})". format(y, x))
                 else:
@@ -1379,7 +1437,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1393,8 +1451,12 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 y = c                   # set new y
                 template[y, x] = "1"    # set current point in template
                 ind_list.append((y, x))     # add co-or to list
+
+                msg_count += 1
+
                 if test == 2:
                     print("U Set: ({},{})". format(y, x))
+
             else:                       # if not set direction var to 2
                 direct = 4
 
@@ -1412,7 +1474,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                 if anw:
-                    yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                    yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                     y, x = yx
 
                     direct = 1
@@ -1430,7 +1492,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:     # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1440,6 +1502,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     y = c
                     x = b
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Pos 3 Set: ({},{})".format(y, x))
 
@@ -1451,8 +1516,12 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                         elif y - 1 >= 0 and plot_c[y - 1, x] != 0:
                             y = y - 1
                             ind_list.append((y, x))
+
+                            msg_count += 1
+
                             if test == 2:
                                 print("Por 3 Set: ({},{})".format(y, x))
+
                         else:
                             j = 1
 
@@ -1471,7 +1540,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1480,6 +1549,8 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 else:
                     x = b
                     ind_list.append((y, x))
+
+                    msg_count += 1
 
                     if test == 2:
                         print("Pos 4 Set: ({},{})".format(y, x))
@@ -1508,7 +1579,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
@@ -1518,6 +1589,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     y = a
                     x = b
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Pos 5  Set: ({},{})".format(y, x))
 
@@ -1539,6 +1613,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
 
                     y = y + 1
                     ind_list.append((y, x))
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Else  Set: ({},{})".format(y, x))
                 else:
@@ -1549,11 +1626,18 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     anw, yx = check_for_number(new_plot, "1")  # check if any uncompleted parts left
 
                     if anw:  # if true
-                        yx, ind_list = asp.move_to_a_star(plot_c, yx, ind_list[-1], ind_list)  # run move_to
+                        yx, ind_list = asp.move_to_a_star(main, plot_c, yx, ind_list[-1], ind_list)  # run move_to
                         y, x = yx
                         direct = 1
                     else:
                         ext = 1  # if false, all areas have been visited, exit while loop
+
+        if msg_count % 10 == 0:
+            # progress bar update
+            msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
+            main.bar_update_message(msg)
+            main.bar_update_progress(0, 0.001, 1)
+            # end
 
     plot_no_change = plot.copy()
 
@@ -1568,7 +1652,14 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
         if br_val == 1:
             break
     if s2_yx != ind_list[-1]:
-        s2_yx, ind_list = asp.move_to_a_star(plot_c, s2_yx, ind_list[-1], ind_list)
+        s2_yx, ind_list = asp.move_to_a_star(main, plot_c, s2_yx, ind_list[-1], ind_list)
+
+
+    # progress bar update
+    msg_count = 0
+    msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
+    main.bar_update_message(msg)
+    # end
 
     y, x = s2_yx
     direct = 1
@@ -1586,6 +1677,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = b  # set new x
                 plot_c[y, x] = 2  # set current point in template
                 ind_list.append((y, x))  # add co-or to list
+
+                msg_count += 1
+
                 if test == 2:
                     print("R Set: ({},{})". format(y, x))
             else:  # if not set direction var to 2
@@ -1605,7 +1699,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 if anw:
                     y, x = yx
                     plot_c[y, x] = 2
-                    yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
+                    yx, ind_list = asp.move_to_a_star(main, plot_no_change, yx, ind_list[-1], ind_list)
                     y, x = yx
                     direct = 1
                 else:
@@ -1618,6 +1712,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = b
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 5 Set: ({},{})". format(y, x))
 
@@ -1628,6 +1725,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                         x = x + 1
                         ind_list.append((y, x))
                         plot_c[y, x] = 2
+
+                        msg_count += 1
+
                         if test == 2:
                             print("Por 5 Set: ({},{})".format(y, x))
                     else:
@@ -1644,6 +1744,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 y = a
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 6 Set: ({},{})". format(y, x))
 
@@ -1658,6 +1761,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = d
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 7 Set: ({},{})". format(y, x))
 
@@ -1669,6 +1775,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     x = x - 1
                     ind_list.append((y, x))
                     plot_c[y, x] = 2
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Else Set: ({},{})".format(y, x))
 
@@ -1678,7 +1787,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     if anw:
                         y, x = yx
                         plot_c[y, x] = 2
-                        yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
+                        yx, ind_list = asp.move_to_a_star(main, plot_no_change, yx, ind_list[-1], ind_list)
                         y, x = yx
                         direct = 1
                     else:
@@ -1692,6 +1801,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = d  # set new x
                 ind_list.append((y, x))  # add co-or to list
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("L Set: ({},{})". format(y, x))
 
@@ -1711,7 +1823,7 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 if anw:
                     y, x = yx
                     plot_c[y, x] = 2
-                    yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
+                    yx, ind_list = asp.move_to_a_star(main, plot_no_change, yx, ind_list[-1], ind_list)
                     y, x = yx
                     direct = 1
                 else:
@@ -1724,6 +1836,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = d
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 7 Set: ({},{})". format(y, x))
 
@@ -1734,6 +1849,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                         x = x - 1
                         ind_list.append((y, x))
                         plot_c[y, x] = 2
+
+                        msg_count += 1
+
                         if test == 2:
                             print("Por 7 Set: ({},{})".format(y, x))
                     else:
@@ -1748,6 +1866,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 y = a
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 6 Set: ({},{})". format(y, x))
 
@@ -1761,6 +1882,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                 x = b
                 ind_list.append((y, x))
                 plot_c[y, x] = 2
+
+                msg_count += 1
+
                 if test == 2:
                     print("Pos 5 Set: ({},{})". format(y, x))
 
@@ -1773,6 +1897,9 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     x = x + 1
                     ind_list.append((y, x))
                     plot_c[y, x] = 2
+
+                    msg_count += 1
+
                     if test == 2:
                         print("Else Set: ({},{})".format(y, x))
                 else:
@@ -1781,17 +1908,24 @@ def get_object_fill_stitch(template, plot, start_yx, max_yx, min_yx, ind_list):
                     if anw:
                         y, x = yx
                         plot_c[y, x] = 2
-                        yx, ind_list = asp.move_to_a_star(plot_no_change, yx, ind_list[-1], ind_list)
+                        yx, ind_list = asp.move_to_a_star(main, plot_no_change, yx, ind_list[-1], ind_list)
                         y, x = yx
                         direct = 1
                     else:
                         ext = 1  # if false, all areas have been visited, exit while loop
 
+        if msg_count % 10 == 0:
+            # progress bar update
+            msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
+            main.bar_update_message(msg)
+            main.bar_update_progress(0, 0.001, 1)
+            # end
+
     return ind_list
 
 
 def compare_plots(plot1, val1, plot2, val2):
-    test = 5
+    test = 0
     if test == 5:
         print("compare_plots - plot_objects.py")
 
@@ -2563,6 +2697,30 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     return goto_yx, og_ind_list
 
 
+def back_track(ind_list, plot):
+    test = 5
+    if test == 5:
+        print("back_track - plot_objects.py")
+    test = 0
+    length = len(ind_list)
+
+    del ind_list[-1]
+
+    for i in range(length):
+        p_y, p_x = ind_list[-1]
+
+        points = get_surrounding_points(plot, plot, p_y, p_x, 1)
+
+        if 1 in points:
+
+            return ind_list, (p_y, p_x)
+
+        else:
+            if test == 1:
+                print(" Delete Point: ({},{})".format(p_y, p_x))
+            del ind_list[-1]
+
+
 def find_path(main_plot, goto_yx, start_yx, ind_list):
     test = 0
     if test == 5:
@@ -2577,8 +2735,8 @@ def find_path(main_plot, goto_yx, start_yx, ind_list):
 
     if test == 1 or test == 2 or test == 3:
         print("test in find_path")
-        # asp.print_node_plot(main_plot)
-        # print_plot(plot)
+        asp.print_node_plot(main_plot)
+        print_plot(plot)
 
     ext = 0
 
@@ -2818,30 +2976,6 @@ def find_path(main_plot, goto_yx, start_yx, ind_list):
                     l_point = next_point(cur_yx, goto_yx)  # get next position to check
 
 
-def back_track(ind_list, plot):
-    test = 5
-    if test == 5:
-        print("back_track - plot_objects.py")
-    test = 0
-    length = len(ind_list)
-
-    del ind_list[-1]
-
-    for i in range(length):
-        p_y, p_x = ind_list[-1]
-
-        points = get_surrounding_points(plot, plot, p_y, p_x, 1)
-
-        if 1 in points:
-
-            return ind_list, (p_y, p_x)
-
-        else:
-            if test == 1:
-                print(" Delete Point: ({},{})".format(p_y, p_x))
-            del ind_list[-1]
-
-
 def next_point(yx_st, yx_fn):
     test = 0
     if test == 5:
@@ -2970,7 +3104,7 @@ def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, co
 
 
 def check_for_number(plot, num):
-    test = 5
+    test = 0
     if test == 5:
         print("check_for_number - class Plot - plot_objects.py")
 
@@ -2992,41 +3126,41 @@ def check_for_number(plot, num):
 
 
 # not used?
-def get_ob_inlines(main_plot, ref_plot):
-    test = 5
-    if test == 5:
-        print("get_ob_inline - class Plot - plot_objects.py")
-
-    plot_w = len(main_plot[0])
-    bol = True
-
-    for y, row in enumerate(main_plot):
-        for x, point in enumerate(row):
-            if point == "2":
-                ref_plot[y, x] = "2"
-
-    if test == 1:
-        print("ref_plot")
-        print_plot(ref_plot)
-
-    while bol:
-
-        for y, row in enumerate(ref_plot):
-            for x, point in enumerate(row):
-                if x + 1 < plot_w - 1:
-                    if row[x + 1] == "2":
-
-                        # set used inside
-                        start_yx = (y, x + 1)
-                        max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, start_yx, 8, "4", "2")
-
-                        reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, "4", "2", 3)
-                        if test == 1:
-                            print("")
-                            print_plot(ref_plot)
-
-        bol, yx = check_for_number(ref_plot, 2)
-    return ref_plot
+# def get_ob_inlines(main_plot, ref_plot):
+#     test = 5
+#     if test == 5:
+#         print("get_ob_inline - class Plot - plot_objects.py")
+#
+#     plot_w = len(main_plot[0])
+#     bol = True
+#
+#     for y, row in enumerate(main_plot):
+#         for x, point in enumerate(row):
+#             if point == "2":
+#                 ref_plot[y, x] = "2"
+#
+#     if test == 1:
+#         print("ref_plot")
+#         print_plot(ref_plot)
+#
+#     while bol:
+#
+#         for y, row in enumerate(ref_plot):
+#             for x, point in enumerate(row):
+#                 if x + 1 < plot_w - 1:
+#                     if row[x + 1] == "2":
+#
+#                         # set used inside
+#                         start_yx = (y, x + 1)
+#                         max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, start_yx, 8, "4", "2")
+#
+#                         reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, "4", "2", 3)
+#                         if test == 1:
+#                             print("")
+#                             print_plot(ref_plot)
+#
+#         bol, yx = check_for_number(ref_plot, 2)
+#     return ref_plot
 
 
 def print_plot(plot):

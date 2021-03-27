@@ -359,7 +359,7 @@ print(int.from_bytes(b'\xEE', byteorder='little', signed=True))            # 409
 print(int.from_bytes(b'\x80', byteorder='big'))  #-1024
 print(int.from_bytes(b'\x12', byteorder='little'))            # 4096
 print(int.from_bytes(b'\x1E', byteorder='little', signed=True))
-print(int.from_bytes(b'\xE2', byteorder='little', signed=True))
+print(int.from_bytes(b'\x1b', byteorder='little', signed=True))
 print(int.from_bytes(b'\xE5', byteorder='little', signed=True))
 
 # #

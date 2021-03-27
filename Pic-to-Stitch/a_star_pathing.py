@@ -84,10 +84,16 @@ class Node:
         print("Co_or: {} L_p: {}".format(self.co_or, self.l_point))
 
 
-def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
-    test = 5
+def move_to_a_star(main, main_plot, goto_yx, start_yx, passed_ind_list):
+    test = 0
     if test == 5:
         print("move_to_a_star - a_start_pathing.py")
+
+    # progress bar update
+    msg_count = 0
+    msg = "Moving... (Points Processed: " + str(msg_count) + ")"
+    main.bar_update_message(msg)
+    # end
 
     open_list = []
     closed_list = []
@@ -121,6 +127,13 @@ def move_to_a_star(main_plot, goto_yx, start_yx, passed_ind_list):
 
     ext = 0
     while ext != 1:
+        msg_count += 1
+
+        if msg_count % 10 == 0:
+            # progress bar update
+            msg = "Moving... (Points Processed: " + str(msg_count) + ")"
+            main.bar_update_message(msg)
+            # end
 
         cur_node = lowest_f(open_list)
 
