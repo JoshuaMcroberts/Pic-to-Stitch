@@ -1845,7 +1845,7 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
                 j = 0
                 while j != 1:  # to the end of the line
 
-                    if plot_c[y, x - 1] != 0:
+                    if plot_c[y, x - 1] != 0 and x - 1 >= 0:
                         x = x - 1
                         ind_list.append((y, x))
                         plot_c[y, x] = 2

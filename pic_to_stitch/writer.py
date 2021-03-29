@@ -1,8 +1,6 @@
 
-
-
 def write_to_file(mata_file, file_path):
-    test = 5
+    test = 0
     if test == 5:
         print("write_to_file - writer.py")
 
@@ -11,66 +9,66 @@ def write_to_file(mata_file, file_path):
     # write all bytes here
 
     # offset
-    offset = mata_file.offset
+    offset = mata_file.get_offset()
     w_byte = four_byte_int(offset)
     f.write(w_byte)
 
     # flags
-    flag = mata_file.flags
+    flag = mata_file.get_flags()
     w_byte = four_byte_int(flag)
     f.write(w_byte)
 
     # date - set
-    date = mata_file.date
+    date = mata_file.get_date()
     f.write(bytes(date, 'ascii'))
 
     # time - set
-    time = mata_file.time
+    time = mata_file.get_time()
     f.write(bytes(time, 'ascii'))
 
     # thread count
-    thread_count = mata_file.thread_count
+    thread_count = mata_file.get_thread_count()
     w_byte = four_byte_int(thread_count)
     f.write(w_byte)
 
     # stitch count
-    stitch_count = mata_file.stitch_count
+    stitch_count = mata_file.get_stitch_count()
     w_byte = four_byte_int(stitch_count)
     f.write(w_byte)
 
     # hoop code
-    hoop_code = mata_file.hoop_code
+    hoop_code = mata_file.get_hoop_code()
     w_byte = four_byte_int(hoop_code)
     f.write(w_byte)
 
     # extents
-    entent1_list = mata_file.extent1
-    for item in entent1_list:
+    extent_1_list = mata_file.get_extent_1()
+    for item in extent_1_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
 
-    entent2_list = mata_file.extent2
-    for item in entent2_list:
+    extent_2_list = mata_file.get_extent_2()
+    for item in extent_2_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
 
-    entent3_list = mata_file.extent3
-    for item in entent3_list:
+    extent_3_list = mata_file.get_extent_3()
+    for item in extent_3_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
 
-    entent4_list = mata_file.extent4
-    for item in entent4_list:
+    extent_4_list = mata_file.get_extent_4()
+    for item in extent_4_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
 
-    entent5_list = mata_file.extent1
-    for item in entent5_list:
+    extent_5_list = mata_file.get_extent_5()
+    for item in extent_5_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
 
     # colour change list
-    col_change_list = mata_file.colour_change
+    col_change_list = mata_file.get_colour_change()
     for item in col_change_list:
         w_byte = four_byte_int(item)
         f.write(w_byte)
@@ -80,8 +78,8 @@ def write_to_file(mata_file, file_path):
         f.write(b'\x0d\x00\x00\x00')
 
     # xy's
-    jump_lists = mata_file.emb_jump_to_lists
-    stitch_lists = mata_file.emb_stitch_lists
+    jump_lists = mata_file.get_emb_jump_to_lists()
+    stitch_lists = mata_file.get_emb_stitch_lists()
 
     for i, jump_list in enumerate(jump_lists):
         if i != 0:

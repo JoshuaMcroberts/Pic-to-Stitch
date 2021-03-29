@@ -1857,6 +1857,6 @@ def rgb_to_hex(pixel):
     return hex_colour
 
 
-global main_window
-
-main_window = Gui()
+if __name__ == '__main__':
+    global main_window
+    main_window = Gui()

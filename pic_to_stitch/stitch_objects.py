@@ -38,6 +38,9 @@ class StitchObject:
         self.matrix = blank_plot
         self.set_colour()
 
+    def get_stitch_len(self):
+        return self.stitch_len
+
     def get_stitch_list(self):
         test = 0
         if test == 5:
@@ -71,6 +74,9 @@ class StitchObject:
         if test == 5:
             print("get_colour - StitchObject - stitch_objects.py")
         return self.colour
+
+    def get_matrix(self):
+        return self.matrix
 
     def process_stitch_list(self):
         test = 0

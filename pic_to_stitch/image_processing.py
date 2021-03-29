@@ -559,7 +559,7 @@ def check_delete(deleted_list, pixel):
 
 
 def pix_change(main):
-    test = 4
+    test = 0
     if test == 5:
         print("pix_change image_processing.py")
 

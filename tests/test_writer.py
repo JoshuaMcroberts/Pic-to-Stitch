@@ -1,42 +1,39 @@
 import unittest
 import os
+
 import sys
-sys.path.append('../Pic-to-Stitch/')
-
-import writer as w
-
-
-class MataObject:
-    def __init__(self):
-        self.colour_change = [75]
-        self.offset = 116 + 8 * 1  # set
-        self.flags = 20  # set
-        self.date = str("20210327")  # set
-        self.time = str("10261000")  # set
-        self.thread_count = 1  # set
-        self.stitch_count = 6  # set by method
-        self.hoop_code = 0  # set
-        self.extent1 = [6, 6, 6, 6]  # set
-        self.extent2 = [-1, -1, -1, -1]  # set
-        self.extent3 = [-1, -1, -1, -1]  # set
-        self.extent4 = [-1, -1, -1, -1]  # set
-        self.extent5 = [-1, -1, -1, -1]  # set
-        self.emb_stitch_lists = [[(0, 0), (30, 0), (0, -30), (-27, 0)]]  # set by method
-        self.emb_jump_to_lists = [[(0, 0), (-18, 18)]]  # set by method
+sys.path.append('../pic_to_stitch/')
+from pic_to_stitch import writer as w
+from pic_to_stitch import mata_object as mo
 
 
 class TestWriter(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        self.mata = MataObject()
+        self.mata = mo.MataObject()
+        self.mata.set_colour_change([75])
+        self.mata.set_offset(116 + 8 * 1)
+        self.mata.set_flags(20)
+        self.mata.set_date(str("20210327"))
+        self.mata.set_time(str("10261000"))
+        self.mata.set_thread_count(1)
+        self.mata.set_stitch_count(6)
+        self.mata.set_hoop_code(0)
+        self.mata.set_extent_1([6, 6, 6, 6])
+        self.mata.set_extent_2([-1, -1, -1, -1])
+        self.mata.set_extent_3([-1, -1, -1, -1])
+        self.mata.set_extent_4([-1, -1, -1, -1])
+        self.mata.set_extent_5([-1, -1, -1, -1])
+        self.mata.set_emb_stitch_lists([[(0, 0), (30, 0), (0, -30), (-27, 0)]])
+        self.mata.set_emb_jump_to_lists([[(0, 0), (-18, 18)]])
 
         self.mata_bytes = b'\x7c\x00\x00\x00\x14\x00\x00\x00\x32\x30\x32\x31\x30\x33\x32\x37\x31\x30\x32\x36\x31\x30' \
                           b'\x30\x30\x01\x00\x00\x00\x06\x00\x00\x00\x00\x00\x00\x00\x06\x00\x00\x00\x06\x00\x00\x00' \
                           b'\x06\x00\x00\x00\x06\x00\x00\x00\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
                           b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
-                          b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\x06\x00\x00\x00\x06\x00\x00\x00\x06\x00' \
-                          b'\x00\x00\x06\x00\x00\x00\x4b\x00\x00\x00\x0d\x00\x00\x00\x80\x02\x00\x00\x80\x02\xee\x12' \
+                          b'\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff\xff' \
+                          b'\xff\xff\xff\xff\xff\xff\x4b\x00\x00\x00\x0d\x00\x00\x00\x80\x02\x00\x00\x80\x02\xee\x12' \
                           b'\x00\x00\x1e\x00\x00\xe2\xe5\x00\x80\x10'
 
     @classmethod
@@ -69,3 +66,6 @@ class TestWriter(unittest.TestCase):
         file_bytes = file.read()
         self.assertEqual(self.mata_bytes, file_bytes)
         file.close()
+
+if __name__ == '__main__':
+    unittest.main()
