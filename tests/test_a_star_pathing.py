@@ -3,70 +3,102 @@ import os
 import sys
 sys.path.append('../Pic-to-Stitch/')
 
-import a_star_pathing as asp
 
+from pic_to_stitch import a_star_pathing as asp
+from pic_to_stitch import plot_objects as po
 
-class MyTestCase(unittest.TestCase):
+class TestAStarPathing(unittest.TestCase):
 
-    def test_something(self):
-        self.assertEqual(True, False)
+    @classmethod
+    def setUpClass(self):
+        pass
+
+    @classmethod
+    def tearDownClass(self):
+        pass
+
+    def setUp(self):
+        self.node = asp.Node()
+        self.node.h = 10
+        self.node.g = 23
+        self.node.f = 33
+        self.node.l_point = (1, 2)
+        self.node.co_or = (2, 3)
+
+    def tearDown(self):
+        pass
 
     def test__init__(self):
-        pass
+        new = asp.Node()
+        self.assertFalse(new.h)
+        self.assertFalse(new.g)
+        self.assertFalse(new.f)
+        self.assertFalse(new.l_point)
+        self.assertFalse(new.co_or)
 
-    def test_set_co_or(self, val):
-        pass
+    def test_set_h(self):
+        self.node.set_h(35)
+        self.assertEqual(35, self.node.h)
 
-    def test_set_h(self, val):
-        pass
+    def test_set_g(self):
+        self.node.set_g(43)
+        self.assertEqual(43, self.node.g)
 
-    def test_set_g(self, val):
-        pass
+    def test_set_f(self):
+        self.node.set_f(20)
+        self.assertEqual(20, self.node.f)
 
-    def test_set_f(self, val):
-        pass
+    def test_set_l_point(self):
+        self.node.set_l_point((3, 4))
+        self.assertEqual((3, 4), self.node.l_point)
 
-    def test_set_l_point(self, val):
-        pass
-
-    def test_get_f(self):
-        pass
+    def test_set_co_or(self):
+        self.node.set_co_or((2, 1))
+        self.assertEqual((2, 1), self.node.co_or)
 
     def test_get_h(self):
-        pass
+        h = self.node.get_h()
+        self.assertEqual(10, h)
 
     def test_get_g(self):
-        pass
+        g = self.node.get_g()
+        self.assertEqual(23, g)
+
+    def test_get_f(self):
+        f = self.node.get_f()
+        self.assertEqual(33, f)
 
     def test_get_l_point(self):
-        pass
+        l_point = self.node.get_l_point()
+        self.assertEqual((1, 2), l_point)
 
     def test_get_co_or(self):
-        pass
+        co_or = self.node.get_co_or()
+        self.assertEqual((2, 3), co_or)
 
-    def test_printe(self):
-        pass
-
-    def test_point_set_print(self):
-        pass
-
-    def test_move_to_a_star(self, main, main_plot, goto_yx, start_yx, passed_ind_list):
-        pass
-
-    def test_set_node(self, node, plot, start_yx, goto_yx, g, l_p):
-        pass
-
-    def test_lowest_f(self, open_list):
-        pass
-
-    def get_surrounding_nodes(self, plot, y, x):
-        pass
-
-    def test_print_node_plot(self, node_plot):
-        pass
-
-    def test_print_node_list(self, node_list):
-        pass
+    # def test_printe(self):
+    #     pass
+    #
+    # def test_point_set_print(self):
+    #     pass
+    #
+    # def test_move_to_a_star(self):
+    #     pass
+    #
+    # def test_set_node(self):
+    #     pass
+    #
+    # def test_lowest_f(self):
+    #     pass
+    #
+    # def get_surrounding_nodes(self):
+    #     pass
+    #
+    # def test_print_node_plot(self):
+    #     pass
+    #
+    # def test_print_node_list(self):
+    #     pass
 
 
 if __name__ == '__main__':

@@ -1666,8 +1666,8 @@ def create_image_plot(main):
         po.print_plot(plot)
 
     # create main_plot object from
-    main_plot = po.Plot(plot)
-    main_plot.set_num_list(pixel_list)
+    main_plot = po.Plot()
+    main_plot.create_matrix_object(plot, pixel_list)
 
     # create ColourObjects from individual main_plot colours - progress pop added
     main_plot.create_sub_plot(main)
@@ -1688,7 +1688,7 @@ def create_image_plot(main):
             print("count: {}".format(count))
         col_obj = i
 
-        col_obj.process_colour_plot(main, msg_count, main_plot.matrix)
+        col_obj.process_colour_plot(main, count, main_plot.matrix)
 
         col_obj.create_object_sub_plot()
 

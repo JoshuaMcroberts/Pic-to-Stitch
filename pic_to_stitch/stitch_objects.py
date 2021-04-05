@@ -24,94 +24,111 @@ janome_colour_list = [(0, 0, 0), (240, 240, 240), (255, 255, 23), (255, 102, 0),
 
 class StitchObject:
 
-    def __init__(self, passed_colour, stitch_list, max_stitch_len, matrix):  # hoop_code my not be needed
-        self.stitch_list = stitch_list
-        self.jump_to_list = []
-        self.emb_stitch_list = []
-        self.emb_jump_to_list = []
-        self.colour = passed_colour
+    def __init__(self):
+        self.stitch_list = []
+        self.colour = int()
         self.stitch_type = str()
-        self.stitch_count = int()
-        self.stitch_len = max_stitch_len
-        p_row = [1] * len(matrix[0])  # create blank plot make template plot
-        blank_plot = np.array([p_row] * len(matrix))
-        self.matrix = blank_plot
-        self.set_colour()
+        self.stitch_len = int()
+        self.matrix = []
+
+    def set_stitch_list(self, stitch_list):
+        self.stitch_list = stitch_list
+
+    def set_colour(self, colour):
+        self.colour = colour
+
+    def set_stitch_type(self, stitch_type):
+        self.stitch_type = stitch_type
+
+    def set_stitch_len(self, stitch_len):
+        self.stitch_len = stitch_len
+
+    def set_matrix(self, matrix):
+        self.matrix = matrix
+
+    def get_stitch_list(self):
+        return self.stitch_list
+
+    def get_colour(self):
+        return self.colour
+
+    def get_stitch_type(self):
+        return self.stitch_type
 
     def get_stitch_len(self):
         return self.stitch_len
 
-    def get_stitch_list(self):
-        test = 0
-        if test == 5:
-            print("get_stitch_list - StitchObject - stitch_objects.py")
-        return self.stitch_list
-
-    def set_colour(self):
-        test = 0
-        if test == 5:
-            print("set_colour - StitchObject - stitch_objects.py")
-
-        colour_tup = self.colour
-        global janome_colour_list
-        if test == 1:
-            print("nope")
-
-        for i, col in enumerate(janome_colour_list):
-            if test == 1:
-                print(colour_tup, " ", col)
-            if colour_tup[0] == col[0]:
-                if colour_tup[1] == col[1]:
-                    if colour_tup[2] == col[2]:
-                        colour_num = i
-                        colour_num += 1
-                        if test == 1:
-                            print("Set Colour to num {}".format(colour_num))
-                        self.colour = colour_num
-
-    def get_colour(self):
-        test = 0
-        if test == 5:
-            print("get_colour - StitchObject - stitch_objects.py")
-        return self.colour
-
     def get_matrix(self):
         return self.matrix
 
-    def process_stitch_list(self):
-        test = 0
-        if test == 5:
-            print("process_stitch_list - StitchObject - stitch_objects.py")
 
-        l_p = self.stitch_list[0]
-        for i in self.stitch_list:
-            cur_y, cur_x = i
-            l_y, l_x = l_p
-            y_val = cur_y - l_y
-            x_val = cur_x - l_x
-            l_p = i
-            self.emb_stitch_list.append((x_val, y_val))   # very important, yx flipped to xy
+# creates matrix based of the dimensions of the matrix past
+def create_matrix(matrix):
+    p_row = [1] * len(matrix[0])                    # set row length
+    blank_plot = np.array([p_row] * len(matrix))    # set number of rows
+    return blank_plot
 
+
+# create Janome colour code using Janome rgb colour list
+def create_colour(colour):
+    test = 0
+
+    # console testing comment
+    if test == 5:
+        print("set_colour - StitchObject - stitch_objects.py")
+
+    global janome_colour_list
+    colour_tup = colour
+
+    # for each colour in janome_colour_list
+    for i, col in enumerate(janome_colour_list):
+
+        # console testing comment
         if test == 1:
-            print(self.emb_stitch_list)
+            print(colour_tup, " ", col)
+
+        # pixel colour compare structure
+        if colour_tup[0] == col[0]:             # if both red values are equal...
+            if colour_tup[1] == col[1]:         # if both green values are equal...
+                if colour_tup[2] == col[2]:     # if both blue values are equal...
+                    colour_num = i + 1          # set colour_num to current index + 1
+
+                    # console testing comment
+                    if test == 1:
+                        print("Set Colour to num {}".format(colour_num))
+                    return colour_num
+    return False
 
 
+# create stitch objects using objects list
 def create_stitch_objects(objects):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("create_stitch_objects - stitch_objects.py")
 
     stitch_ob_list = []
 
+    # for each object in objects list
     for ob in objects:
-        ob_colour = ob.get_ob_colour()
-        ob_stitch_list = ob.get_stitch_list()
-        ob_stitch_len = ob.get_stitch_len()
-        ob_matrix = ob.get_ob_matrix()
+        ob_colour = ob.get_colour()          # get object colour
+        ob_stitch_list = ob.get_stitch_list()   # get object stitch_list
+        ob_stitch_len = ob.get_stitch_len()     # get object stitch_len
+        ob_matrix = ob.get_matrix()          # get object matrix
 
-        stitch_ob = StitchObject(ob_colour, ob_stitch_list, ob_stitch_len, ob_matrix)
-        stitch_ob.process_stitch_list()
+        # create new stitch object
+        stitch_ob = StitchObject()
+        stitch_ob.set_stitch_list(ob_stitch_list)   # set stitch object stitch_list
+        stitch_ob.set_stitch_len(ob_stitch_len)     # set stitch object stitch_len
 
-        stitch_ob_list.append(stitch_ob)
+        matrix = create_matrix(ob_matrix)           # create matrix using object matrix
+        stitch_ob.set_matrix(matrix)                # set stitch object matrix
+
+        colour = create_colour(ob_colour)           # create colour using object colour
+        stitch_ob.set_colour(colour)                # set stitch object colour
+
+        stitch_ob_list.append(stitch_ob)            # append stitch object to stitch_ob-list
+
     return stitch_ob_list
 

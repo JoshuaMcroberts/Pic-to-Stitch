@@ -1,221 +1,363 @@
 import numpy as np
-import a_star_pathing as asp
+from pic_to_stitch import a_star_pathing as asp
 
 
 class Plot:
 
-    def __init__(self, plot_matrix):
+    def __init__(self):
 
-        self.matrix = plot_matrix
+        self.matrix = []
         self.col_list = []
-        self.col_amount = 0
-        self.matrix_width = len(self.matrix[0])
-        self.matrix_height = len(self.matrix)
+        self.col_amount = int()
+        self.matrix_width = int()
+        self.matrix_height = int()
         self.col_matrix_list = []
 
-    def set_num_list(self, colour_list):
-        test = 0
-        if test == 5:
-            print("set_num_list - class Plot - plot_objects.py")
+    def set_matrix(self, matrix):
+        self.matrix = matrix
 
-        self.col_list = colour_list
-        self.col_amount = len(self.col_list)
+    def set_col_list(self, col_list):
+        self.col_list = col_list
 
-    def set_matrix_w_h(self):
-        test = 0
-        if test == 5:
-            print("set_matrix_w_h - class Plot - plot_objects.py")
+    def set_col_amount(self, col_amount):
+        self.col_amount = col_amount
 
-        self.matrix_width = len(self.matrix[0])
-        self.matrix_height = len(self.matrix)
+    def set_matrix_width(self, width):
+        self.matrix_width = width
 
+    def set_matrix_height(self, height):
+        self.matrix_height = height
+
+    def set_col_matrix_list(self, col_matrix_list):
+        self.col_matrix_list = col_matrix_list
+
+    def get_matrix(self):
+        return self.matrix
+
+    def get_col_list(self):
+        return self.col_list
+
+    def get_col_amount(self):
+        return self.col_amount
+
+    def get_matrix_width(self):
+        return self.matrix_width
+
+    def get_matrix_height(self):
+        return self.matrix_height
+
+    def get_col_matrix_list(self):
+        return self.col_matrix_list
+
+    # method used to set plot_objects attributes
+    def create_matrix_object(self, matrix, colour_list):
+        self.set_matrix(matrix)
+        self.set_matrix_width(len(matrix[0]))
+        self.set_matrix_height(len(matrix))
+        self.set_col_list(colour_list)
+        self.set_col_amount(len(colour_list))
+
+    # create individual colour_objects based off the plot_object
     def create_sub_plot(self, main):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("create_sub_plot - class Plot - plot_objects.py")
 
-        message = "Starting Object Creation..." # progress pop in main
-        main.bar("Object Creation", message, 10, 0)
-        main.bar_update_message(message)
+        # progress bar creation
+        if main is not None:
+            message = "Starting Object Creation..."
+            main.bar("Object Creation", message, 10, 0)
+            main.bar_update_message(message)
+            msg_count = 1
+        # end
 
-        msg_count = 1
+        # for each i in range colour amount
         for i in range(self.col_amount):
+
+            colour = self.col_list[i]       # set colour from col_list
+
+            # console testing comment
             if test == 1:
                 print(i)
-            colour = self.col_list[i]
-            if test == 1:
                 print(self.col_list)
-            p_row = [0] * self.matrix_width
-            plot = np.array([p_row] * self.matrix_height)
 
+            p_row = [0] * self.matrix_width                 # create blank p_row list
+            plot = np.array([p_row] * self.matrix_height)   # create blank plot matrix using p_row list
+
+            # for each row in matrix
             for y, row in enumerate(self.matrix):
+                # for each point in row
                 for x, point in enumerate(row):
 
-                    if self.matrix[y, x] == i+1:
-                        plot[y, x] = i+1
+                    if point == i + 1:      # if point value is equal to i (current number) + 1...
+                        plot[y, x] = i + 1  # set blank plot[y, x] to current number + 1
 
-            col_plot = ColourPlot(plot, i+1, colour)
-            self.col_matrix_list.append(col_plot)
+            # create colour_object
+            col_plot = ColourPlot()
+            col_plot.create_colour_plot(plot, i+1, colour)  # set colour plots attributes
+            self.col_matrix_list.append(col_plot)           # append colour_object to col_matrix_list
 
-            msg = "Colour Plot " + str(msg_count) + " Created..."   # update progress pop in main
-            main.bar_update_message(msg)
-            msg_count += 1
+            # progress bar update
+            if main is not None:
+                msg = "Colour Plot " + str(msg_count) + " Created..."
+                main.bar_update_message(msg)
+                msg_count += 1
+            # end
 
     def print_col_matrix_list(self):
         test = 5
+
+        # console testing comment
         if test == 5:
             print("print_col_matrix_list - class Plot - plot_objects.py")
 
-        if not self.col_matrix_list:
-            if test ==1:
-                print("Not Matrix' in list")
-        else:
+        if not self.col_matrix_list:    # if col_matrix_list if empty...
+
+            # console testing comment
+            print("Not Matrix' in list")
+
+        else:                           # else if col_matrix_list is not empty...
+
+            # for each object in col_matrix_list
             for i in self.col_matrix_list:
                 p_object = i
                 plot = p_object.matrix
                 ind = self.col_matrix_list.index(i)
-                if test == 1:
-                    print("Colour: {}".format(ind))
+
+                # console testing comment
+                print("Colour: {}".format(ind))
+
+                # for each row in plot
                 for y, row in enumerate(plot):
-                    p_row = ""
+                    p_row = ""                          # set print row to string
+
+                    # for each point in row
                     for x, point in enumerate(row):
 
-                        if point == 0:
-                            p_row = p_row + ". "
-                        else:
-                            p_row = p_row + str(point) + " "
-                    if test == 1:
-                        print(p_row)
+                        if point == 0:                  # if point is equal to 0
+                            p_row += ". "               # add '. ' to print row
+                            # (0 is the null value, other values now more easily read in console debugging)
+
+                        else:                           # else if point is not equal to 0
+                            p_row += str(point) + " "   # add point value to print row followed by a space
+
+                    print(p_row)    # print row list
 
 
 class ColourPlot(Plot):
 
-    def __init__(self, matrix, colour_number, colour):
-        super().__init__(matrix)
-        self.col_num = colour_number
-        self.ref_plot = self.create_ref_plot(1)
-        self.object_count = 0
-        self.colour = colour
+    def __init__(self):
+        super().__init__()
+        self.col_num = int()
+        self.ref_plot = []
+        self.object_count = int()
+        self.colour = tuple()
         self.ob_matrix_list = []
 
+    def set_col_num(self, col_num):
+        self.col_num = col_num
+
+    def set_ref_plot(self, ref_plot):
+        self.ref_plot = ref_plot
+
+    def set_object_count(self, object_count):
+        self.object_count = object_count
+
+    def set_colour(self, colour):
+        self.colour = colour
+
+    def set_ob_matrix_list(self, matrix_list):
+        self.ob_matrix_list = matrix_list
+
+    def get_col_num(self):
+        return self.col_num
+
+    def get_ref_plot(self):
+        return self.ref_plot
+
+    def get_object_count(self):
+        return self.object_count
+
+    def get_colour(self):
+        return self.colour
+
+    def get_ob_matrix_list(self):
+        return self.ob_matrix_list
+
+    # create ColourPlot variables using matrix, colour number and colour
+    def create_colour_plot(self, matrix, colour_number, colour):
+
+        self.set_matrix(matrix)                 # set matrix
+        self.set_col_num(colour_number)         # set colour number
+        ref_plot = self.create_ref_plot(0)      # create ref_plot
+        self.set_ref_plot(ref_plot)             # set ref_plot
+        self.set_object_count(0)                 # set object count
+        self.set_colour(colour)                 # set colour
+        self.set_ob_matrix_list([])             # set object matrix list
+
+    # create a reference plot using one argument
     def create_ref_plot(self, arg):
         test = 0
+        # console testing comment
         if test == 5:
             print("create_ref_plot - class ColourPlot - plot_objects.py")
 
-        self.set_matrix_w_h()
-        if arg == 1:
-            p_row = ["0"] * self.matrix_width
-        elif arg == 2:
-            p_row = ["b"] * self.matrix_width
-        else:
-            p_row = ["0"] * self.matrix_width
+        if arg == 1:      # if arg is equal to 1...
+            p_row = ["b"] * len(self.matrix[0])    # create rows with string 'b' value
+        else:             # else if arg is not equal to 1...
+            p_row = ["0"] * len(self.matrix[0])        # create rows with string '0' value
 
-        ref_plot = np.array([p_row] * self.matrix_height)
+        ref_plot = np.array([p_row] * len(self.matrix))   # create numpy array using rows
 
+        # for each row in matrix
         for y, row in enumerate(self.matrix):
-            for x, point in enumerate(row):
 
-                val = self.matrix[y, x]
-                if val == self.col_num:
-                    val = "a"
-                elif val == 0 and arg == 2:
-                    val = "b"
-                else:
-                    val = str(val)
-                ref_plot[y, x] = val
+            # for each value in row
+            for x, val in enumerate(row):
+
+                if val == self.col_num:         # if value is equal to colour number...
+                    val = "a"                       # set value to string 'a'
+                elif val == 0 and arg == 1:     # else if value is equal to 0 and arg is equal to 1...
+                    val = "b"                       # set value to string 'b'
+                else:                           # else if value is not colour number and not 0...
+                    val = str(val)                  # set value equal to string value
+
+                ref_plot[y, x] = val            # set reference plot (y,x) equal to value
         return ref_plot
 
+    # finds unset valid shape, gets the outline of the shape, fills in the shape and updates the ref_plot
     def process_colour_plot(self, main, col_count, main_plot):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("process_colour_plot - class ColourPlot - plot_objects.py")
 
-        ref_plot = self.ref_plot
-        col_num = self.col_num
+        ref_plot = self.ref_plot    # get reference plot
+        col_num = self.col_num      # get colour number
         col_letter = "a"
         count = 0
-        i = 0
+
         msg_count = 1
 
+        # for each row in reference plot
         for y, row in enumerate(ref_plot):
 
+            # for each point in row
             for x, point in enumerate(row):
 
-                if point == col_letter:
-                    msg = "Colour Plot " + str(col_count) + " - Processing Section " + str(msg_count) + "..."
-                    main.bar_update_message(msg)
-                    main.bar_update_progress(msg_count, 0.3, 0)
+                if point == col_letter:     # if the point is equal to the colour letter
+
+                    # progress bar update
+                    if main is not None:
+                        msg = "Colour Plot " + str(col_count) + " - Processing Section " + str(msg_count) + "..."
+                        main.bar_update_message(msg)
+                        main.bar_update_progress(msg_count, 0.3, 0)
+                    # end
 
                     count += 1
+
+                    # function finds and marks out the outline of an object, returns list of points on outline
                     max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), 8, count, col_num)
+
+                    # console testing comment
                     if test == 1:
                         print_plot(ref_plot)
                         print("")
+
+                    # function uses the outline created by get_object_outline to fill the interior of the shape
                     reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, count, col_num, 1)
+
+                    # console testing comment
                     if test == 1:
                         print_plot(ref_plot)
                     msg_count += 1
-                i += 1
+
         self.ref_plot = ref_plot
 
-    def set_object_count(self):
+    # create value for object count
+    def create_object_count(self):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("set_object_count - class ColourPlot - plot_objects.py")
 
         plot = self.ref_plot
         num = []
         row_list = []
-        for i, row in enumerate(plot):
-            for x, point in enumerate(row):
-                bol = isinstance(point, str)
-                if bol:
-                    point = int(point)
-                    row_list.append(point)
+        # for each row in plot
+        for y, row in enumerate(plot):
 
-            val = max(row_list)
-            num.append(val)
-        val = max(num)
+            # for each point in row
+            for x, point in enumerate(row):
+                bol = isinstance(point, str)    # check if point is a string
+                if bol:     # if bol is true...
+                    point = int(point)      # make point an int
+                    row_list.append(point)  # append point to row list
+
+            val = max(row_list)     # get max value from row list
+            num.append(val)         # append value to num list
+        val = max(num)              # get max value from num list
+
+        # console testing comment
         if test == 1:
             print("count is : {}".format(val))
-        self.object_count = val
 
+        return val
+
+    # separates different object of the same colour into a plot by themselves
     def create_object_sub_plot(self):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("create_object_sub_plot - class ColourPlot - plot_objects.py")
 
-        self.set_object_count()
+        # create object count value
+        object_count = self.create_object_count()
+        self.set_object_count(object_count)         # set object count value
 
+        ref_plot = self.get_ref_plot()              # get ref_plot
+
+        # for each in range object count
         for i in range(self.object_count):
+
+            # console testing comment
             if test == 1:
                 print(i+1)
-            colour = self.colour
 
-            self.set_matrix_w_h()
+            colour = self.get_colour()              # get colour
 
-            p_row = [0] * self.matrix_width
-            plot = np.array([p_row] * self.matrix_height)
+            p_row = [0] * len(ref_plot[0])              # create blank list
+            plot = np.array([p_row] * len(ref_plot))    # create blank array with blank lists
 
-            for y, row in enumerate(self.ref_plot):
+            # loop through ref_plot
+            for y, row in enumerate(ref_plot):
                 for x, point in enumerate(row):
 
-                    if self.ref_plot[y, x] == str(i + 1):
-                        plot[y, x] = str(i + 1)
+                    if point == str(i + 1):     # if point is equal to object number...
+                        plot[y, x] = str(i + 1)     # set plot[y,x] to object number
+
+            # console testing comment
             if test == 1:
                 print_plot(plot)
-            ob_plot = ObjectPlot(plot, i + 1, i + 1, colour)
-            self.ob_matrix_list.append(ob_plot)
 
+            ob_plot = ObjectPlot()                                  # create new object plot
+            ob_plot.create_object_plot(plot, i + 1, i + 1, colour)  # set object plot attributes
+            self.ob_matrix_list.append(ob_plot)                     # appending object plot to ob_matrix_list
+
+    # method used for console testing
     def print_ob_matrix_list(self):
-        test = 5
+        test = 1
         if test == 5:
             print("print_ob_matrix_list - class ColourPlot - plot_objects.py")
 
         if not self.ob_matrix_list:
             if test == 1:
-                print("Not Matrix' in list")
+                print("No Matrix in list")
         else:
             for i in self.ob_matrix_list:
                 p_object = i
@@ -238,345 +380,251 @@ class ColourPlot(Plot):
 
 class ObjectPlot(ColourPlot):
 
-    def __init__(self, matrix, colour_number, object_number, colour):
-        super().__init__(matrix, colour_number, colour)
-        self.ob_id = object_number
-        self.out_ob = 0
-        self.in_ob = 2
-        self.ob_fill_all = []
-        self.ob_outline = []
-        self.ob_run_fill = []
-        self.ob_stitch_type = ""
-        self.ob_max_stitch_length = 0
-        self.ob_stitch_list = []
-        self.colour = colour
-        self.ref_plot = self.create_ref_plot(2)
-        self.ob_parts_list = []
+    def __init__(self):
+        super().__init__()
+        self.ob_id = int()
+        self.colour = tuple()
+        self.ref_plot = []
         self.section_image = int()
+        self.stitch_type = str()
+        self.stitch_len = int()
+        self.stitch_list = []
 
-    def set_stitch_type(self, val):
-        test = 0
-        if test == 5:
-            print("set_stitch_type - class ObjectPlot - plot_objects.py")
-        self.ob_stitch_type = val
+    def set_ob_id(self, ob_id):
+        self.ob_id = ob_id
 
-    def get_stitch_type(self):
-        test = 0
-        if test == 5:
-            print("get_stitch_type - class ObjectPlot - plot_objects.py")
-        return self.ob_stitch_type
+    def set_colour(self, colour):
+        self.colour = colour
 
-    def set_stitch_len(self, val):
-        test = 0
-        if test == 5:
-            print("set_stitch_len - class ObjectPlot - plot_objects.py")
-        self.ob_max_stitch_length = val
+    def set_ref_plot(self, ref_plot):
+        self.ref_plot = ref_plot
 
-    def get_stitch_len(self):
-        test = 0
-        if test == 5:
-            print("get_stitch_len - class ObjectPlot - plot_objects.py")
-        return self.ob_max_stitch_length
+    def set_section_image(self, section_image):
+        self.section_image = section_image
 
-    def set_stitch_list(self, val):
-        test = 0
-        if test == 5:
-            print("set_stitch_list - class ObjectPlot - plot_objects.py")
-        self.ob_stitch_list = val
+    def set_stitch_type(self, stitch_type):
+        self.stitch_type = stitch_type
 
-    def get_stitch_list(self):
-        test = 0
-        if test == 5:
-            print("get_stitch_list - class ObjectPlot - plot_objects.py")
-        return self.ob_stitch_list
+    def set_stitch_len(self, stitch_len):
+        self.stitch_len = stitch_len
 
-    def set_ob_colour(self, val):
-        test = 0
-        if test == 5:
-            print("set_ob_colour - class ObjectPlot - plot_objects.py")
-        self.colour = val
+    def set_stitch_list(self, stitch_list):
+        self.stitch_list = stitch_list
 
-    def get_ob_colour(self):
-        test = 0
-        if test == 5:
-            print("get_ob_colour - class ObjectPlot - plot_objects.py")
+    def get_ob_id(self):
+        return self.ob_id
+
+    def get_colour(self):
         return self.colour
 
-    def get_ob_matrix(self):
-        test = 0
-        if test == 5:
-            print("get_ob_matrix - class ObjectPlot - plot_objects.py")
-        return self.matrix
+    def get_ref_plot(self):
+        return self.ref_plot
 
-    def process_colour_plot(self, main_plot):
-        test = 0
-        if test == 5:
-            print("process_colour_plot - class ObjectPlot - plot_objects.py")
-        test = 0
-        ref_plot = self.ref_plot
-        col_num = self.col_num
-        col_letter_list = ["b", "a"]
-        plot_h = len(ref_plot)
-        plot_w = len(ref_plot[0])
+    def get_section_image(self):
+        return self.section_image
 
-        if test == 1:
-            print("plot_h: {} plot_w: {}".format(plot_h, plot_w))
+    def get_stitch_type(self):
+        return self.stitch_type
 
-        co_or_list = [(0, 0), (0, plot_w - 1), (plot_h - 1, 0), (plot_h - 1, plot_w - 1)]
-        l_point = [8, 2, 6, 4]
-        val_list = ["0", "2", "1"]
+    def get_stitch_len(self):
+        return self.stitch_len
 
-        for i in co_or_list:
-            ind = co_or_list.index(i)
-            l_p = l_point[ind]
-            y, x = i
-            point = ref_plot[y, x]
-            val = val_list[0]
+    def get_stitch_list(self):
+        return self.stitch_list
 
-            if point == col_letter_list[0]:     # Sets the background colour
+    # sets attribute values for the object class
+    def create_object_plot(self, matrix, colour_number, object_number, colour):
+        self.set_matrix(matrix)             # set matrix
+        self.set_ob_id(object_number)       # set object id
+        self.set_col_num(colour_number)     # set colour number
+        self.set_colour(colour)             # set colour
+        self.set_ref_plot(self.create_ref_plot(1))  # set reference plot using inherited method from colour plot class
 
-                max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), l_p, val, col_num)
-
-                if test == 1:
-                    print_plot(ref_plot)
-                    print("")
-                reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, val, col_num, 2)
-
-                if test == 1:
-                    print_plot(ref_plot)
-
-        for y, row in enumerate(ref_plot):
-            for x, point in enumerate(row):
-
-                if point == col_letter_list[1]:
-
-                    max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, (y, x), 8, "1", "a")
-                    if test == 1:
-                        print_plot_advanced(ref_plot)
-                        print("")
-                    reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, "1", 2, 1)
-                    if test == 1:
-                        print_plot_advanced(ref_plot)
-
-        for y, row in enumerate(ref_plot):
-            for x, point in enumerate(row):
-
-                if point == col_letter_list[0]:
-
-                    max_yx, min_yx, ind_list = get_object_outline(ref_plot, ref_plot, (y, x), 8, "2", 2)
-                    if test == 1:
-                        print_plot_advanced(ref_plot)
-                        print("")
-                    reversible_mine_sweeper_fill(ref_plot, ref_plot, max_yx, min_yx, "2", "b", 2)
-                    if test == 1:
-                        print_plot_advanced(ref_plot)
-
-    def outline_running_stitch(self, main):
-        test = 0
-        if test == 5:
-            print("outline_running_stitch - class ObjectPlot - plot_objects.py")
-        plot = self.matrix.copy()
-
-        new_plot = plot.copy()
-        b_val = 0
-
-        for y, row in enumerate(plot):
-            for x, point in enumerate(row):
-                if point == 1:
-                    out = get_object_outline(plot, new_plot, (y, x), 8, 1, 1)
-                    ind_list = out[2]
-                    ind_list += ind_list[0:2]
-                    self.ob_stitch_list = ind_list  # Outline co-or list
-                    b_val = 1
-                    break
-            if b_val == 1:
-                break
-
+    # set values in object matrix to 1 leave at 0
     def process_matrix(self):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("process_matrix - class ObjectPlot - plot_objects.py")
 
-        plot = self.matrix
+        plot = self.matrix                  # get matrix
 
+        # for each row in plot
+        for y, row in enumerate(plot):
+            # for each point in row
+            for x, point in enumerate(row):
+                if point != 0:              # if point is not equal to 0
+                    self.matrix[y, x] = 1       # set matrix[y, x] to 1
+
+    # sets stitch list to a list of co-ordinates that outline the object
+    def outline_running_stitch(self):
+        test = 0
+
+        # console testing comment
+        if test == 5:
+            print("outline_running_stitch - class ObjectPlot - plot_objects.py")
+
+        plot = self.matrix.copy()       # get copy of matrix
+        new_plot = plot.copy()          # make copy of copy
+        b_val = 0                       # set break value to 0
+
+        # loop through each position in plot matrix
         for y, row in enumerate(plot):
             for x, point in enumerate(row):
-                if point != 0:
-                    self.matrix[y, x] = 1
 
-    # not used?
-    # def get_ob_lines(self):
-    #     test = 5
-    #     if test == 5:
-    #         print("get_ob_lines - class ObjectPlot - plot_objects.py")
-    #
-    #     if not self.ob_parts_list:
-    #         if test == 1:
-    #             print("not objects in list")
-    #
-    #     elif len(self.ob_parts_list) < 2:
-    #         if test == 1:
-    #             print("not enough data")
-    #
-    #     else:
-    #         base_plot = self.ob_parts_list[0]
-    #         ref_plot = self.ob_parts_list[1]
-    #         if test == 1:
-    #             print("Base")
-    #         print_plot(base_plot)
-    #         for y, row in enumerate(ref_plot):
-    #             for x, point in enumerate(row):
-    #                 if point == "1":
-    #                     base_plot[y, x] = "2"
-    #         return base_plot
+                if point == 1:          # if point is 1...
+                    # returns a list if points that make up the object outline as well as the max y,x and min y,x
+                    out = get_object_outline(plot, new_plot, (y, x), 8, 1, 1)
+                    ind_list = out[2]               # get list from output
+                    ind_list += ind_list[0:2]       # add the first 2 stitches to the end of the list to close the gap
+                    self.stitch_list = ind_list     # set object stitch_list using the output co-or list
+                    b_val = 1                       # set break value to 1
+                    break                           # break second loop
+            if b_val == 1:  # if break value is equal to 1...
+                break           # break first loop
 
+    # sets stitch list to a list of co-ordinates that outline and circle the object until all points have been visited
     def running_stitch_fill(self, main):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("running_stitch_fill - class ObjectPlot - plot_objects.py")
 
-        plot = self.matrix.copy()   # untouched only for reference
-        new_plot = self.matrix.copy()
-        b_val = 0
-        count = 4
+        plot = self.matrix.copy()               # get copy of matrix
+        new_plot = self.matrix.copy()           # get copy of copy
+        b_val = 0                               # set break value to 0
+        count = 4                               # set count to 4
 
+        # loop through plot matrix
         for y, row in enumerate(plot):
             for x, point in enumerate(row):
-                if point == 1:
+
+                if point == 1:  # if point is equal to 1...
+
+                    # returns a list if points that make up the object outline as well as the max y,x and min y,x
                     max_yx, min_yx, ind_list = get_object_outline(plot, new_plot, (y, x), 8, count, 1)
 
+                    # checks for any valid point in point, returns the top left most if available
                     anw, yx = check_for_number(new_plot, 1)
 
+                    # varient on of the get_object_outline function expect this keeps circling until object is filled
                     ind_list = get_object_outline_fill(main, plot, new_plot, yx, 8, count, 1, ind_list)
-                    self.ob_stitch_list = ind_list
-                    b_val = 1
-                    break
-            if b_val == 1:
-                break
 
+                    self.stitch_list = ind_list     # set stitch list
+                    b_val = 1                       # set break value
+                    break                           # break second loop
+
+            if b_val == 1:  # if break value is equal to 1...
+                break           # break first loop
+
+    # sets stitch list to a list generated by a fill pattern - vertical and horizontal stitch sets combined into one
     def fill_stitch_fill(self, main):
         test = 0
+
+        # console testing comment
         if test == 5:
             print("fill_stitch_fill - class ObjectPlot - plot_objects.py")
 
-        plot = self.matrix.copy()
+        plot = self.matrix.copy()           # get matrix copy
+
+        # console testing comment
         if test == 1:
             print("fill stitch fill")
             print_plot_advanced(plot)
-        ref_plot = self.ref_plot.copy()
-        min_yx = (0, 0)
-        max_yx = (len(plot), len(plot[0]))
-        br_val = 0
-        ind_list = []
-        end_at = 0
 
-        # works
-        p_row = ["0"] * len(ref_plot[0])    # create blank polt make template plot
+        ref_plot = self.ref_plot.copy()     # get copy of reference plot
+        min_yx = (0, 0)                     # set min y,x to the lowest
+        max_yx = (len(plot), len(plot[0]))  # set max y,x to the highest
+        br_val = 0                          # set break value to 0
+        ind_list = []                       # create int_list
+        end_at = 0                          # set end_at value to 0
+
+        p_row = ["0"] * len(ref_plot[0])    # create blank plot to make template plot
         blank_plot = np.array([p_row] * len(ref_plot))
         template = blank_plot.copy()    
 
-        # works
-        for y, row in enumerate(template):  # create skip a column template plot
+        # loop through template plot - create skip a column template plot
+        for y, row in enumerate(template):
             for x, point in enumerate(row):
-                if (x % 2) == 0:
-                    template[y, x] = "2"
-        
-        if test == 1:   # testing comment for console debug
+                if (x % 2) == 0:            # if x divided by 2 has no remainder...- every other column
+                    template[y, x] = "2"        # set template[y, x] eqaul to 2
+
+        # console testing comment
+        if test == 1:
             print_plot_advanced(template)
             print(" ")
             print_plot_advanced(plot)
 
-        # works
-        for y, row in enumerate(plot):  # set outline point in ind_list and get min_x for start point
+        # loop through plot - set outline point in ind_list and get min_x for start point
+        for y, row in enumerate(plot):
             for x, point in enumerate(row):
 
-                if point == 1:
+                if point == 1:  # if point is equal to 1...
+
+                    # get object outline starting at point
                     max_yx, min_yx, ind_list = get_object_outline(plot, ref_plot, (y, x), 8, 3, 1)
-                    br_val = 1
-                    break
+                    br_val = 1      # set break value to 1
+                    break           # break second loop
 
-            if br_val == 1:
-                break
+            if br_val == 1:     # if break value is equal to 1...
+                break               # break first loop
 
+        min_y, min_x = min_yx   # get minimum y value and minimum x value from min_yx
+
+        # console testing comment
         if test == 1:
             print("before min_yx: {}".format(min_yx))
-            min_y, min_x = min_yx
             print("after min_x: {}".format(min_x))
-        else:
-            min_y, min_x = min_yx
 
-        # works
-        for y, row in enumerate(plot):  # get start point by finding valid point that matches both template and plot
+        # loop through plot rows - get start point by finding valid point that matches both template and plot
+        for y, row in enumerate(plot):
             p_a = row[min_x]
             p_b = row[min_x + 1]
             tem_p_a = template[y, min_x]
             tem_p_b = template[y, min_x + 1]
 
+            # console testing comment
             if test == 1:
                 print("y: {} plot val: {}".format(y, p_a))
 
-            if p_a == 1 and tem_p_a == "2":
-                end_at = (y, min_x)
+            if p_a == 1 and tem_p_a == "2":     # if point a is equal to 1 and template point a is equal to 2...
+                end_at = (y, min_x)                 # set end_at value
                 break
-            elif p_b == 1 and tem_p_b == "2":
-                end_at = (y, min_x + 1)
+            elif p_b == 1 and tem_p_b == "2":   # if point b is equal to 1 and template point b is equal to 2...
+                end_at = (y, min_x + 1)             # set end_at value
                 break
-            else:
+            else:                               # else if point a and b are not 1 and template a and b are not 2...
+                # console testing comment
                 if test == 1:
                     print("not set")
 
+        start_at = ind_list[-1]     # set start at point
+
+        # console testing comment
         if test == 1:
             print(ind_list)
-
-        start_at = ind_list[-1]
-
-        if test == 1:
             print("Start Val: {}".format(end_at))
             print("end Point: {}".format(start_at))
 
-        if end_at == start_at:
+        if end_at == start_at:      # if end at point and start at point are equal...
             pass
-        else:
+        else:                       # else if end at point and start at point are not equal...
+
+            # creates list of point between 2 given points - list between end of outline and start of full fill
             goto, ind_list = asp.move_to_a_star(main, plot, end_at, start_at, ind_list)
 
+        # creates a list of points that systematically visits and records each valid point in the object
         ind_list = get_object_fill_stitch(main, template, plot, end_at, max_yx, min_yx, ind_list)
 
-        self.ob_stitch_list = ind_list
-                
-    def print_ob_part_list(self):
-        test = 5
-        if test == 5:
-            print("print_ob_part_list - class ObjectPlot - plot_objects.py")
-
-        if not self.ob_parts_list:
-            print("Not Matrix' in list")
-        else:
-            for i, item in enumerate(self.ob_parts_list):
-
-                print("Item {}".format(i+1))
-                print_plot(item)
-
-
-# def stitch_test(plot, ind_list):
-#     test = 5
-#     if test == 5:
-#         print("stitch_test - plot_objects.py")
-#
-#     if test == 1:
-#         print("Stitch TEST")
-#     p_row = ["0"] * len(plot[0])
-#     blank_plot = np.array([p_row] * len(plot))
-#
-#     for i in ind_list:
-#         y, x = i
-#         blank_plot[y, x] = "1"
-#
-#     if test == 1:
-#         print_plot(blank_plot)
+        self.stitch_list = ind_list     # set stitch list
 
 
 def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_num):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_object_outline - plot_objects.py")
 
@@ -598,7 +646,9 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
     ref_plot[y, x] = set_to
     ind_list.append((y, x))
 
-    for j in range(len(plot)*len(plot[0])):
+    count = 0
+    ext = 0
+    while ext != 1:
 
         # One
         if l_point == 8:
@@ -755,6 +805,7 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
                 print("# Five")
 
             if y + 1 < len(plot) and x + 1 < len(plot[0]):
+
                 n_point = plot[y + 1, x + 1]
 
                 if n_point == col_num:
@@ -899,6 +950,9 @@ def get_object_outline(main_plot, ref_plot, start_yx, start_point, set_to, col_n
             if l_point != 4:
                 l_point = 8
 
+        if count > len(main_plot)*len(main_plot[0])*10:
+            ext = 1
+        count += 1
 
     max_y = 0
     min_y = plot_h
@@ -930,11 +984,12 @@ def get_object_outline_fill(main, main_plot, ref_plot, start_yx, start_point, se
     test = 0
     if test == 5:
         print("get_object_outline_fill - plot_objects.py")
+    msg_count = 0
 
     # progress bar update
-    msg_count = 0
-    msg = "Getting Running Fill...(Points Set: " + str(msg_count) + ")"
-    main.bar_update_message(msg)
+    if main is not None:
+        msg = "Getting Running Fill...(Points Set: " + str(msg_count) + ")"
+        main.bar_update_message(msg)
     # end
 
     ref_plot = ref_plot.copy()
@@ -1175,12 +1230,13 @@ def get_object_outline_fill(main, main_plot, ref_plot, start_yx, start_point, se
             if l_point != 4:    # check if loop start was set
                 l_point = 8     # if not, set to the next position
 
-        if msg_count % 10 == 0:
-            # progress bar update
-            msg = "Getting Object Outline...(Points Set: " + str(msg_count) + ")"
-            main.bar_update_message(msg)
-            main.bar_update_progress(0, 0.001, 1)
-            # end
+        # progress bar update
+        if main is not None:
+            if msg_count % 10 == 0:
+                msg = "Getting Object Outline...(Points Set: " + str(msg_count) + ")"
+                main.bar_update_message(msg)
+                main.bar_update_progress(0, 0.001, 1)
+        # end
 
         if loop > 16:
 
@@ -1214,10 +1270,13 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
     if test == 5:
         print("get_object_fill_stitch - plot_objects.py")
 
-    # progress bar update
     msg_count = 0
-    msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
-    main.bar_update_message(msg)
+
+    # progress bar update
+    if main is not None:
+
+        msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
+        main.bar_update_message(msg)
     # end
 
     s_y, s_x = start_yx
@@ -1415,6 +1474,7 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
                         print("error 1 right position 3")
                     elif template[y, x] == "0":
                         pass
+
             else:
                 if test == 1:
                     print("Else")
@@ -1631,13 +1691,14 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
                         direct = 1
                     else:
                         ext = 1  # if false, all areas have been visited, exit while loop
+        # progress bar update
+        if main is not None:
+            if msg_count % 10 == 0:
 
-        if msg_count % 10 == 0:
-            # progress bar update
-            msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
-            main.bar_update_message(msg)
-            main.bar_update_progress(0, 0.001, 1)
-            # end
+                msg = "Getting Fill Base...(Points Set: " + str(msg_count) + ")"
+                main.bar_update_message(msg)
+                main.bar_update_progress(0, 0.001, 1)
+        # end
 
     plot_no_change = plot.copy()
 
@@ -1654,11 +1715,11 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
     if s2_yx != ind_list[-1]:
         s2_yx, ind_list = asp.move_to_a_star(main, plot_c, s2_yx, ind_list[-1], ind_list)
 
-
     # progress bar update
-    msg_count = 0
-    msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
-    main.bar_update_message(msg)
+    if main is not None:
+        msg_count = 0
+        msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
+        main.bar_update_message(msg)
     # end
 
     y, x = s2_yx
@@ -1914,13 +1975,13 @@ def get_object_fill_stitch(main, template, plot, start_yx, max_yx, min_yx, ind_l
                     else:
                         ext = 1  # if false, all areas have been visited, exit while loop
 
-        if msg_count % 10 == 0:
-            # progress bar update
-            msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
-            main.bar_update_message(msg)
-            main.bar_update_progress(0, 0.001, 1)
-            # end
-
+        # progress bar update
+        if main is not None:
+            if msg_count % 10 == 0:
+                msg = "Getting Full Fill...(Points Set: " + str(msg_count) + ")"
+                main.bar_update_message(msg)
+                main.bar_update_progress(0, 0.001, 1)
+        # end
     return ind_list
 
 
@@ -1938,6 +1999,777 @@ def compare_plots(plot1, val1, plot2, val2):
                 blank_plot[y, x] = "1"
 
     return blank_plot
+
+
+def find_path(main_plot, goto_yx, start_yx, ind_list):
+    test = 0
+    if test == 5:
+        print("find_path - plot_objects.py")
+
+    f_y, f_x = goto_yx
+    y, x = start_yx
+    col_num = 1
+
+    p_row = [1] * len(main_plot[0])  # create blank plot make template plot
+    plot = np.array([p_row] * len(main_plot))
+
+    if test == 1 or test == 2 or test == 3:
+        print("test in find_path")
+        asp.print_node_plot(main_plot)
+        print_plot(plot)
+
+    ext = 0
+
+    h = 0
+    l_point = next_point(start_yx, goto_yx)
+
+    if test == 2 or test == 3:
+        print("Start: {} GoTo: {}".format(start_yx, goto_yx))
+
+    if start_yx == goto_yx:
+        return h, ind_list
+
+    while ext != 1:
+
+        # One
+        if l_point == 1:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# One")
+
+            n_point = plot[y - 1, x - 1]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+                h += 14
+
+                if y - 1 == f_y and x - 1 == f_x:   # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:   # else record valid point
+                    y -= 1  # set y to y - 1
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Two
+        elif l_point == 2:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Two")
+
+            n_point = plot[y - 1, x]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+                h += 10
+
+                if y - 1 == f_y and x == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}". format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    y -= 1  # set y to y - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Three
+        elif l_point == 3:  # check if this point is within the plot limits
+
+            if test == 1:  # set this point
+                print("# Three")
+
+            n_point = plot[y - 1, x + 1]  # set next point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y - 1 == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+                    y -= 1  # set y to y - 1
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Four
+        elif l_point == 4:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Four")
+
+            n_point = plot[y, x + 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{} +10)".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Five
+        elif l_point == 5:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Five")
+
+            n_point = plot[y + 1, x + 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y + 1 == f_y and x + 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+                    x += 1  # set x to x + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Six
+        elif l_point == 6:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Six")
+
+            n_point = plot[y + 1, x]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y + 1 == f_y and x == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Seven
+        elif l_point == 7:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Seven")
+
+            n_point = plot[y + 1, x - 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 14
+
+                if y + 1 == f_y and x - 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    y += 1  # set y to y + 1
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +14".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+        # Eight
+        elif l_point == 8:  # check loop start
+
+            if test == 1:  # testing console comments
+                print("# Eight")
+
+            n_point = plot[y, x - 1]  # set this point
+
+            if n_point == col_num:  # check against colour_number
+
+                h += 10
+
+                if y == f_y and x - 1 == f_x:  # check if next point is destination
+                    if test == 2:
+                        print("return h: {}".format(h))
+                    return h, ind_list  # if true then break loop and return h and ind_list
+
+                else:  # else record valid point
+
+                    x -= 1  # set x to x - 1
+
+                    if test == 1 or test == 2:  # testing console comments
+                        print("({},{}) +10".format(y, x))
+
+                    ind_list.append((y, x))
+                    cur_yx = (y, x)  # combine current y, x
+                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
+
+
+def next_point(yx_st, yx_fn):
+    test = 0
+    if test == 5:
+        print("next_point - plot_objects.py")
+    start_p = 1
+
+    c_y, c_x = yx_st
+    f_y, f_x = yx_fn
+
+    sum_y = f_y - c_y
+    sum_x = f_x - c_x
+
+    if sum_y < 0:
+        # - y
+        if sum_x < 0:
+            # - x
+            start_p = 1
+
+        elif sum_x > 0:
+            # + x
+            start_p = 3
+
+        else:
+            # x
+            start_p = 2
+
+    elif sum_y > 0:
+        # + y
+        if sum_x < 0:
+            # - x
+            start_p = 7
+
+        elif sum_x > 0:
+            # + x
+            start_p = 5
+
+        else:
+            # x
+            start_p = 6
+
+    elif sum_y == 0:
+        # y
+        if sum_x < 0:
+            # - x
+            start_p = 8
+
+        elif sum_x > 0:
+            # + x
+            start_p = 4
+
+    return start_p
+
+
+def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, col_num, arg):
+    test = 0
+    if test == 5:
+        print("reversible_mine_sweeper_fill - plot_objects.py")
+
+    copy_col_num = col_num
+    plot = main_plot
+    min_y, min_x = min_yx
+    max_y, max_x = max_yx
+    l_len = len(ref_plot)
+    r_len = len(ref_plot[0])
+    change = 1
+    j = 0
+    bol = isinstance(ref_plot[0, 0], str)
+
+    if test == 1:
+        print("max_yx: {} min_yx: {}".format(max_yx, min_yx))
+
+    if bol and arg == 1:
+        col_num = "a"
+        set_to = str(set_to)
+    elif bol and arg == 2:
+        col_num = "b"
+        set_to = str(set_to)
+    elif bol and arg == 3:
+        col_num = str(col_num)
+        set_to = str(set_to)
+
+    while change == 1:
+        change = 0
+
+        # while flip < 2:
+        for y, row in enumerate(ref_plot):
+            for x, point in enumerate(ref_plot[0]):
+                if min_x <= x <= max_x and min_y <= y <= max_y:
+                    if plot[y, x] == copy_col_num:
+                        if ref_plot[y, x] == col_num:
+                            points = get_surrounding_points(plot, ref_plot, y, x, copy_col_num)
+
+                            if set_to not in points:
+                                pass
+                            else:
+
+                                if test == 1:
+                                    print("Fill Set({},{})".format(y, x))
+                                ref_plot[y, x] = set_to
+                                change = 1
+
+        while l_len >= 0:
+
+            x = r_len
+            while x >= 0:
+                y = l_len
+
+                if test == 1:
+                    print("l_len: {} r_len: {}".format(l_len, x))
+
+                if min_x <= x <= max_x and min_y <= y <= max_y:
+                    if plot[y, x] == copy_col_num:
+
+                        if ref_plot[y, x] == col_num:
+                            points = get_surrounding_points(plot, ref_plot, y, x, copy_col_num)
+
+                            if set_to not in points:
+                                pass
+                            else:
+                                if test == 1:
+                                    print("Re Fill ({},{})".format(y, x))
+                                ref_plot[y, x] = set_to
+                                change = 1
+                x -= 1
+            l_len -= 1
+
+
+def check_for_number(plot, num):
+    test = 0
+    if test == 5:
+        print("check_for_number - class Plot - plot_objects.py")
+
+    yx = (0, 0)
+    bol = isinstance(plot[0, 0], str)
+    bol2 = isinstance(num, str)
+    if bol and not bol2:
+        num = str(num)
+    elif not bol and bol2:
+        num = int(num)
+
+    for y, row in enumerate(plot):
+        for x, point in enumerate(row):
+            if point == num:
+                yx = (y, x)
+                return True, yx
+
+    return False, yx
+
+
+def valid_position(main_plot, y, x, col_num, con_col):
+    test = 0
+    if test == 5:
+        print("valid_position - class Plot - plot_objects.py")
+
+    test = 0
+
+    if test >= 1:
+        print("Valid position check: ({},{})".format(y, x))
+        print("col_num Value: {}".format(col_num))
+
+    points, yx_points = get_surrounding_points_5x5(main_plot, y, x)
+    val_list, amount_list = count_list(points)
+    anw = t_w_p_logic(col_num, con_col, val_list, amount_list)
+
+    return anw
+
+
+def get_surrounding_points(plot, out_plot, y, x, col_num):
+    test = 0
+    if test == 5:
+        print("get_surrounding_point - class Plot - plot_objects.py")
+
+    row_num = len(out_plot)
+    cul_num = len(out_plot[0])
+    points = []
+    a = y - 1
+    b = y + 1
+    c = x - 1
+    d = x + 1
+    if test == 1:
+        print("Centre: ({},{})".format(y, x))
+    if y > 0:
+        p_a = plot[y - 1, x]
+        points.append(out_plot[a, x])
+        if test == 1:
+            print(" Sur_2: ({},{})".format(a, x))
+
+        if x > 0:
+            p_c = plot[y, x - 1]
+            if p_a != p_c:
+                points.append(out_plot[a, c])
+                if test == 1:
+                    print(" Sur_1: ({},{})".format(a, c))
+            elif p_a == p_c and p_a != col_num:  # and out_plot[a, c] == out_plot[y, x]:
+                anw = valid_position(plot, y - 1, x - 1, col_num, p_a)
+                if anw == 1:
+                    points.append(out_plot[a, c])
+                    if test == 1:
+                        print(" Sur_1: ({},{})".format(a, c))
+                else:
+                    if test == 1:
+                        print("({},{}) not valid".format(a, c))
+
+        if x < cul_num - 1:
+            p_d = plot[y, x + 1]
+            if p_a != p_d:
+                points.append(out_plot[a, d])
+                if test == 1:
+                    print(" Sur_3: ({},{})".format(a, d))
+            elif p_a == p_d and p_a != col_num:  # and out_plot[a, d] == out_plot[y, x]:
+                anw = valid_position(plot, y - 1, x + 1, col_num, p_a)
+                if anw == 1:
+                    points.append(out_plot[a, d])
+                    if test == 1:
+                        print(" Sur_3: ({},{})".format(a, d))
+                else:
+                    if test == 1:
+                        print("({},{}) not valid".format(a, d))
+
+    if y < row_num - 1:
+        p_b = plot[y + 1, x]
+        points.append(out_plot[b, x])
+        if test == 1:
+            print(" Sur_6: ({},{})".format(b, x))
+        if x > 0:
+            p_c = plot[y, x - 1]
+            if p_b != p_c:
+                points.append(out_plot[b, c])
+                if test == 1:
+                    print(" Sur_7: ({},{})".format(b, c))
+            elif p_b == p_c and p_b != col_num:  # and out_plot[b, c] == out_plot[y, x]:
+                anw = valid_position(plot, y + 1, x - 1, col_num, p_b)
+                if anw == 1:
+                    points.append(out_plot[b, c])
+                    if test == 1:
+                        print(" Sur_7: ({},{})".format(b, c))
+                else:
+                    if test == 1:
+                        print("({},{}) not valid".format(b, c))
+
+        if x < cul_num - 1:
+            p_c = plot[y, x + 1]
+            if p_b != p_c:
+                points.append(out_plot[b, d])
+                if test == 1:
+                    print(" Sur_5: ({},{})".format(b, d))
+            elif p_b == p_c and p_b != col_num:  # and out_plot[b, d] == out_plot[y, x]:
+                anw = valid_position(plot, y + 1, x + 1, col_num, p_b)
+                if anw == 1:
+                    points.append(out_plot[b, d])
+                    if test == 1:
+                        print(" Sur_5: ({},{})".format(b, d))
+                else:
+                    if test == 1:
+                        print("({},{}) not valid".format(b, d))
+
+    if x > 0:
+        points.append(out_plot[y, c])
+        if test == 1:
+            print(" Sur_8: ({},{})".format(y, c))
+    if x < cul_num - 1:
+        points.append(out_plot[y, d])
+        if test == 1:
+            print(" Sur_4: ({},{})".format(y, d))
+    return points
+
+
+def get_surrounding_points_5x5(main_plot, y, x):
+    test = 0
+    if test == 5:
+        print("get_surrounding_points_5x5 - class Plot - plot_objects.py")
+
+    row_num = len(main_plot)
+    col_num = len(main_plot[0])
+    points = []
+    yx_points = []
+    a = y - 2
+    b = y + 2
+    c = x - 2
+    d = x + 2
+    e = y - 1
+    f = y + 1
+    g = x - 1
+    h = x + 1
+
+    points.append(main_plot[y, x])
+    yx_points.append((y, x))
+
+    if y >= 2:
+        points.append(main_plot[a, x])
+        yx_points.append((a, x))
+        if x >= 2:
+            points.append(main_plot[a, c])
+            yx_points.append((a, c))
+
+        if x >= 1:
+            points.append(main_plot[a, g])
+            yx_points.append((a, g))
+
+        if x < col_num - 2:
+            points.append(main_plot[a, d])
+            yx_points.append((a, d))
+
+        if x < col_num - 1:
+            points.append(main_plot[a, h])
+            yx_points.append((a, h))
+
+    if y >= 1:
+        points.append(main_plot[e, x])
+        yx_points.append((e, x))
+        if x >= 2:
+            points.append(main_plot[e, c])
+            yx_points.append((e, c))
+
+        if x >= 1:
+            points.append(main_plot[e, g])
+            yx_points.append((e, g))
+
+        if x < col_num - 2:
+            points.append(main_plot[e, d])
+            yx_points.append((e, d))
+
+        if x < col_num - 1:
+            points.append(main_plot[e, h])
+            yx_points.append((e, h))
+
+    if y < row_num - 2:
+        points.append(main_plot[b, x])
+        yx_points.append((b, x))
+        if x >= 2:
+            points.append(main_plot[b, c])
+            yx_points.append((b, c))
+
+        if x >= 1:
+            points.append(main_plot[b, g])
+            yx_points.append((b, g))
+
+        if x < col_num - 2:
+            points.append(main_plot[b, d])
+            yx_points.append((b, d))
+
+        if x < col_num - 1:
+            points.append(main_plot[b, h])
+            yx_points.append((b, h))
+
+    if y < row_num - 1:
+        points.append(main_plot[f, x])
+        yx_points.append((f, x))
+        if x >= 2:
+            points.append(main_plot[f, c])
+            yx_points.append((f, c))
+
+        if x >= 1:
+            points.append(main_plot[f, g])
+            yx_points.append((f, g))
+
+        if x < col_num - 2:
+            points.append(main_plot[f, d])
+            yx_points.append((f, d))
+
+        if x < col_num - 1:
+            points.append(main_plot[f, h])
+            yx_points.append((f, h))
+
+    if x >= 2:
+        points.append(main_plot[y, c])
+        yx_points.append((y, c))
+
+    if x >= 1:
+        points.append(main_plot[y, g])
+        yx_points.append((y, g))
+
+    if x < col_num - 2:
+        points.append(main_plot[y, d])
+        yx_points.append((y, d))
+
+    if x < col_num - 1:
+        points.append(main_plot[y, h])
+        yx_points.append((y, h))
+
+    return points, yx_points
+
+
+def count_list(points):
+    test = 0
+    if test == 5:
+        print("count_list - class Plot - plot_objects.py")
+
+    val_list = []
+    amount_list = []
+
+    for x, pon in enumerate(points):
+
+        # count the number of times a pixel appears
+        if len(val_list) == 0:
+            val_list.append(pon)
+            amount_list.append(1)
+
+        else:
+            count = 0
+            for i in val_list:
+
+                if i == pon:
+
+                    ind = val_list.index(i)
+                    amount_list[ind] += 1
+
+                else:
+                    count += 1
+
+                if count >= len(val_list):
+                    val_list.append(pon)
+                    amount_list.append(1)
+                    break
+
+    return val_list, amount_list
+
+
+def t_w_p_logic(col_num, con_col, val_list, amount_list):
+    test = 0
+    if test == 5:
+        print("t_w_p_logic - class Plot - plot_objects.py")
+
+    test = 0
+
+    if test >= 1:
+        print("** t_w_p_logic() console debug **")
+        print("col_num: {} ".format(col_num))
+
+    if col_num not in val_list:
+        if test == 1:
+            print("*** {} not in list".format(col_num))
+        return 2
+    else:
+        ind = val_list.index(con_col)
+        con_amount = amount_list[ind]
+        ind = val_list.index(col_num)
+        col_amount = amount_list[ind]
+
+        if con_amount > col_amount:
+            if test >= 1:
+                print("T_W_P Return: 1")
+                print("** end **")
+            return 1
+        elif con_amount < col_amount:
+            if test == 1:
+                print("col_con is the line")
+            return 2
+        else:
+            if test == 1:
+                print("Both are equal")
+            return 3
+
+
+def print_plot(plot):
+    test = 5
+    if test == 5:
+        print("print_plot - class Plot - plot_objects.py")
+
+    bol = isinstance(plot[0, 0], str)
+
+    if bol:
+        pass
+
+    for y, row in enumerate(plot):
+        p_row = ""
+        for x, point in enumerate(row):
+
+            if bol:
+                if point == "0":
+                    p_row = p_row + "."
+                else:
+                    p_row = p_row + point
+            else:
+                if point == 0:
+                    p_row = p_row + "."
+                else:
+                    p_row = p_row + str(point)
+
+        print(p_row)
+
+
+def print_plot_advanced(plot):
+    test = 5
+    if test == 5:
+        print("print_plot_advanced - class Plot - plot_objects.py")
+
+    bol = isinstance(plot[0, 0], str)
+
+    if bol:
+        pass
+
+    for y, row in enumerate(plot):
+        p_row = ""
+        for x, point in enumerate(row):
+
+            if bol:
+                if point == "0":
+                    p_row = p_row + ". "
+                elif point == "2":
+                    p_row = p_row + "_ "
+                elif point == "b":
+                    p_row = p_row + ", "
+                else:
+                    p_row = p_row + point + " "
+            else:
+                if point == 0:
+                    p_row = p_row + ". "
+                elif point == 2:
+                    p_row = p_row + "_ "
+                else:
+                    p_row = p_row + str(point) + " "
+
+        print(p_row)
 
 
 # do not delete
@@ -2697,6 +3529,7 @@ def move_to(main_plot, goto_yx, start_yx, set_to, look_for, passed_ind_list):
     return goto_yx, og_ind_list
 
 
+# do not delete
 def back_track(ind_list, plot):
     test = 5
     if test == 5:
@@ -2719,812 +3552,3 @@ def back_track(ind_list, plot):
             if test == 1:
                 print(" Delete Point: ({},{})".format(p_y, p_x))
             del ind_list[-1]
-
-
-def find_path(main_plot, goto_yx, start_yx, ind_list):
-    test = 0
-    if test == 5:
-        print("find_path - plot_objects.py")
-
-    f_y, f_x = goto_yx
-    y, x = start_yx
-    col_num = 1
-
-    p_row = [1] * len(main_plot[0])  # create blank plot make template plot
-    plot = np.array([p_row] * len(main_plot))
-
-    if test == 1 or test == 2 or test == 3:
-        print("test in find_path")
-        asp.print_node_plot(main_plot)
-        print_plot(plot)
-
-    ext = 0
-
-    h = 0
-    l_point = next_point(start_yx, goto_yx)
-
-    if test == 2 or test == 3:
-        print("Start: {} GoTo: {}".format(start_yx, goto_yx))
-
-    if start_yx == goto_yx:
-        return h, ind_list
-
-    while ext != 1:
-
-        # One
-        if l_point == 1:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# One")
-
-            n_point = plot[y - 1, x - 1]  # set next point
-
-            if n_point == col_num:  # check against colour_number
-                h += 14
-
-                if y - 1 == f_y and x - 1 == f_x:   # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:   # else record valid point
-                    y -= 1  # set y to y - 1
-                    x -= 1  # set x to x - 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +14".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Two
-        elif l_point == 2:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Two")
-
-            n_point = plot[y - 1, x]  # set next point
-
-            if n_point == col_num:  # check against colour_number
-                h += 10
-
-                if y - 1 == f_y and x == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}". format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    y -= 1  # set y to y - 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +10".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Three
-        elif l_point == 3:  # check if this point is within the plot limits
-
-            if test == 1:  # set this point
-                print("# Three")
-
-            n_point = plot[y - 1, x + 1]  # set next point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 14
-
-                if y - 1 == f_y and x + 1 == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-                    y -= 1  # set y to y - 1
-                    x += 1  # set x to x + 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +14".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Four
-        elif l_point == 4:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Four")
-
-            n_point = plot[y, x + 1]  # set this point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 10
-
-                if y == f_y and x + 1 == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    x += 1  # set x to x + 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{} +10)".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Five
-        elif l_point == 5:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Five")
-
-            n_point = plot[y + 1, x + 1]  # set this point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 14
-
-                if y + 1 == f_y and x + 1 == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    y += 1  # set y to y + 1
-                    x += 1  # set x to x + 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +14".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Six
-        elif l_point == 6:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Six")
-
-            n_point = plot[y + 1, x]  # set this point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 10
-
-                if y + 1 == f_y and x == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    y += 1  # set y to y + 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +10".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Seven
-        elif l_point == 7:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Seven")
-
-            n_point = plot[y + 1, x - 1]  # set this point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 14
-
-                if y + 1 == f_y and x - 1 == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    y += 1  # set y to y + 1
-                    x -= 1  # set x to x - 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +14".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-        # Eight
-        elif l_point == 8:  # check loop start
-
-            if test == 1:  # testing console comments
-                print("# Eight")
-
-            n_point = plot[y, x - 1]  # set this point
-
-            if n_point == col_num:  # check against colour_number
-
-                h += 10
-
-                if y == f_y and x - 1 == f_x:  # check if next point is destination
-                    if test == 2:
-                        print("return h: {}".format(h))
-                    return h, ind_list  # if true then break loop and return h and ind_list
-
-                else:  # else record valid point
-
-                    x -= 1  # set x to x - 1
-
-                    if test == 1 or test == 2:  # testing console comments
-                        print("({},{}) +10".format(y, x))
-
-                    ind_list.append((y, x))
-                    cur_yx = (y, x)  # combine current y, x
-                    l_point = next_point(cur_yx, goto_yx)  # get next position to check
-
-
-def next_point(yx_st, yx_fn):
-    test = 0
-    if test == 5:
-        print("next_point - plot_objects.py")
-    start_p = 1
-
-    c_y, c_x = yx_st
-    f_y, f_x = yx_fn
-
-    sum_y = f_y - c_y
-    sum_x = f_x - c_x
-
-    if sum_y < 0:
-        # - y
-        if sum_x < 0:
-            # - x
-            start_p = 1
-
-        elif sum_x > 0:
-            # + x
-            start_p = 3
-
-        else:
-            # x
-            start_p = 2
-
-    elif sum_y > 0:
-        # + y
-        if sum_x < 0:
-            # - x
-            start_p = 7
-
-        elif sum_x > 0:
-            # + x
-            start_p = 5
-
-        else:
-            # x
-            start_p = 6
-
-    elif sum_y == 0:
-        # y
-        if sum_x < 0:
-            # - x
-            start_p = 8
-
-        elif sum_x > 0:
-            # + x
-            start_p = 4
-
-    return start_p
-
-
-def reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, set_to, col_num, arg):
-    test = 0
-    if test == 5:
-        print("reversible_mine_sweeper_fill - plot_objects.py")
-
-    copy_col_num = col_num
-    plot = main_plot
-    min_y, min_x = min_yx
-    max_y, max_x = max_yx
-    l_len = len(ref_plot)
-    r_len = len(ref_plot[0])
-    change = 1
-    j = 0
-    bol = isinstance(ref_plot[0, 0], str)
-
-    if test == 1:
-        print("max_yx: {} min_yx: {}".format(max_yx, min_yx))
-
-    if bol and arg == 1:
-        col_num = "a"
-        set_to = str(set_to)
-    elif bol and arg == 2:
-        col_num = "b"
-        set_to = str(set_to)
-    elif bol and arg == 3:
-        col_num = str(col_num)
-        set_to = str(set_to)
-
-    while change == 1:
-        change = 0
-
-        # while flip < 2:
-        for y, row in enumerate(ref_plot):
-            for x, point in enumerate(ref_plot[0]):
-                if min_x <= x <= max_x and min_y <= y <= max_y:
-                    if plot[y, x] == copy_col_num:
-                        if ref_plot[y, x] == col_num:
-                            points = get_surrounding_points(plot, ref_plot, y, x, copy_col_num)
-
-                            if set_to not in points:
-                                pass
-                            else:
-
-                                if test == 1:
-                                    print("Fill Set({},{})".format(y, x))
-                                ref_plot[y, x] = set_to
-                                change = 1
-
-        while l_len >= 0:
-
-            x = r_len
-            while x >= 0:
-                y = l_len
-
-                if test == 1:
-                    print("l_len: {} r_len: {}".format(l_len, x))
-
-                if min_x <= x <= max_x and min_y <= y <= max_y:
-                    if plot[y, x] == copy_col_num:
-
-                        if ref_plot[y, x] == col_num:
-                            points = get_surrounding_points(plot, ref_plot, y, x, copy_col_num)
-
-                            if set_to not in points:
-                                pass
-                            else:
-                                if test == 1:
-                                    print("Re Fill ({},{})".format(y, x))
-                                ref_plot[y, x] = set_to
-                                change = 1
-                x -= 1
-            l_len -= 1
-
-
-def check_for_number(plot, num):
-    test = 0
-    if test == 5:
-        print("check_for_number - class Plot - plot_objects.py")
-
-    yx = (0, 0)
-    bol = isinstance(plot[0, 0], str)
-    bol2 = isinstance(num, str)
-    if bol and not bol2:
-        num = str(num)
-    elif not bol and bol2:
-        num = int(num)
-
-    for y, row in enumerate(plot):
-        for x, point in enumerate(row):
-            if point == num:
-                yx = (y, x)
-                return True, yx
-
-    return False, yx
-
-
-# not used?
-# def get_ob_inlines(main_plot, ref_plot):
-#     test = 5
-#     if test == 5:
-#         print("get_ob_inline - class Plot - plot_objects.py")
-#
-#     plot_w = len(main_plot[0])
-#     bol = True
-#
-#     for y, row in enumerate(main_plot):
-#         for x, point in enumerate(row):
-#             if point == "2":
-#                 ref_plot[y, x] = "2"
-#
-#     if test == 1:
-#         print("ref_plot")
-#         print_plot(ref_plot)
-#
-#     while bol:
-#
-#         for y, row in enumerate(ref_plot):
-#             for x, point in enumerate(row):
-#                 if x + 1 < plot_w - 1:
-#                     if row[x + 1] == "2":
-#
-#                         # set used inside
-#                         start_yx = (y, x + 1)
-#                         max_yx, min_yx, ind_list = get_object_outline(main_plot, ref_plot, start_yx, 8, "4", "2")
-#
-#                         reversible_mine_sweeper_fill(main_plot, ref_plot, max_yx, min_yx, "4", "2", 3)
-#                         if test == 1:
-#                             print("")
-#                             print_plot(ref_plot)
-#
-#         bol, yx = check_for_number(ref_plot, 2)
-#     return ref_plot
-
-
-def print_plot(plot):
-    test = 5
-    if test == 5:
-        print("print_plot - class Plot - plot_objects.py")
-
-    bol = isinstance(plot[0, 0], str)
-
-    if bol:
-        pass
-
-    for y, row in enumerate(plot):
-        p_row = ""
-        for x, point in enumerate(row):
-
-            if bol:
-                if point == "0":
-                    p_row = p_row + "."
-                else:
-                    p_row = p_row + point
-            else:
-                if point == 0:
-                    p_row = p_row + "."
-                else:
-                    p_row = p_row + str(point)
-
-        print(p_row)
-
-
-def print_plot_advanced(plot):
-    test = 5
-    if test == 5:
-        print("print_plot_advanced - class Plot - plot_objects.py")
-
-    bol = isinstance(plot[0, 0], str)
-
-    if bol:
-        pass
-
-    for y, row in enumerate(plot):
-        p_row = ""
-        for x, point in enumerate(row):
-
-            if bol:
-                if point == "0":
-                    p_row = p_row + ". "
-                elif point == "2":
-                    p_row = p_row + "_ "
-                elif point == "b":
-                    p_row = p_row + ", "
-                else:
-                    p_row = p_row + point + " "
-            else:
-                if point == 0:
-                    p_row = p_row + ". "
-                elif point == 2:
-                    p_row = p_row + "_ "
-                else:
-                    p_row = p_row + str(point) + " "
-
-        print(p_row)
-
-
-def get_surrounding_points(plot, out_plot, y, x, col_num):
-    test = 0
-    if test == 5:
-        print("get_surrounding_point - class Plot - plot_objects.py")
-
-    row_num = len(out_plot)
-    cul_num = len(out_plot[0])
-    points = []
-    a = y - 1
-    b = y + 1
-    c = x - 1
-    d = x + 1
-    if test == 1:
-        print("Centre: ({},{})".format(y, x))
-    if y > 0:
-        p_a = plot[y - 1, x]
-        points.append(out_plot[a, x])
-        if test == 1:
-            print(" Sur_2: ({},{})".format(a, x))
-
-        if x > 0:
-            p_c = plot[y, x - 1]
-            if p_a != p_c:
-                points.append(out_plot[a, c])
-                if test == 1:
-                    print(" Sur_1: ({},{})".format(a, c))
-            elif p_a == p_c and p_a != col_num:  # and out_plot[a, c] == out_plot[y, x]:
-                anw = valid_position(plot, y - 1, x - 1, col_num, p_a)
-                if anw == 1:
-                    points.append(out_plot[a, c])
-                    if test == 1:
-                        print(" Sur_1: ({},{})".format(a, c))
-                else:
-                    if test == 1:
-                        print("({},{}) not valid".format(a, c))
-
-        if x < cul_num - 1:
-            p_d = plot[y, x + 1]
-            if p_a != p_d:
-                points.append(out_plot[a, d])
-                if test == 1:
-                    print(" Sur_3: ({},{})".format(a, d))
-            elif p_a == p_d and p_a != col_num:  # and out_plot[a, d] == out_plot[y, x]:
-                anw = valid_position(plot, y - 1, x + 1, col_num, p_a)
-                if anw == 1:
-                    points.append(out_plot[a, d])
-                    if test == 1:
-                        print(" Sur_3: ({},{})".format(a, d))
-                else:
-                    if test == 1:
-                        print("({},{}) not valid".format(a, d))
-
-    if y < row_num - 1:
-        p_b = plot[y + 1, x]
-        points.append(out_plot[b, x])
-        if test == 1:
-            print(" Sur_6: ({},{})".format(b, x))
-        if x > 0:
-            p_c = plot[y, x - 1]
-            if p_b != p_c:
-                points.append(out_plot[b, c])
-                if test == 1:
-                    print(" Sur_7: ({},{})".format(b, c))
-            elif p_b == p_c and p_b != col_num:  # and out_plot[b, c] == out_plot[y, x]:
-                anw = valid_position(plot, y + 1, x - 1, col_num, p_b)
-                if anw == 1:
-                    points.append(out_plot[b, c])
-                    if test == 1:
-                        print(" Sur_7: ({},{})".format(b, c))
-                else:
-                    if test == 1:
-                        print("({},{}) not valid".format(b, c))
-
-        if x < cul_num - 1:
-            p_c = plot[y, x + 1]
-            if p_b != p_c:
-                points.append(out_plot[b, d])
-                if test == 1:
-                    print(" Sur_5: ({},{})".format(b, d))
-            elif p_b == p_c and p_b != col_num:  # and out_plot[b, d] == out_plot[y, x]:
-                anw = valid_position(plot, y + 1, x + 1, col_num, p_b)
-                if anw == 1:
-                    points.append(out_plot[b, d])
-                    if test == 1:
-                        print(" Sur_5: ({},{})".format(b, d))
-                else:
-                    if test == 1:
-                        print("({},{}) not valid".format(b, d))
-
-    if x > 0:
-        points.append(out_plot[y, c])
-        if test == 1:
-            print(" Sur_8: ({},{})".format(y, c))
-    if x < cul_num - 1:
-        points.append(out_plot[y, d])
-        if test == 1:
-            print(" Sur_4: ({},{})".format(y, d))
-    return points
-
-
-def valid_position(main_plot, y, x, col_num, con_col):
-    test = 0
-    if test == 5:
-        print("valid_position - class Plot - plot_objects.py")
-
-    test = 0
-
-    if test >= 1:
-        print("Valid position check: ({},{})".format(y, x))
-        print("col_num Value: {}".format(col_num))
-
-    points, yx_points = get_surrounding_points_5x5(main_plot, y, x)
-    val_list, amount_list = count_list(points)
-    anw = t_w_p_logic(col_num, con_col, val_list, amount_list)
-
-    return anw
-
-
-def get_surrounding_points_5x5(main_plot, y, x):
-    test = 0
-    if test == 5:
-        print("get_surrounding_points_5x5 - class Plot - plot_objects.py")
-
-    row_num = len(main_plot)
-    col_num = len(main_plot[0])
-    points = []
-    yx_points = []
-    a = y - 2
-    b = y + 2
-    c = x - 2
-    d = x + 2
-    e = y - 1
-    f = y + 1
-    g = x - 1
-    h = x + 1
-
-    points.append(main_plot[y, x])
-    yx_points.append((y, x))
-
-    if y >= 2:
-        points.append(main_plot[a, x])
-        yx_points.append((a, x))
-        if x >= 2:
-            points.append(main_plot[a, c])
-            yx_points.append((a, c))
-
-        if x >= 1:
-            points.append(main_plot[a, g])
-            yx_points.append((a, g))
-
-        if x < col_num - 2:
-            points.append(main_plot[a, d])
-            yx_points.append((a, d))
-
-        if x < col_num - 1:
-            points.append(main_plot[a, h])
-            yx_points.append((a, h))
-
-    if y >= 1:
-        points.append(main_plot[e, x])
-        yx_points.append((e, x))
-        if x >= 2:
-            points.append(main_plot[e, c])
-            yx_points.append((e, c))
-
-        if x >= 1:
-            points.append(main_plot[e, g])
-            yx_points.append((e, g))
-
-        if x < col_num - 2:
-            points.append(main_plot[e, d])
-            yx_points.append((e, d))
-
-        if x < col_num - 1:
-            points.append(main_plot[e, h])
-            yx_points.append((e, h))
-
-    if y < row_num - 2:
-        points.append(main_plot[b, x])
-        yx_points.append((b, x))
-        if x >= 2:
-            points.append(main_plot[b, c])
-            yx_points.append((b, c))
-
-        if x >= 1:
-            points.append(main_plot[b, g])
-            yx_points.append((b, g))
-
-        if x < col_num - 2:
-            points.append(main_plot[b, d])
-            yx_points.append((b, d))
-
-        if x < col_num - 1:
-            points.append(main_plot[b, h])
-            yx_points.append((b, h))
-
-    if y < row_num - 1:
-        points.append(main_plot[f, x])
-        yx_points.append((f, x))
-        if x >= 2:
-            points.append(main_plot[f, c])
-            yx_points.append((f, c))
-
-        if x >= 1:
-            points.append(main_plot[f, g])
-            yx_points.append((f, g))
-
-        if x < col_num - 2:
-            points.append(main_plot[f, d])
-            yx_points.append((f, d))
-
-        if x < col_num - 1:
-            points.append(main_plot[f, h])
-            yx_points.append((f, h))
-
-    if x >= 2:
-        points.append(main_plot[y, c])
-        yx_points.append((y, c))
-
-    if x >= 1:
-        points.append(main_plot[y, g])
-        yx_points.append((y, g))
-
-    if x < col_num - 2:
-        points.append(main_plot[y, d])
-        yx_points.append((y, d))
-
-    if x < col_num - 1:
-        points.append(main_plot[y, h])
-        yx_points.append((y, h))
-
-    return points, yx_points
-
-
-def count_list(points):
-    test = 0
-    if test == 5:
-        print("count_list - class Plot - plot_objects.py")
-
-    val_list = []
-    amount_list = []
-
-    for x, pon in enumerate(points):
-
-        # count the number of times a pixel appears
-        if len(val_list) == 0:
-            val_list.append(pon)
-            amount_list.append(1)
-
-        else:
-            count = 0
-            for i in val_list:
-
-                if i == pon:
-
-                    ind = val_list.index(i)
-                    amount_list[ind] += 1
-
-                else:
-                    count += 1
-
-                if count >= len(val_list):
-                    val_list.append(pon)
-                    amount_list.append(1)
-                    break
-
-    return val_list, amount_list
-
-
-def t_w_p_logic(col_num, con_col, val_list, amount_list):
-    test = 0
-    if test == 5:
-        print("t_w_p_logic - class Plot - plot_objects.py")
-
-    test = 0
-
-    if test >= 1:
-        print("** t_w_p_logic() console debug **")
-        print("col_num: {} ".format(col_num))
-
-    if col_num not in val_list:
-        if test == 1:
-            print("*** {} not in list".format(col_num))
-        return 2
-    else:
-        ind = val_list.index(con_col)
-        con_amount = amount_list[ind]
-        ind = val_list.index(col_num)
-        col_amount = amount_list[ind]
-
-        if con_amount > col_amount:
-            if test >= 1:
-                print("T_W_P Return: 1")
-                print("** end **")
-            return 1
-        elif con_amount < col_amount:
-            if test == 1:
-                print("col_con is the line")
-            return 2
-        else:
-            if test == 1:
-                print("Both are equal")
-            return 3

@@ -1199,8 +1199,7 @@ class Gui:
 
             # max stitch len dropdown = create
             lengths = ["0.3mm", "0.5mm", "1.0mm", "1.2mm", "1.5mm", "2.0mm", "2.5mm", "3.0mm", "3.5mm", "4.0mm",
-                       "4.5mm",
-                       "5.0mm"]
+                       "4.5mm", "5.0mm"]
             stitch_len = StringVar()
             de = len_drop_list[count - 1]
             stitch_len.set(de.get())
