@@ -78,8 +78,8 @@ class Gui:
         self.right_display.pack()
         self.right_bot = tk.Frame(self.right_pane)
         self.right_bot.pack(side=BOTTOM, pady=40)
-        sizing_label_1 = Label(self.right_top, width=50, height=5)  # width = 1/5 of display or minimum 50
-        sizing_label_1.grid(row=0, column=0, columnspan=5)
+        # sizing_label_1 = Label(self.right_top, width=50, height=5)  # width = 1/5 of display or minimum 50
+        # sizing_label_1.grid(row=0, column=0, columnspan=5)
 
         title_label = Label(self.right_top, width=10)  # width = 1/5 of display or minimum 50
         title_label.grid(row=2, column=0, pady=5, columnspan=2)
@@ -282,7 +282,7 @@ class Gui:
             self.title_frame.pack()
 
             # mid - merge layout
-            display_canvas = Canvas(self.right_display, width=300, height=300)
+            display_canvas = Canvas(self.right_display, width=300, height=200)
             display_canvas.configure()
 
             scroll_bar_y = tk.Scrollbar(self.right_display, orient=VERTICAL, command=display_canvas.yview)
@@ -517,12 +517,12 @@ class Gui:
         self.title_frame = Frame(self.right_display)
         self.title_frame.pack()
 
-        display_canvas = Canvas(self.right_display, width=300, height=300)
+        display_canvas = Canvas(self.right_display, width=300, height=200)
         display_canvas.configure()
 
         scroll_bar_y = tk.Scrollbar(self.right_display, orient=VERTICAL, command=display_canvas.yview)
         scroll_bar_y.pack(side=RIGHT, fill=Y)
-        display_canvas.pack(fill=X, side=RIGHT)
+        display_canvas.pack(fill=BOTH, side=RIGHT, expand=5)
 
         display_canvas.configure(yscrollcommand=scroll_bar_y.set)
         display_canvas.bind("<Configure>", lambda e: display_canvas.configure(scrollregion=display_canvas.bbox("all")))
@@ -640,13 +640,13 @@ class Gui:
         pop_frame1.pack()
         pop_label_1 = Label(pop_frame1, text='Select a Hoop Size:')
         pop_label_1.grid(row=0, column=0, padx=20, pady=10)
-        pop_label_2 = Label(pop_frame1, text='4"x4" Hoop (110x110mm)')
+        pop_label_2 = Label(pop_frame1, text='2"x2" Hoop (50x50mm)')
         pop_label_2.grid(row=1, column=0)
-        pop_label_3 = Label(pop_frame1, text='2"x2" Hoop (50x50mm)')
+        pop_label_3 = Label(pop_frame1, text='4"x4" Hoop (110x110mm)')
         pop_label_3.grid(row=2, column=0)
-        pop_label_4 = Label(pop_frame1, text='5.5"x8" Hoop (140x200mm)')
+        pop_label_4 = Label(pop_frame1, text='5"x4" Hoop (127x110mm)')
         pop_label_4.grid(row=3, column=0)
-        pop_label_3 = Label(pop_frame1, text='5"x4" Hoop (127x110mm)')
+        pop_label_3 = Label(pop_frame1, text='5.5"x8" Hoop (140x200mm)')
         pop_label_3.grid(row=4, column=0)
         pop_label_4 = Label(pop_frame1, text='8"x8" Hoop (200x200mm)')
         pop_label_4.grid(row=5, column=0)
@@ -841,24 +841,24 @@ class Gui:
         go = int()
         try:
             if hoopchoice == 1:
+                hoop_width = 50
+                hoop_height = 50
+
+            elif hoopchoice == 2:
                 hoop_width = 110
                 hoop_height = 110
 
-            elif hoopchoice == 2:
-                hoop_width = 127
-                hoop_height = 177
-
             elif hoopchoice == 3:
-                hoop_width = 152
-                hoop_height = 254
+                hoop_width = 127
+                hoop_height = 110
 
             elif hoopchoice == 4:
-                hoop_width = 127
-                hoop_height = 177
+                hoop_width = 140
+                hoop_height = 200
 
             elif hoopchoice == 5:
-                hoop_width = 152
-                hoop_height = 254
+                hoop_width = 200
+                hoop_height = 200
 
             else:
                 raise ValueError1
@@ -866,30 +866,33 @@ class Gui:
 
             self.error_message("Select a Hoop SIze")
 
-        if hoopchoice > 0 and customcheck == 1:
+        if hoopchoice > 0 and customcheck == 1:     # custom size option
             try:
                 img_w = enter_width.get()
                 img_h = enter_height.get()
-                if bool(img_w) == True and bool(img_h) == True:
+                if bool(img_w) == True and bool(img_h) == True:     # Height, Width Sizing
                     img_w = int(enter_width.get())
                     img_h = int(enter_height.get())
                     go = 1
+
+                    # console testing comment
                     if test == 1:
                         print("option 1")
-                elif bool(img_w) == False and bool(img_h) == True:
+
+                elif bool(img_w) == False and bool(img_h) == True:  # Height sizing
                     img_w = 0
                     img_h = int(enter_height.get())
                     go = 1
                     if test == 1:
                         print("option 2")
-                elif bool(img_h) == False and bool(img_w) == True:
+                elif bool(img_h) == False and bool(img_w) == True:  # Width Sizing
                     img_h = 0
                     img_w = int(enter_width.get())
                     go = 1
                     if test == 1:
                         print("option 3")
 
-                else:
+                else:                                               # Error option
                     go = 0
                     raise ValueError3
 
@@ -1382,7 +1385,7 @@ class Gui:
         combine_count = []
         total_pix = len(pixel_matrix) * len(pixel_matrix[0])
 
-        im.count_colour(pixel_matrix, pixel_list, colour_count, combine_count)
+        pixel_list, colour_count, combine_count = im.count_colour(pixel_matrix)
 
         im.sort_algorithm(pixel_list, combine_count, colour_count)
         avg = total_pix / len(colour_count)
@@ -1439,13 +1442,10 @@ class Gui:
         y_len = len(pixel_matrix)
         x_len = len(pixel_matrix[0])
         total_pix = y_len * x_len
-        self.pixel_list = []
-        colour_count = []
-        combine_count = []
 
         self.change_list = []
 
-        im.count_colour(pixel_matrix, self.pixel_list, colour_count, combine_count)
+        self.pixel_list, colour_count, combine_count = im.count_colour(pixel_matrix)
         length = len(self.pixel_list)
 
         # pop = Toplevel(self.second_frame)
@@ -1751,7 +1751,7 @@ def process_stitch_choices(main, objects, section_images, stitch_type, stitch_le
         if stitch == "Stitch Outline":
             if test == 1:
                 print("Objects {} set with Outline Running Stitch".format(i + 1))
-            ob.outline_running_stitch(main)
+            ob.outline_running_stitch()
             ob.set_stitch_type("Outline Running Stitch")
 
         elif stitch == "Running Stitch Fill":

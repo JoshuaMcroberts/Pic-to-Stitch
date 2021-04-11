@@ -9,7 +9,6 @@ from pic_to_stitch import plot_objects as po
 
 class TestStitchObjects(unittest.TestCase):
 
-
     @classmethod
     def setUpClass(self):
         pass
@@ -119,19 +118,65 @@ class TestStitchObjects(unittest.TestCase):
         self.assertFalse(colour_4)
 
     def test_create_stitch_objects(self):
-        pass
-        # for i in range(5):
-        #     row = [0] * 10
-        #     matrix = np.array([row] * 10)
-        #
-        #     stitch_ob = po.Object()
-        #     stitch_ob.set_stitch_list([(0, 0), (0, 1), (1, 2), (2, 2)])
-        #     stitch_ob.set_stitch_len(30)
-        #     stitch_ob.set_matrix(matrix)
-        #     stitch_ob.set_colour(i+1)
-        #
-        #     ob_list.append(stitch_ob)
-        #
+        ob_list = []
+        jan_col = [(245, 219, 139), (11, 47, 132), (255, 186, 94)]
+        for i in range(3):
+            row = [0] * 10
+            matrix = np.array([row] * 10)
+
+            ob = po.ObjectPlot()
+            ob.set_stitch_list([(0, 0), (0, 1), (1, 2), (2, 2)])
+            if i == 0:
+                ob.set_stitch_len(5)
+            else:
+                ob.set_stitch_len(10 * i)
+            ob.set_matrix(matrix)
+            ob.set_colour(jan_col[i])
+
+            ob_list.append(ob)
+
+        test_matrix = np.array([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                                [1, 1, 1, 1, 1, 1, 1, 1, 1, 1]])
+
+        test_ob_1 = so.StitchObject()
+        test_ob_1.matrix = test_matrix
+        test_ob_1.stitch_list = [(0, 0), (0, 1), (1, 2), (2, 2)]
+        test_ob_1.stitch_len = 5
+        test_ob_1.colour = 36
+
+        test_ob_2 = so.StitchObject()
+        test_ob_2.matrix = test_matrix
+        test_ob_2.stitch_list = [(0, 0), (0, 1), (1, 2), (2, 2)]
+        test_ob_2.stitch_len = 10
+        test_ob_2.colour = 12
+
+        test_ob_3 = so.StitchObject()
+        test_ob_3.matrix = test_matrix
+        test_ob_3.stitch_list = [(0, 0), (0, 1), (1, 2), (2, 2)]
+        test_ob_3.stitch_len = 20
+        test_ob_3.colour = 72
+
+        test_list = [test_ob_1, test_ob_2, test_ob_3]
+
+        stitch_ob_list = so.create_stitch_objects(ob_list)
+
+        for i, ob in enumerate(test_list):
+            self.assertEqual(ob.stitch_list, stitch_ob_list[i].stitch_list)
+            self.assertEqual(ob.stitch_len, stitch_ob_list[i].stitch_len)
+            self.assertEqual(ob.colour, stitch_ob_list[i].colour)
+
+            for y, row in enumerate(ob.matrix):
+                for x, point in enumerate(row):
+                    self.assertEqual(point, stitch_ob_list[i].matrix[y, x])
+
 
 if __name__ == '__main__':
     unittest.main()

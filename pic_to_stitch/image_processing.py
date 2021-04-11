@@ -16,38 +16,53 @@ def image_resize(main, image, hoop_size, option, new_w, new_h):
     new_w = int(new_w)
     new_h = int(new_h)
 
-    if option == 1:
+    if option == 1:     # set a standard hoop size
 
         if hoop_size == 1:
             main.hoop_code = 0
-            if test == 1:
-                print('4x4" hoop')
-            set_w = 415
-            set_h = 415
-        elif hoop_size == 2:
-            main.hoop_code = 1
+
+            # console testing comment
             if test == 1:
                 print('2x2" hoop')
             set_w = 188
             set_h = 188
+
+        elif hoop_size == 2:
+            main.hoop_code = 1
+
+            # console testing comment
+            if test == 1:
+                print('4x4" hoop')
+            set_w = 415
+            set_h = 415
+
         elif hoop_size == 3:
             main.hoop_code = 2
-            if test == 1:
-                print('5.5x8" hoop')
-            set_w = 529
-            set_h = 756
-        elif hoop_size == 4:
-            main.hoop_code = 3
+
+            # console testing comment
             if test == 1:
                 print('5x4" hoop')
             set_w = 476
             set_h = 415
+
+        elif hoop_size == 4:
+            main.hoop_code = 3
+
+            # console testing comment
+            if test == 1:
+                print('5.5x8" hoop')
+            set_w = 529
+            set_h = 756
+
         elif hoop_size == 5:
             main.hoop_code = 4
+
+            # console testing comment
             if test == 1:
                 print('8x8" hoop')
             set_w = 756
             set_h = 756
+
         else:
             set_w = 1
             set_h = 1
@@ -58,25 +73,25 @@ def image_resize(main, image, hoop_size, option, new_w, new_h):
             img_h = int(temp_h)
             img_w = int(set_w)
 
-        if img_h > new_h:
+        if img_h > set_h:
             x = img_h / set_h
             temp_w = img_w / x
             img_w = int(temp_w)
             img_h = int(set_h)
 
-    elif option == 2:
+    elif option == 2:       # set independent height and width
 
         img_w = new_w
         img_h = new_h
 
-    elif option == 3:
+    elif option == 3:       # set width and height in ratio based off width
 
         x = img_w / new_w
         temp_h = img_h / x
         img_h = int(temp_h)
         img_w = int(new_w)
 
-    elif option == 4:
+    elif option == 4:       # set width and height in ratio based off height
 
         x = img_h / new_h
         temp_w = img_w / x
@@ -84,11 +99,14 @@ def image_resize(main, image, hoop_size, option, new_w, new_h):
         img_h = int(new_h)
 
     image = image.resize((int(img_w), int(img_h)), Image.ANTIALIAS)
+
     return image
 
 
 def auto_colour_step(main):
     test = 0
+
+    # console testing comment
     if test == 5 or test == 1:
         print("auto_colour_step image_processing.py")
 
@@ -154,15 +172,18 @@ def auto_colour_step(main):
             print("failed to run")
 
 
+# rounds pixel values to intervals set by the floors variable
 def floor_step(pixel, floors):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("floor_step image_processing.py")
 
-    max_val = 2**8 - 1
+    max_val = 2**8-1
     coarseness = max_val / floors
 
-    return [coarseness * np.floor(val / coarseness) for val in pixel]
+    return [int(coarseness * np.floor(val / coarseness)) for val in pixel]  # numpy floor rounds a number down
 
 
 def pix_restrict(main):     # og first different colour
@@ -379,119 +400,142 @@ def pix_restrict(main):     # og first different colour
             print("Error: Pix_change failed")
 
 
+# gets a replacement value for a pixel that is on the delete list
 def get_liner_pixel(pixel_matrix, y, x, deleted_list):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_liner_pixel image_processing.py")
+    elif test == 1:
+        print("Start")
 
     pixel_list = []
     count = 0
     option = 1
 
-# get N E S W pixels that are valid and not black
+# get W N E S pixels that are valid and not black
 
     while option != 5:
-        if count > 3:
+
+        if count > 3:   # infinite loop exit statement
             option = 5
             count = 0
 
+            # console testing comment
             if test == 1:
-                print("stuck in a loop on: ", y + 1, ",", x + 1, " Val :", pixel_matrix[y, x])
+                print("stuck in a loop on: ", y, ",", x, " Val :", pixel_matrix[y, x])
 
-        if len(pixel_list) > 0:
+        if len(pixel_list) > 0:  # if valid pixel in list break while loop
             break
 
-        if option == 1:
+        if option == 1:     # check West direction - Position 8
 
             nx = x - 1
-            while nx >= 0:
+            while nx >= 0:      # does not run if nx is outside of pixel matrix
 
-                new_pix = pixel_matrix[y, nx]
+                new_pix = pixel_matrix[y, nx]       # get pixel value
 
-                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-                    option = 2
+                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:     # if new pixel is black next option
                     break
 
-                bool_val = check_delete(deleted_list, new_pix)
+                bool_val = check_delete(deleted_list, new_pix)      # returns true if new pixel is not valid
 
-                if bool_val:
+                if bool_val:        # new pixel not valid get next pixel
                     nx -= 1
-                else:
-                    pixel_list.append(new_pix)
-                    option = 2
-                    break
+                else:               # new pixel is valid append to list and check next position
 
-        if option == 2:
+                    # console testing comment
+                    if test == 1:
+                        print("Added Value: 1  New pixel: {}".format(new_pix))
+                    pixel_list.append(new_pix)
+                    break
+            option = 2
+
+        if option == 2:     # check North direction - Position 2
 
             ny = y - 1
-            while ny >= 0:
+            while ny >= 0:  # does not run if ny is outside of pixel matrix
 
-                new_pix = pixel_matrix[ny, x]
+                new_pix = pixel_matrix[ny, x]   # get pixel value
 
-                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-                    option = 3
+                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:     # if new pixel is black next option
                     break
 
-                bool_val = check_delete(deleted_list, new_pix)
+                bool_val = check_delete(deleted_list, new_pix)      # returns true if new pixel is not valid
 
-                if bool_val:
+                if bool_val:    # new pixel not valid get next pixel
                     ny -= 1
-                else:
-                    pixel_list.append(new_pix)
-                    option = 3
-                    break
+                else:           # new pixel is valid append to list and check next position
 
-        if option == 3:
+                    # console testing comment
+                    if test == 1:
+                        print("Added Value: 2  New pixel: {}".format(new_pix))
+                    pixel_list.append(new_pix)
+
+                    break
+            option = 3
+
+        if option == 3:     # check East direction - Position 3
 
             nx = x + 1
-            while nx < len(pixel_matrix[0]):
 
-                new_pix = pixel_matrix[y, nx]
+            while nx < len(pixel_matrix[0]):    # does not run if nx is outside of pixel matrix
 
-                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-                    option = 4
+                new_pix = pixel_matrix[y, nx]   # get pixel value
+
+                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:     # if new pixel is black next option
                     break
 
-                bool_val = check_delete(deleted_list, new_pix)
+                bool_val = check_delete(deleted_list, new_pix)      # returns true if new pixel is not valid
 
-                if bool_val:
+                if bool_val:        # new pixel not valid get next pixel
                     nx += 1
-                else:
-                    pixel_list.append(new_pix)
-                    option = 4
-                    break
+                else:               # new pixel is valid append to list and check next position
 
-        if option == 4:
+                    # console testing comment
+                    if test == 1:
+                        print("Added Value: 3  New pixel: {}".format(new_pix))
+                    pixel_list.append(new_pix)
+
+                    break
+            option = 4
+
+        if option == 4:  # check East direction - Position 3
 
             ny = y + 1
-            if test == 1:
-                print("ny:", ny, "pixel: ", pix, "new pixel: ", new_pix, "option: ", option)
 
-            while ny < len(pixel_matrix):
+            while ny < len(pixel_matrix):   # does not run if ny is outside of pixel matrix
 
-                new_pix = pixel_matrix[ny, x]
+                new_pix = pixel_matrix[ny, x]   # get pixel value
 
-                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:
-                    option = 5
+                if new_pix[0] == 0 and new_pix[1] == 0 and new_pix[2] == 0:     # if new pixel is black next option
                     break
 
-                bool_val = check_delete(deleted_list, new_pix)
+                bool_val = check_delete(deleted_list, new_pix)       # returns true if new pixel is not valid
 
-                if bool_val:
+                if bool_val:        # new pixel not valid get next pixel
                     ny += 1
-                else:
+                else:       # new pixel is valid append to list and check next position
+
+                    # console testing comment
+                    if test == 1:
+                        print("Added Value: 4  New pixel: {}".format(new_pix))
+
                     pixel_list.append(new_pix)
-                    option = 5
+
                     break
+            option = 5
+        count += 1
 
-        count += 1  # ##### this needs checked to make sure the loop breaks
+    if len(pixel_list) == 0:        # if no surrounding pixel is valid...
+        pixel = (0, 255, 50)            # set delete substitution pixel
 
-    if len(pixel_list) == 0:
-        pixel = (0, 255, 50)
+        # console testing comment
         if test == 1:
-            print("black")
+            print("black Surrounded - Change to Bright Green")
 
-        return pixel
+        return pixel    # return substitution pixel
 
     else:
         colour_count = []
@@ -505,7 +549,7 @@ def get_liner_pixel(pixel_matrix, y, x, deleted_list):
                 colour_count.append(1)
 
             count = 0
-            for i in count_list:
+            for i in count_list:    # counts how many times a colour appears in the list
 
                 if i[0] == e[0]:
                     if i[1] == e[1]:
@@ -527,29 +571,38 @@ def get_liner_pixel(pixel_matrix, y, x, deleted_list):
                     colour_count.append(1)
                     break
             z += 1
-            if test ==1:
+
+            # console testing comment
+            if test == 1:
                 print(z)
 
-        pick = max(colour_count)
-        ind = colour_count.index(pick)
+        pick = max(colour_count)        # gets max value from count list
+        ind = colour_count.index(pick)  # gets index of max value
+
+        # console testing comment
         if test == 1:
             print("Pixel: ", count_list[ind])
-        return count_list[ind]
+
+        return count_list[ind]  # return pixel from count_list using the index of the max value
 
 
+# checks if the passed pixel is in the passed list
 def check_delete(deleted_list, pixel):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("check_delete image_processing.py")
 
     value = 0
-    for i in deleted_list:
+    for i in deleted_list:  # check through delete list
 
+        # pixel compare section
         if i[0] == pixel[0]:
             if i[1] == pixel[1]:
                 if i[2] == pixel[2]:
 
-                    value = 1
+                    value = 1   # pixels are the same
                     break
 
     if value == 1:
@@ -605,10 +658,8 @@ def pix_change(main):
                                 break
 
                 if val == 0:
-                    pixel_list = []
-                    colour_count = []
-                    count_list = []
-                    count_colour_list(pixels, pixel_list, colour_count, count_list)
+
+                    pixels, pixel_list, colour_count, count_list = count_colour_list(pixels)
 
                     if len(pixel_list) == 1:
                         image_copy[y, x] = pixel_list[0]
@@ -682,10 +733,8 @@ def pix_change(main):
                     pixels_og.append(tuple(image_copy[y, x]))
 
                     pix_3x3 = pixels
-                    pixel_list = []
-                    colour_count = []
-                    count_list = []
-                    count_colour_list(pixels_og, pixel_list, colour_count, count_list)
+
+                    pixels_og, pixel_list, colour_count, count_list = count_colour_list(pixels_og)
 
                     ext = 0
                     while ext != 1:
@@ -778,10 +827,7 @@ def pix_change(main):
                     pixel_yx_og.append((y, x))
                     pixels_og.append(tuple(image_copy[y, x]))
 
-                    pixel_list = []
-                    colour_count = []
-                    count_list = []
-                    count_colour_list(pixels_og, pixel_list, colour_count, count_list)
+                    pixels_og, pixel_list, colour_count, count_list = count_colour_list(pixels_og)
 
                     pix_3x3 = pixels
                     ext = 0
@@ -875,10 +921,7 @@ def pix_change(main):
                     pixel_yx_og.append((y, x))
                     pixels_og.append(tuple(image_copy[y, x]))
 
-                    pixel_list = []
-                    colour_count = []
-                    count_list = []
-                    count_colour_list(pixels_og, pixel_list, colour_count, count_list)
+                    pixels_og, pixel_list, colour_count, count_list = count_colour_list(pixels_og)
 
                     pix_3x3 = pixels
                     ext = 0
@@ -951,30 +994,39 @@ def pix_change(main):
             print("Error: Pix_change failed")
 
 
-def count_colour_list(pixels, pixel_list, colour_count, combine_count):
+# counts the number of times each pixel appears in the list
+def count_colour_list(pixels):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("count_colour_list image_processing.py")
 
+    pixel_list = []
+    colour_count = []
+    combine_count = []
+
+    # loop through pixels list
     for x, pix in enumerate(pixels):
 
-        # count the number of times a pixel appears
-        if len(pixel_list) == 0:
+        if len(pixel_list) == 0:    # if pixel list is empty add first pixel and related values to each list
             pixel_list.append(list(pix))
             colour_count.append(1)
             val = int(pix[0]) + int(pix[1]) + int(pix[2])
             combine_count.append(val)
-        else:
+
+        else:                        # else if pixel list has pixels in it...
             count = 0
+
+            # loop through pixel list
             for i in pixel_list:
 
+                # pixel compare section
                 if i[0] == pix[0]:
                     if i[1] == pix[1]:
-                        if i[2] == pix[2]:
+                        if i[2] == pix[2]:  # if pixel is in list get index and add 1 to the indexed colour_count value
                             index = pixel_list.index(i)
-
                             ind = index
-
                             colour_count[ind] += 1
                         else:
                             count += 1
@@ -983,16 +1035,20 @@ def count_colour_list(pixels, pixel_list, colour_count, combine_count):
                 else:
                     count += 1
 
-                if count >= len(pixel_list):
+                if count >= len(pixel_list):    # if pixel not in pixel list add it and add related values to each list
                     pixel_list.append(list(pix))
                     colour_count.append(1)
                     val = int(pix[0]) + int(pix[1]) + int(pix[2])
                     combine_count.append(val)
                     break
+    return pixels, pixel_list, colour_count, combine_count
 
 
+# returns valid pixels in the surrounding 3x3 grid
 def get_surrounding_pixels_3x3(pixel_matrix, y, x):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_surrounding_pixels_3x3 image_processing.py")
 
@@ -1006,44 +1062,48 @@ def get_surrounding_pixels_3x3(pixel_matrix, y, x):
     x1 = x + 1
 
     if y > 0:                                       # y - 1
-        # pixels.append(pixel_matrix[yn1, x])
         pixels.append(tuple(pixel_matrix[yn1, x]))
-
         pixel_yx.append((yn1, x))
+
         if x > 0:                                   # x - 1
-            # pixels.append(pixel_matrix[yn1, xn1])
             pixels.append(tuple(pixel_matrix[yn1, xn1]))
             pixel_yx.append((yn1, xn1))
+
         if x < col_num - 1:                         # x + 1
-            # pixels.append(pixel_matrix[yn1, x1])
             pixels.append(tuple(pixel_matrix[yn1, x1]))
             pixel_yx.append((yn1, x1))
+
     if y < row_num - 1:                             # y + 1
-        # pixels.append(pixel_matrix[y1, x])
         pixels.append(tuple(pixel_matrix[y1, x]))
         pixel_yx.append((y1, x))
+
         if x > 0:                                   # x - 1
-            # pixels.append(pixel_matrix[y1, xn1])
             pixels.append(tuple(pixel_matrix[y1, xn1]))
             pixel_yx.append((y1, xn1))
+
         if x < col_num - 1:                         # x + 1
-            # pixels.append(pixel_matrix[y1, x1])
             pixels.append(tuple(pixel_matrix[y1, x1]))
             pixel_yx.append((y1, x1))
+
     if x > 0:                                       # x - 1
         pixels.append(tuple(pixel_matrix[y, xn1]))
         pixel_yx.append((y, xn1))
+
     if x < col_num - 1:                             # x + 1
         pixels.append(tuple(pixel_matrix[y, x1]))
         pixel_yx.append((y, x1))
-    # pixels = np.array(pixels)
 
-    # print("pixel: {}\nPixels: {}".format(pixel_matrix[y, x], pixels))
+    # console testing comment
+    if test == 1:
+        print("pixel: {}\nPixels: {}".format(pixel_matrix[y, x], pixels))
+
     return pixels, pixel_yx
 
 
 def get_surrounding_pixels_5x5(pixel_matrix, y, x):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_surrounding_pixels_5x5 image_processing.py")
 
@@ -1061,83 +1121,80 @@ def get_surrounding_pixels_5x5(pixel_matrix, y, x):
     x1 = x + 1
 
     if y > 1:                                       # y - 2
-        # pixels.append(pixel_matrix[yn2, x])
         pixels.append(tuple(pixel_matrix[yn2, x]))
         pixel_yx.append((yn2, x))
+
         if x > 1:                                   # x - 2
-            # pixels.append(pixel_matrix[yn2, xn2])
             pixels.append(tuple(pixel_matrix[yn2, xn2]))
             pixel_yx.append((yn2, xn2))
+
         if x < col_num - 2:                         # x + 2
-            # pixels.append(pixel_matrix[yn2, x2])
             pixels.append(tuple(pixel_matrix[yn2, x2]))
             pixel_yx.append((yn2, x2))
+
         if x > 0:                                   # x - 1
-            # pixels.append(pixel_matrix[yn2, xn1])
             pixels.append(tuple(pixel_matrix[yn2, xn1]))
             pixel_yx.append((yn2, xn1))
+
         if x < col_num - 1:                         # x + 1
-            # pixels.append(pixel_matrix[yn2, x1])
             pixels.append(tuple(pixel_matrix[yn2, x1]))
             pixel_yx.append((yn2, x1))
 
     if y > 0:                                       # y - 1
 
         if x > 1:                                   # x - 2
-            # pixels.append(pixel_matrix[yn1, xn2])
             pixels.append(tuple(pixel_matrix[yn1, xn2]))
             pixel_yx.append((yn1, xn2))
+
         if x < col_num - 2:                         # x + 2
-            # pixels.append(pixel_matrix[yn1, x2])
             pixels.append(tuple(pixel_matrix[yn1, x2]))
             pixel_yx.append((yn1, x2))
 
     if y < row_num - 2:                             # y + 2
-        # pixels.append(pixel_matrix[y2, x])
         pixels.append(tuple(pixel_matrix[y2, x]))
         pixel_yx.append((y2, x))
+
         if x > 1:                                   # x - 2
-            # pixels.append(pixel_matrix[y2, xn2])
             pixels.append(tuple(pixel_matrix[y2, xn2]))
             pixel_yx.append((y2, xn2))
+
         if x < col_num - 2:                         # x + 2
-            # pixels.append(pixel_matrix[y2, x2])
             pixels.append(tuple(pixel_matrix[y2, x2]))
             pixel_yx.append((y2, x2))
+
         if x > 0:                                   # x - 1
-            # pixels.append(pixel_matrix[y2, xn1])
             pixels.append(tuple(pixel_matrix[y2, xn1]))
             pixel_yx.append((y2, xn1))
+
         if x < col_num - 1:                         # x + 1
-            # pixels.append(pixel_matrix[y2, x1])
             pixels.append(tuple(pixel_matrix[y2, x1]))
             pixel_yx.append((y2, x1))
 
     if y < row_num - 1:                             # y + 1
 
         if x > 1:                                   # x - 2
-            # pixels.append(pixel_matrix[y1, xn2])
             pixels.append(tuple(pixel_matrix[y1, xn2]))
             pixel_yx.append((y1, xn2))
+
         if x < col_num - 2:                         # x + 2
-            # pixels.append(pixel_matrix[y1, x2])
             pixels.append(tuple(pixel_matrix[y1, x2]))
             pixel_yx.append((y1, x2))
 
     if x > 1:                                       # x - 2
-        # pixels.append(pixel_matrix[y, xn2])
         pixels.append(tuple(pixel_matrix[y, xn2]))
         pixel_yx.append((y, xn2))
+
     if x < col_num - 2:                             # x + 2
-        # pixels.append(pixel_matrix[y, x2])
         pixels.append(tuple(pixel_matrix[y, x2]))
         pixel_yx.append((y, x2))
-    # pixels = np.array(pixels)
+
     return pixels, pixel_yx
 
 
 def get_surrounding_pixels_7x7(pixel_matrix, y, x):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_surrounding_pixels_7x7 image_processing.py")
 
@@ -1161,21 +1218,27 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
     if y > 2:                                       # y - 3
         pixels.append(tuple(pixel_matrix[yn3, x]))
         pixel_yx.append((yn3, x))
+
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[yn3, xn3]))
             pixel_yx.append((yn3, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[yn3, x3]))
             pixel_yx.append((yn3, x3))
+
         if x > 1:                                   # x - 2
             pixels.append(tuple(pixel_matrix[yn3, xn2]))
             pixel_yx.append((yn3, xn2))
+
         if x < col_num - 2:                         # x + 2
             pixels.append(tuple(pixel_matrix[yn3, x2]))
             pixel_yx.append((yn3, x2))
+
         if x > 0:                                   # x - 1
             pixels.append(tuple(pixel_matrix[yn3, xn1]))
             pixel_yx.append((yn3, xn1))
+
         if x < col_num - 1:                         # x + 1
             pixels.append(tuple(pixel_matrix[yn3, x1]))
             pixel_yx.append((yn3, x1))
@@ -1185,6 +1248,7 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[yn2, xn3]))
             pixel_yx.append((yn2, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[yn2, x3]))
             pixel_yx.append((yn2, x3))
@@ -1194,6 +1258,7 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[yn1, xn3]))
             pixel_yx.append((yn1, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[yn1, x3]))
             pixel_yx.append((yn1, x3))
@@ -1201,21 +1266,27 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
     if y < row_num - 3:                             # y + 3
         pixels.append(tuple(pixel_matrix[y3, x]))
         pixel_yx.append((y3, x))
+
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[y3, xn3]))
             pixel_yx.append((y3, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[y3, x3]))
             pixel_yx.append((y3, x3))
+
         if x > 1:                                   # x - 2
             pixels.append(tuple(pixel_matrix[y3, xn2]))
             pixel_yx.append((y3, xn2))
+
         if x < col_num - 2:                         # x + 2
             pixels.append(tuple(pixel_matrix[y3, x2]))
             pixel_yx.append((y3, x2))
+
         if x > 0:                                   # x - 1
             pixels.append(tuple(pixel_matrix[y3, xn1]))
             pixel_yx.append((y3, xn1))
+
         if x < col_num - 1:                         # x + 1
             pixels.append(tuple(pixel_matrix[y3, x1]))
             pixel_yx.append((y3, x1))
@@ -1225,6 +1296,7 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[y2, xn3]))
             pixel_yx.append((y2, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[y2, x3]))
             pixel_yx.append((y2, x3))
@@ -1234,6 +1306,7 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[y1, xn3]))
             pixel_yx.append((y1, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[y1, x3]))
             pixel_yx.append((y1, x3))
@@ -1241,15 +1314,18 @@ def get_surrounding_pixels_7x7(pixel_matrix, y, x):
     if x > 2:                                       # x - 3
         pixels.append(tuple(pixel_matrix[y, xn3]))
         pixel_yx.append((y, xn3))
+
     if x < col_num - 3:                             # x + 3
         pixels.append(tuple(pixel_matrix[y, x3]))
         pixel_yx.append((y, x3))
-    # pixels = np.array(pixels)
+
     return pixels, pixel_yx
 
 
 def get_surrounding_pixels_9x9(pixel_matrix, y, x):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_surrounding_pixels_9x9 image_processing.py")
 
@@ -1277,27 +1353,35 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
     if y > 3:                                       # y - 4
         pixels.append(tuple(pixel_matrix[yn4, x]))
         pixel_yx.append((yn4, x))
+
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[yn4, xn4]))
             pixel_yx.append((yn4, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[yn4, x4]))
             pixel_yx.append((yn4, x4))
+
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[yn4, xn3]))
             pixel_yx.append((yn4, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[yn4, x3]))
             pixel_yx.append((yn4, x3))
+
         if x > 1:                                   # x - 2
             pixels.append(tuple(pixel_matrix[yn4, xn2]))
             pixel_yx.append((yn4, xn2))
+
         if x < col_num - 2:                         # x + 2
             pixels.append(tuple(pixel_matrix[yn4, x2]))
             pixel_yx.append((yn4, x2))
+
         if x > 0:                                   # x - 1
             pixels.append(tuple(pixel_matrix[yn4, xn1]))
             pixel_yx.append((yn4, xn1))
+
         if x < col_num - 1:                         # x + 1
             pixels.append(tuple(pixel_matrix[yn4, x1]))
             pixel_yx.append((yn4, x1))
@@ -1307,6 +1391,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[yn3, xn4]))
             pixel_yx.append((yn3, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[yn3, x4]))
             pixel_yx.append((yn3, x4))
@@ -1316,6 +1401,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[yn2, xn4]))
             pixel_yx.append((yn2, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[yn2, x4]))
             pixel_yx.append((yn2, x4))
@@ -1325,6 +1411,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[yn1, xn4]))
             pixel_yx.append((yn1, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[yn1, x4]))
             pixel_yx.append((yn1, x4))
@@ -1332,27 +1419,35 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
     if y < row_num - 4:                             # y + 4
         pixels.append(tuple(pixel_matrix[y4, x]))
         pixel_yx.append((y4, x))
+
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[y4, xn4]))
             pixel_yx.append((y4, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[y4, x4]))
             pixel_yx.append((y4, x4))
+
         if x > 2:                                   # x - 3
             pixels.append(tuple(pixel_matrix[y4, xn3]))
             pixel_yx.append((y4, xn3))
+
         if x < col_num - 3:                         # x + 3
             pixels.append(tuple(pixel_matrix[y4, x3]))
             pixel_yx.append((y4, x3))
+
         if x > 1:                                   # x - 2
             pixels.append(tuple(pixel_matrix[y4, xn2]))
             pixel_yx.append((y4, xn2))
+
         if x < col_num - 2:                         # x + 2
             pixels.append(tuple(pixel_matrix[y4, x2]))
             pixel_yx.append((y4, x2))
+
         if x > 0:                                   # x - 1
             pixels.append(tuple(pixel_matrix[y4, xn1]))
             pixel_yx.append((y4, xn1))
+
         if x < col_num - 1:                         # x + 1
             pixels.append(tuple(pixel_matrix[y4, x1]))
             pixel_yx.append((y4, x1))
@@ -1362,6 +1457,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[y3, xn4]))
             pixel_yx.append((y3, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[y3, x4]))
             pixel_yx.append((y3, x4))
@@ -1371,6 +1467,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[y2, xn4]))
             pixel_yx.append((y2, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[y2, x4]))
             pixel_yx.append((y2, x4))
@@ -1380,6 +1477,7 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
         if x > 3:                                   # x - 4
             pixels.append(tuple(pixel_matrix[y1, xn4]))
             pixel_yx.append((y1, xn4))
+
         if x < col_num - 4:                         # x + 4
             pixels.append(tuple(pixel_matrix[y1, x4]))
             pixel_yx.append((y1, x4))
@@ -1387,10 +1485,11 @@ def get_surrounding_pixels_9x9(pixel_matrix, y, x):
     if x > 3:                                       # x - 4
         pixels.append(tuple(pixel_matrix[y, xn4]))
         pixel_yx.append((y, xn4))
+
     if x < col_num - 4:                             # x + 4
         pixels.append(tuple(pixel_matrix[y, x4]))
         pixel_yx.append((y, x4))
-    # pixels = np.array(pixels)
+
     return pixels, pixel_yx
 
 
@@ -1492,11 +1591,8 @@ def janome_colours(main):
     image = main.images[1]
     pixel_matrix = np.array(image)
     image_copy = pixel_matrix.copy()
-    pixel_list = []
 
-    colour_count = []
-    combine_count = []
-    count_colour(pixel_matrix, pixel_list, colour_count, combine_count)
+    pixel_list, colour_count, combine_count = count_colour(pixel_matrix)
     change_pix = [0] * len(pixel_list)
 
     for i in pixel_list:
@@ -1519,8 +1615,11 @@ def janome_colours(main):
     main.display_cy_image()
 
 
+# compares a pixel colour with list of pixels - creates a list of values - lowest value is closet to original pixel
 def get_colour_diff(pixels, pixel):
     test = 0
+
+    # console testing comment
     if test == 5:
         print("get_colour_diff image_processing.py")
 
@@ -1530,17 +1629,18 @@ def get_colour_diff(pixels, pixel):
     for i in pixels:
         a = 0
         dif = [0, 0, 0]
-        if i[0] == pixel[0] and i[1] == pixel[1] and i[2] == pixel[2]:
-            # dif = (1000, 1000, 1000)
+        if i[0] == pixel[0] and i[1] == pixel[1] and i[2] == pixel[2]:  # colours are the same
             dif = (0, 0, 0)
         else:
             while a < 3:
-                if i[a] == pixel[a]:
-                    dif[a] = 0
+                if i[a] == pixel[a]:    # value is equal
+                    dif[a] = 0              # set 0
+
                 elif i[a] > pixel[a]:
                     p = pixel[a]
                     o_p = i[a]
                     dif[a] = o_p - p
+
                 elif i[a] < pixel[a]:
                     p = pixel[a]
                     o_p = i[a]
@@ -1549,16 +1649,20 @@ def get_colour_diff(pixels, pixel):
                 a += 1
         dif_list.append(dif)
 
-    for i in dif_list:
+    for i in dif_list:      # for each dif pixel add the three values to make a total and append to list
         dif_val.append(i[0] + i[1] + i[2])
 
     return dif_val
 
 
-def count_colour(pixel_matrix, pixel_list, colour_count, combine_count):
+def count_colour(pixel_matrix):
     test = 0
     if test == 5:
         print("count_colour image_processing.py")
+
+    pixel_list = []
+    colour_count = []
+    combine_count = []
 
     for y, row in enumerate(pixel_matrix):
         if test == 1:
@@ -1607,6 +1711,8 @@ def count_colour(pixel_matrix, pixel_list, colour_count, combine_count):
             print("Colour ", e, " Value: ", x," Comb Val:", comb, " Amount: ", num,)
             e += 1
 
+    return pixel_list, colour_count, combine_count
+
 
 def sort_algorithm(pixel_list, combine_value, colour_count):
     test = 0
@@ -1643,12 +1749,8 @@ def create_image_plot(main):
     row = [0] * img_width
     plot = np.array([row] * img_height)
 
-    pixel_list = []
-    count_list = []
-    combine_list = []
-
     # find the first 0 in plot
-    count_colour(image_copy, pixel_list, count_list, combine_list)
+    pixel_list, count_list, combine_list = count_colour(image_copy)
 
     # set colours to numbers referencing image
     for y, row in enumerate(image_copy):
