@@ -38,8 +38,7 @@ class Gui:
         global average_pixel_count
         self.root = tk.Tk()
         self.root.title("Pic-to-Stitch")
-        self.root.iconbitmap("Pic-to-Stitch_32x32.ico")
-        # self.root.iconbitmap("Icon_2.ico")
+        self.root.iconbitmap("../Icons/Pic-to-Stitch_32x32.ico")
 
         # Open in full screen
         self.root.wm_state("zoomed")
@@ -54,10 +53,10 @@ class Gui:
         sub_menu = Menu(menu)
         menu.add_cascade(label="File", menu=sub_menu)
         sub_menu.add_separator()
-        sub_menu.add_command(label="Exit")
-        edit_menu = Menu(menu)
-        menu.add_cascade(label="Edit", menu=edit_menu)
-        edit_menu.add_command(label="Redo", command=redo)
+        sub_menu.add_command(label="Exit", command=self.root.destroy)
+        help_menu = Menu(menu)
+        menu.add_cascade(label="Help", menu=help_menu)
+        help_menu.add_command(label="Redo", command=redo)
 
         # Main Frame
         self.main_pane = Frame(self.root)
@@ -153,7 +152,7 @@ class Gui:
         self.cy_label.pack(fill=BOTH)
 
         # ** Status Bar **
-        status = Label(self.root, text="Preparing to do nothing...", bd=1, relief=SUNKEN, anchor=W)
+        status = Label(self.root, text="", bd=1, relief=SUNKEN, anchor=W)
         status.pack(side=BOTTOM, fill=X)
 
         self.root.mainloop()

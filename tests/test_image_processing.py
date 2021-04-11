@@ -12,13 +12,13 @@ class TestImageProcessing(unittest.TestCase):
 
     @classmethod
     def setUpClass(self):
-        file_path = "Guppy_test.png"
+        file_path = "test_images/Guppy_test.png"
         self.img_1 = Image.open(file_path)
-        file_path = "PixelArtGuppy_test.png"
+        file_path = "test_images/PixelArtGuppy_test.png"
         self.img_2 = Image.open(file_path)
-        file_path = "PixelArtSmall_test.png"
+        file_path = "test_images/PixelArtSmall_test.png"
         self.img_3 = Image.open(file_path)
-        file_path = "Gradient_test.jpg"
+        file_path = "test_images/Gradient_test.jpg"
         self.img_4 = Image.open(file_path)
         self.img_list = [self.img_1, self.img_2, self.img_3, self.img_4]
 
